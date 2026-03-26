@@ -66,26 +66,39 @@ def tokenize_google_api(model_ref: str, sentences: list[str]) -> list[int]:
 
 def tokenize_sentences(model: dict, sentences: list[str], cache: dict, dry_run: bool) -> list[int]:
     """Dispatch tokenization based on model type, with tokenizer caching."""
-    mid = model["id"]
+    mtype = model["type"]
+    ref = model["ref"]
 
     if dry_run:
         return [5] * len(sentences)  # dummy counts
 
-    if model["type"] == "tiktoken":
-        if mid not in cache:
-            cache[mid] = load_tiktoken_tokenizer(model["ref"])
-        return tokenize_tiktoken(cache[mid], sentences)
+    sentences_hash = hash(tuple(sentences))
+    counts_cache_key = ("counts", mtype, ref, sentences_hash)
+    
+    if counts_cache_key in cache:
+        log.info(f"Using cached token counts for tokenizer {ref}")
+        return cache[counts_cache_key]
 
-    elif model["type"] == "huggingface":
-        if mid not in cache:
-            cache[mid] = load_hf_tokenizer(model["ref"])
-        return tokenize_hf(cache[mid], sentences)
+    tok_cache_key = ("tokenizer", mtype, ref)
 
-    elif model["type"] == "anthropic_api":
-        return tokenize_anthropic_api(model["ref"], sentences)
+    if mtype == "tiktoken":
+        if tok_cache_key not in cache:
+            cache[tok_cache_key] = load_tiktoken_tokenizer(ref)
+        counts = tokenize_tiktoken(cache[tok_cache_key], sentences)
 
-    elif model["type"] == "google_api":
-        return tokenize_google_api(model["ref"], sentences)
+    elif mtype == "huggingface":
+        if tok_cache_key not in cache:
+            cache[tok_cache_key] = load_hf_tokenizer(ref)
+        counts = tokenize_hf(cache[tok_cache_key], sentences)
+
+    elif mtype == "anthropic_api":
+        counts = tokenize_anthropic_api(ref, sentences)
+
+    elif mtype == "google_api":
+        counts = tokenize_google_api(ref, sentences)
 
     else:
-        raise ValueError(f"Unknown tokenizer type: {model['type']}")
+        raise ValueError(f"Unknown tokenizer type: {mtype}")
+
+    cache[counts_cache_key] = counts
+    return counts
