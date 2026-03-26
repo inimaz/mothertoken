@@ -23,13 +23,13 @@ Requirements:
     pip install datasets tiktoken transformers anthropic google-generativeai huggingface_hub
 """
 
-import json
 import argparse
+import json
 import logging
-from datetime import datetime, timezone
-from pathlib import Path
 import sys
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from pathlib import Path
 
 # Add `src/` to the python path so the `mothertoken` module can be resolved natively
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -54,30 +54,34 @@ ENGLISH_CONFIG = "eng_Latn"
 # Languages to benchmark by default.
 # Subset chosen to cover diverse script families and known efficiency gaps.
 DEFAULT_LANGUAGES = [
-    "eng_Latn",   # English — baseline
-    "fra_Latn",   # French
-    "spa_Latn",   # Spanish
-    "por_Latn",   # Portuguese
-    "deu_Latn",   # German
-    "arb_Arab",   # Arabic
-    "cmn_Hans",   # Chinese (Simplified)
-    "jpn_Jpan",   # Japanese
-    "tha_Thai",   # Thai
-    "hin_Deva",   # Hindi
-    "kor_Hang",   # Korean
-    "tur_Latn",   # Turkish
-    "ukr_Cyrl",   # Ukrainian
-    "vie_Latn",   # Vietnamese
-    "swh_Latn",   # Swahili
+    "eng_Latn",  # English — baseline
+    "fra_Latn",  # French
+    "spa_Latn",  # Spanish
+    "por_Latn",  # Portuguese
+    "deu_Latn",  # German
+    "arb_Arab",  # Arabic
+    "cmn_Hans",  # Chinese (Simplified)
+    "jpn_Jpan",  # Japanese
+    "tha_Thai",  # Thai
+    "hin_Deva",  # Hindi
+    "kor_Hang",  # Korean
+    "tur_Latn",  # Turkish
+    "ukr_Cyrl",  # Ukrainian
+    "vie_Latn",  # Vietnamese
+    "swh_Latn",  # Swahili
 ]
+
 
 # Model registry and Configuration
 def load_config() -> dict:
-    import yaml
     from pathlib import Path
+
+    import yaml
+
     config_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "models.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         return yaml.safe_load(f)
+
 
 CONFIG = load_config()
 MODELS = CONFIG.get("models", [])
@@ -87,6 +91,7 @@ COST_SOURCE_COMMIT_HASH = CONFIG.get("cost_source_commit_hash", "main")
 # Metrics
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class LanguageMetrics:
     language: str
@@ -95,17 +100,19 @@ class LanguageMetrics:
     total_chars: int
     total_tokens: int
     total_words: int
-    chars_per_token: float      # higher = better
-    fertility: float            # tokens per word — lower = better
-    rtc: float                  # relative tokenization cost vs English baseline
-    cost_per_1m_chars: float    # dollar cost to encode 1M characters
-    fair_cost_delta: float      # difference vs hypothetical fair cost
+    chars_per_token: float  # higher = better
+    fertility: float  # tokens per word — lower = better
+    rtc: float  # relative tokenization cost vs English baseline
+    cost_per_1m_chars: float  # dollar cost to encode 1M characters
+    fair_cost_delta: float  # difference vs hypothetical fair cost
 
     def to_dict(self):
         return asdict(self)
 
 
-def compute_metrics(sentences: list[str], token_counts: list[int], english_chars_per_token: float, input_cost_per_token: float) -> dict:
+def compute_metrics(
+    sentences: list[str], token_counts: list[int], english_chars_per_token: float, input_cost_per_token: float
+) -> dict:
     """Compute aggregate metrics from a list of sentences and their token counts."""
     total_chars = sum(len(s) for s in sentences)
     total_tokens = sum(token_counts)
@@ -131,9 +138,11 @@ def compute_metrics(sentences: list[str], token_counts: list[int], english_chars
         "fair_cost_delta": round(fair_cost_delta, 5),
     }
 
+
 # ---------------------------------------------------------------------------
 # FLORES+ loader
 # ---------------------------------------------------------------------------
+
 
 def load_flores_sentences(language_config: str, split: str = FLORES_SPLIT) -> list[str]:
     """
@@ -142,20 +151,22 @@ def load_flores_sentences(language_config: str, split: str = FLORES_SPLIT) -> li
     Requires HuggingFace login: huggingface_hub.login()
     """
     from datasets import load_dataset
+
     log.info(f"Loading FLORES+ {language_config} / {split}")
     ds = load_dataset(FLORES_DATASET, language_config, split=split)
     return [row["text"] for row in ds]
 
+
 # ---------------------------------------------------------------------------
 # Main benchmark runner
 # ---------------------------------------------------------------------------
+
 
 def run_benchmark(
     languages: list[str],
     model_ids: list[str],
     dry_run: bool = False,
 ) -> tuple[dict, dict]:
-
     results = {}
     tokenizer_cache = {}
 
@@ -213,13 +224,14 @@ def run_benchmark(
 # Output
 # ---------------------------------------------------------------------------
 
+
 def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: list[str]):
     """
     Save benchmark results as versioned JSON.
     CRITICAL: raw sentences are never included in the output.
     """
     output = {
-        "version": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "version": datetime.now(UTC).strftime("%Y-%m-%d"),
         "flores_split": FLORES_SPLIT,
         "flores_dataset": FLORES_DATASET,
         "baseline_language": ENGLISH_CONFIG,
@@ -237,9 +249,11 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
         json.dump(output, f, indent=2, ensure_ascii=False)
     log.info(f"Saved benchmark to {output_path}")
 
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def main():
     parser = argparse.ArgumentParser(description="mothertoken benchmark runner")

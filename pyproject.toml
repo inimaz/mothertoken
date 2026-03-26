@@ -15,6 +15,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+dev = [
+    "prek>=0.3.8",
+    "ruff>=0.9.9",
+]
 tests = [
     "pytest>=9.0.2",
     "pytest-cov>=6.0.0",
@@ -24,3 +28,17 @@ tests = [
 pythonpath = [
   "src"
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "C4", "UP"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
