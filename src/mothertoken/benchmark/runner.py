@@ -78,14 +78,31 @@ def load_config() -> dict:
 
     import yaml
 
-    config_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "models.yaml"
-    with open(config_path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+    # Walk up from __file__ to find the project root containing data/models.yaml
+    candidate = Path(__file__).resolve()
+    for _ in range(8):
+        candidate = candidate.parent
+        p = candidate / "data" / "models.yaml"
+        if p.exists():
+            with open(p, encoding="utf-8") as f:
+                return yaml.safe_load(f)
+    raise FileNotFoundError("data/models.yaml not found. Run from the project root.")
 
 
-CONFIG = load_config()
-MODELS = CONFIG.get("models", [])
-COST_SOURCE_COMMIT_HASH = CONFIG.get("cost_source_commit_hash", "main")
+def _get_config() -> dict:
+    """Lazy loader so importing this module doesn't crash if models.yaml is absent."""
+    if not hasattr(_get_config, "_cache"):
+        _get_config._cache = load_config()  # type: ignore[attr-defined]
+    return _get_config._cache  # type: ignore[attr-defined]
+
+
+def _get_models() -> list:
+    return _get_config().get("models", [])
+
+
+def _get_commit_hash() -> str:
+    return _get_config().get("cost_source_commit_hash", "main")
+
 
 # ---------------------------------------------------------------------------
 # Metrics
@@ -171,14 +188,14 @@ def run_benchmark(
     tokenizer_cache = {}
 
     log.info("Fetching pricing data...")
-    pricing_data = pricing.fetch_pricing_data(COST_SOURCE_COMMIT_HASH) if not dry_run else {}
+    pricing_data = pricing.fetch_pricing_data(_get_commit_hash()) if not dry_run else {}
 
     # Step 1: get English baseline chars_per_token for each model
     log.info("Computing English baseline for all models...")
     english_sentences = load_flores_sentences(ENGLISH_CONFIG) if not dry_run else ["Hello world."] * 10
     english_cpt = {}  # model_id -> chars_per_token
 
-    active_models = [m for m in MODELS if m["id"] in model_ids]
+    active_models = [m for m in _get_models() if m["id"] in model_ids]
     successful_models = []
     failed_models_log = {}
 
@@ -235,7 +252,7 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
         "flores_split": FLORES_SPLIT,
         "flores_dataset": FLORES_DATASET,
         "baseline_language": ENGLISH_CONFIG,
-        "models": [m for m in MODELS if m["id"] in model_ids],
+        "models": [m for m in _get_models() if m["id"] in model_ids],
         "metrics": results,
         "errors": errors,
         "note": (
@@ -266,7 +283,7 @@ def main():
     parser.add_argument(
         "--models",
         type=str,
-        default=",".join(m["id"] for m in MODELS),
+        default=",".join(m["id"] for m in _get_models()),
         help="Comma-separated model IDs to benchmark",
     )
     parser.add_argument(

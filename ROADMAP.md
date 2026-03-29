@@ -48,7 +48,7 @@ The ranking flips depending on whose internet the model grew up on.
 
 ---
 
-## Phase 1 — Benchmark Dataset
+## Phase 1 — Benchmark Dataset ✅ COMPLETE
 
 **Goal:** Produce a static, versioned benchmark table (language × model → metrics).
 
@@ -75,7 +75,7 @@ The ranking flips depending on whose internet the model grew up on.
 
 ---
 
-## Phase 2 — The CLI Tool (`mothertoken`)
+## Phase 2 — The CLI Tool (`mothertoken`) ✅ COMPLETE
 
 **Goal:** Let developers analyze their own text or prompts against the benchmark.
 
@@ -123,7 +123,7 @@ $ mothertoken token --text "ChatGPT" --model gpt-4o
 
 ### Technical stack (proposed)
 
-- Python CLI with `typer` or `click`
+- Python CLI with `typer`
 - `tiktoken` for GPT models
 - `transformers` for open models
 - Anthropic + Google SDKs for closed model token counting

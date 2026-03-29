@@ -1,7 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true
+
 [project]
 name = "mothertoken"
-version = "0.0.1"
-description = "Add your description here"
+version = "0.1.0"
+description = "Benchmarking tool for tokenizer efficiency across languages and models"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -12,7 +19,13 @@ dependencies = [
     "pyyaml>=6.0.1",
     "anthropic>=0.25.0",
     "google-generativeai>=0.5.0",
+    "typer>=0.12.0",
+    "rich>=13.0.0",
 ]
+
+[project.scripts]
+mothertoken = "mothertoken.cli.app:app"
+mothertoken-benchmark = "mothertoken.benchmark.runner:main"
 
 [dependency-groups]
 dev = [

@@ -1,52 +1,78 @@
-# mothertoken — benchmark
+# mothertoken
 
-Generates `data/benchmark.json` — the tokenization efficiency dataset
-that powers the mothertoken web page and CLI tool.
+> *Every model has a native tongue. The question is whether yours matches.*
 
-## Setup
+Benchmarking tool and dataset exploring how tokenizer design creates silent cost, quality, and carbon inequities for non-English languages.
+
+## Installation
 
 ```bash
-# Install dependencies
+# Clone the repo
+git clone https://github.com/inimaz/mothertoken
+cd mothertoken
+
+# Install dependencies and the package in editable mode
 uv sync
-
-# Log into HuggingFace (required for FLORES+)
-python -c "import huggingface_hub; huggingface_hub.login()"
+uv pip install -e .
 ```
 
-## Running
+## CLI Usage
 
+The `mothertoken` command is available after installation.
+
+### 📊 Compare model rankings
+Rank all models for a specific language using the precomputed benchmark data.
 ```bash
-# Verify setup without loading real data
-uv run src/mothertoken/benchmark/runner.py --dry-run
-
-# Run for a single language (fast, good for testing)
-uv run src/mothertoken/benchmark/runner.py --languages tha_Thai --models gpt-4o,llama3
-
-# Full benchmark — all languages, public tokenizers only (no API keys needed)
-uv run src/mothertoken/benchmark/runner.py --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
-
-# Full benchmark — include closed models (requires API keys)
-export ANTHROPIC_API_KEY=your_key
-export GOOGLE_API_KEY=your_key
-uv run src/mothertoken/benchmark/runner.py
+mothertoken compare --language spa_Latn
 ```
+
+### 🔤 Count tokens locally
+Count tokens for a string using real tokenizers (no API needed for local models like GPT-4o, Llama 3, etc.).
+```bash
+mothertoken token --text "ChatGPT" --model gpt-4o
+```
+
+### 🧠 Analyze custom text
+Analyze your own prompts across multiple models and languages to see cost and efficiency deltas.
+```bash
+# Local analysis (uses public tokenizers)
+mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn
+
+# Full analysis (requires API keys for Claude/Gemini)
+export ANTHROPIC_API_KEY=your_key
+mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn --mode full
+```
+
+---
+
+## 🛠️ Regenerating the Benchmark
+
+If you want to contribute new models or update pricing, you can run the benchmark generator.
+
+### Setup
+```bash
+# Log into HuggingFace (required for FLORES+ datasets)
+uv run python -c "import huggingface_hub; huggingface_hub.login()"
+```
+
+### Running the generator
+```bash
+# Verify setup (fast, no real data)
+uv run mothertoken-benchmark --dry-run
+
+# Run full benchmark (public tokenizers)
+uv run mothertoken-benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
+
+# Run full benchmark (including closed models via API)
+uv run mothertoken-benchmark
+```
+*Note: `mothertoken-benchmark` is an alias for the internal `runner.py` script.*
 
 ## Output
+Results are saved to `data/benchmark.json`. The file contains aggregated metrics; raw FLORES+ sentences are never written to disk or included in public artifacts.
 
-Results are saved to `data/benchmark.json`. The file contains only
-aggregated metrics — raw FLORES+ sentences are never written to disk
-or included in any public artifact.
-
-## Reproducibility
-
-The benchmark is versioned by date. To reproduce a specific run,
-use the same FLORES+ dataset version and model tokenizer versions
-listed in the output JSON.
-
-## Adding a new model
-
+## Adding a New Model
 Add an entry to `data/models.yaml`:
-
 ```yaml
   - id: my-model
     name: "My Model"
@@ -55,9 +81,6 @@ Add an entry to `data/models.yaml`:
     api_key_env: null       # env var name, or null if no key needed
 ```
 
-## Benchmark integrity
+## License
+MIT
 
-- Always use the `dev` split for the public benchmark
-- Keep the `devtest` split as a private held-out validation set
-- Never commit raw FLORES+ sentences to any public repository
-- Pin `huggingface_hub` and tokenizer versions for reproducible runs

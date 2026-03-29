@@ -80,7 +80,10 @@ def test_run_benchmark_flow(mock_tokenize, mock_get_cost, mock_fetch_pricing, mo
     languages = ["eng_Latn", "tha_Thai"]
     model_ids = ["gpt-4o"]
 
-    with patch("mothertoken.benchmark.runner.MODELS", [{"id": "gpt-4o", "type": "tiktoken", "ref": "o200k_base"}]):
+    with patch(
+        "mothertoken.benchmark.runner._get_models",
+        return_value=[{"id": "gpt-4o", "type": "tiktoken", "ref": "o200k_base"}],
+    ):
         results, errors = run_benchmark(languages, model_ids, dry_run=False)
 
         # Verify calls
@@ -113,7 +116,10 @@ def test_run_benchmark_model_failure(mock_tokenize, mock_load_flores):
     languages = ["eng_Latn"]
     model_ids = ["fail-model"]
 
-    with patch("mothertoken.benchmark.runner.MODELS", [{"id": "fail-model", "type": "tiktoken", "ref": "invalid"}]):
+    with patch(
+        "mothertoken.benchmark.runner._get_models",
+        return_value=[{"id": "fail-model", "type": "tiktoken", "ref": "invalid"}],
+    ):
         results, errors = run_benchmark(languages, model_ids, dry_run=False)
 
         assert "fail-model" in errors
@@ -132,7 +138,7 @@ def test_save_benchmark(tmp_path):
     output_path = tmp_path / "benchmark.json"
     model_ids = ["gpt-4o"]
 
-    with patch("mothertoken.benchmark.runner.MODELS", [{"id": "gpt-4o", "type": "tiktoken"}]):
+    with patch("mothertoken.benchmark.runner._get_models", return_value=[{"id": "gpt-4o", "type": "tiktoken"}]):
         save_benchmark(results, errors, output_path, model_ids)
 
         assert output_path.exists()
