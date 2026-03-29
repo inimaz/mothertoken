@@ -1,5 +1,5 @@
 {
-  "version": "2026-03-26",
+  "version": "2026-03-29",
   "flores_split": "dev",
   "flores_dataset": "openlanguagedata/flores_plus",
   "baseline_language": "eng_Latn",
@@ -78,9 +78,7 @@
         "total_words": 20954,
         "chars_per_token": 4.903,
         "fertility": 1.219,
-        "rtc": 1.0,
-        "cost_per_1m_chars": 0.50993,
-        "fair_cost_delta": 0.0
+        "rtc": 1.0
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -89,9 +87,7 @@
         "total_words": 20954,
         "chars_per_token": 4.852,
         "fertility": 1.231,
-        "rtc": 1.0,
-        "cost_per_1m_chars": 6.18264,
-        "fair_cost_delta": 0.0
+        "rtc": 1.0
       },
       "mistral": {
         "num_sentences": 997,
@@ -100,9 +96,7 @@
         "total_words": 20954,
         "chars_per_token": 4.245,
         "fertility": 1.407,
-        "rtc": 1.0,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.0
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -111,9 +105,7 @@
         "total_words": 20954,
         "chars_per_token": 4.768,
         "fertility": 1.253,
-        "rtc": 1.0,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.0
       }
     },
     "fra_Latn": {
@@ -124,9 +116,7 @@
         "total_words": 24146,
         "chars_per_token": 4.329,
         "fertility": 1.424,
-        "rtc": 1.133,
-        "cost_per_1m_chars": 0.57755,
-        "fair_cost_delta": 0.06762
+        "rtc": 1.133
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -135,9 +125,7 @@
         "total_words": 24146,
         "chars_per_token": 3.643,
         "fertility": 1.692,
-        "rtc": 1.332,
-        "cost_per_1m_chars": 8.23569,
-        "fair_cost_delta": 2.05304
+        "rtc": 1.332
       },
       "mistral": {
         "num_sentences": 997,
@@ -146,9 +134,7 @@
         "total_words": 24146,
         "chars_per_token": 3.212,
         "fertility": 1.919,
-        "rtc": 1.322,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.322
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -157,9 +143,7 @@
         "total_words": 24146,
         "chars_per_token": 3.642,
         "fertility": 1.692,
-        "rtc": 1.309,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.309
       }
     },
     "spa_Latn": {
@@ -170,9 +154,7 @@
         "total_words": 24819,
         "chars_per_token": 4.448,
         "fertility": 1.351,
-        "rtc": 1.102,
-        "cost_per_1m_chars": 0.56203,
-        "fair_cost_delta": 0.0521
+        "rtc": 1.102
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -181,9 +163,7 @@
         "total_words": 24819,
         "chars_per_token": 3.74,
         "fertility": 1.607,
-        "rtc": 1.297,
-        "cost_per_1m_chars": 8.02067,
-        "fair_cost_delta": 1.83803
+        "rtc": 1.297
       },
       "mistral": {
         "num_sentences": 997,
@@ -192,9 +172,7 @@
         "total_words": 24819,
         "chars_per_token": 3.238,
         "fertility": 1.856,
-        "rtc": 1.311,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.311
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -203,9 +181,7 @@
         "total_words": 24819,
         "chars_per_token": 3.731,
         "fertility": 1.611,
-        "rtc": 1.278,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.278
       }
     },
     "por_Latn": {
@@ -216,9 +192,7 @@
         "total_words": 22409,
         "chars_per_token": 4.354,
         "fertility": 1.394,
-        "rtc": 1.126,
-        "cost_per_1m_chars": 0.57413,
-        "fair_cost_delta": 0.06421
+        "rtc": 1.126
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -227,9 +201,7 @@
         "total_words": 22409,
         "chars_per_token": 3.563,
         "fertility": 1.704,
-        "rtc": 1.362,
-        "cost_per_1m_chars": 8.42084,
-        "fair_cost_delta": 2.2382
+        "rtc": 1.362
       },
       "mistral": {
         "num_sentences": 997,
@@ -238,9 +210,7 @@
         "total_words": 22409,
         "chars_per_token": 3.013,
         "fertility": 2.014,
-        "rtc": 1.409,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.409
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -249,9 +219,7 @@
         "total_words": 22409,
         "chars_per_token": 3.565,
         "fertility": 1.702,
-        "rtc": 1.338,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.338
       }
     },
     "deu_Latn": {
@@ -262,9 +230,7 @@
         "total_words": 20903,
         "chars_per_token": 4.406,
         "fertility": 1.591,
-        "rtc": 1.113,
-        "cost_per_1m_chars": 0.5674,
-        "fair_cost_delta": 0.05747
+        "rtc": 1.113
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -273,9 +239,7 @@
         "total_words": 20903,
         "chars_per_token": 3.608,
         "fertility": 1.943,
-        "rtc": 1.345,
-        "cost_per_1m_chars": 8.31398,
-        "fair_cost_delta": 2.13133
+        "rtc": 1.345
       },
       "mistral": {
         "num_sentences": 997,
@@ -284,9 +248,7 @@
         "total_words": 20903,
         "chars_per_token": 3.196,
         "fertility": 2.194,
-        "rtc": 1.328,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.328
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -295,9 +257,7 @@
         "total_words": 20903,
         "chars_per_token": 3.604,
         "fertility": 1.945,
-        "rtc": 1.323,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.323
       }
     },
     "arb_Arab": {
@@ -308,9 +268,7 @@
         "total_words": 18759,
         "chars_per_token": 3.132,
         "fertility": 1.882,
-        "rtc": 1.565,
-        "cost_per_1m_chars": 0.79813,
-        "fair_cost_delta": 0.2882
+        "rtc": 1.565
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -319,9 +277,7 @@
         "total_words": 18759,
         "chars_per_token": 1.414,
         "fertility": 4.17,
-        "rtc": 3.433,
-        "cost_per_1m_chars": 21.22199,
-        "fair_cost_delta": 15.03934
+        "rtc": 3.433
       },
       "mistral": {
         "num_sentences": 997,
@@ -330,9 +286,7 @@
         "total_words": 18759,
         "chars_per_token": 1.104,
         "fertility": 5.34,
-        "rtc": 3.846,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 3.846
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -341,9 +295,7 @@
         "total_words": 18759,
         "chars_per_token": 2.585,
         "fertility": 2.28,
-        "rtc": 1.845,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.845
       }
     },
     "cmn_Hans": {
@@ -354,9 +306,7 @@
         "total_words": 2041,
         "chars_per_token": 1.305,
         "fertility": 15.833,
-        "rtc": 3.756,
-        "cost_per_1m_chars": 1.91535,
-        "fair_cost_delta": 1.40542
+        "rtc": 3.756
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -365,9 +315,7 @@
         "total_words": 2041,
         "chars_per_token": 0.865,
         "fertility": 23.887,
-        "rtc": 5.609,
-        "cost_per_1m_chars": 34.6765,
-        "fair_cost_delta": 28.49385
+        "rtc": 5.609
       },
       "mistral": {
         "num_sentences": 997,
@@ -376,9 +324,7 @@
         "total_words": 2041,
         "chars_per_token": 0.885,
         "fertility": 23.356,
-        "rtc": 4.798,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.798
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -387,9 +333,7 @@
         "total_words": 2041,
         "chars_per_token": 1.568,
         "fertility": 13.181,
-        "rtc": 3.041,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 3.041
       }
     },
     "jpn_Jpan": {
@@ -400,9 +344,7 @@
         "total_words": 1063,
         "chars_per_token": 1.288,
         "fertility": 39.911,
-        "rtc": 3.805,
-        "cost_per_1m_chars": 1.94048,
-        "fair_cost_delta": 1.43055
+        "rtc": 3.805
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -411,9 +353,7 @@
         "total_words": 1063,
         "chars_per_token": 0.935,
         "fertility": 55.0,
-        "rtc": 5.19,
-        "cost_per_1m_chars": 32.08954,
-        "fair_cost_delta": 25.90689
+        "rtc": 5.19
       },
       "mistral": {
         "num_sentences": 997,
@@ -422,9 +362,7 @@
         "total_words": 1063,
         "chars_per_token": 0.878,
         "fertility": 58.536,
-        "rtc": 4.833,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.833
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -433,9 +371,7 @@
         "total_words": 1063,
         "chars_per_token": 1.48,
         "fertility": 34.735,
-        "rtc": 3.221,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 3.221
       }
     },
     "tha_Thai": {
@@ -446,9 +382,7 @@
         "total_words": 4123,
         "chars_per_token": 2.43,
         "fertility": 12.003,
-        "rtc": 2.017,
-        "cost_per_1m_chars": 1.0287,
-        "fair_cost_delta": 0.51877
+        "rtc": 2.017
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -457,9 +391,7 @@
         "total_words": 4123,
         "chars_per_token": 1.076,
         "fertility": 27.119,
-        "rtc": 4.511,
-        "cost_per_1m_chars": 27.89021,
-        "fair_cost_delta": 21.70757
+        "rtc": 4.511
       },
       "mistral": {
         "num_sentences": 997,
@@ -468,9 +400,7 @@
         "total_words": 4123,
         "chars_per_token": 0.992,
         "fertility": 29.392,
-        "rtc": 4.277,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.277
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -479,9 +409,7 @@
         "total_words": 4123,
         "chars_per_token": 1.795,
         "fertility": 16.252,
-        "rtc": 2.657,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 2.657
       }
     },
     "hin_Deva": {
@@ -492,9 +420,7 @@
         "total_words": 24607,
         "chars_per_token": 3.114,
         "fertility": 1.636,
-        "rtc": 1.575,
-        "cost_per_1m_chars": 0.80293,
-        "fair_cost_delta": 0.293
+        "rtc": 1.575
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -503,9 +429,7 @@
         "total_words": 24607,
         "chars_per_token": 1.014,
         "fertility": 5.026,
-        "rtc": 4.787,
-        "cost_per_1m_chars": 29.59343,
-        "fair_cost_delta": 23.41079
+        "rtc": 4.787
       },
       "mistral": {
         "num_sentences": 997,
@@ -514,9 +438,7 @@
         "total_words": 24607,
         "chars_per_token": 0.953,
         "fertility": 5.344,
-        "rtc": 4.453,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.453
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -525,9 +447,7 @@
         "total_words": 24607,
         "chars_per_token": 1.074,
         "fertility": 4.743,
-        "rtc": 4.439,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.439
       }
     },
     "kor_Hang": {
@@ -538,9 +458,7 @@
         "total_words": 14764,
         "chars_per_token": 1.676,
         "fertility": 2.546,
-        "rtc": 2.925,
-        "cost_per_1m_chars": 1.49137,
-        "fair_cost_delta": 0.98144
+        "rtc": 2.925
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -549,9 +467,7 @@
         "total_words": 14764,
         "chars_per_token": 1.03,
         "fertility": 4.143,
-        "rtc": 4.71,
-        "cost_per_1m_chars": 29.12111,
-        "fair_cost_delta": 22.93846
+        "rtc": 4.71
       },
       "mistral": {
         "num_sentences": 997,
@@ -560,9 +476,7 @@
         "total_words": 14764,
         "chars_per_token": 0.884,
         "fertility": 4.828,
-        "rtc": 4.803,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 4.803
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -571,9 +485,7 @@
         "total_words": 14764,
         "chars_per_token": 1.464,
         "fertility": 2.916,
-        "rtc": 3.258,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 3.258
       }
     },
     "tur_Latn": {
@@ -584,9 +496,7 @@
         "total_words": 16692,
         "chars_per_token": 3.548,
         "fertility": 2.171,
-        "rtc": 1.382,
-        "cost_per_1m_chars": 0.70456,
-        "fair_cost_delta": 0.19463
+        "rtc": 1.382
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -595,9 +505,7 @@
         "total_words": 16692,
         "chars_per_token": 2.609,
         "fertility": 2.952,
-        "rtc": 1.86,
-        "cost_per_1m_chars": 11.49899,
-        "fair_cost_delta": 5.31635
+        "rtc": 1.86
       },
       "mistral": {
         "num_sentences": 997,
@@ -606,9 +514,7 @@
         "total_words": 16692,
         "chars_per_token": 2.02,
         "fertility": 3.814,
-        "rtc": 2.102,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 2.102
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -617,9 +523,7 @@
         "total_words": 16692,
         "chars_per_token": 3.04,
         "fertility": 2.534,
-        "rtc": 1.569,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.569
       }
     },
     "ukr_Cyrl": {
@@ -630,9 +534,7 @@
         "total_words": 18385,
         "chars_per_token": 2.87,
         "fertility": 2.442,
-        "rtc": 1.709,
-        "cost_per_1m_chars": 0.87123,
-        "fair_cost_delta": 0.3613
+        "rtc": 1.709
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -641,9 +543,7 @@
         "total_words": 18385,
         "chars_per_token": 1.668,
         "fertility": 4.202,
-        "rtc": 2.91,
-        "cost_per_1m_chars": 17.98924,
-        "fair_cost_delta": 11.8066
+        "rtc": 2.91
       },
       "mistral": {
         "num_sentences": 997,
@@ -652,9 +552,7 @@
         "total_words": 18385,
         "chars_per_token": 2.279,
         "fertility": 3.075,
-        "rtc": 1.862,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.862
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -663,9 +561,7 @@
         "total_words": 18385,
         "chars_per_token": 1.95,
         "fertility": 3.594,
-        "rtc": 2.445,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 2.445
       }
     },
     "vie_Latn": {
@@ -676,9 +572,7 @@
         "total_words": 29193,
         "chars_per_token": 3.493,
         "fertility": 1.294,
-        "rtc": 1.404,
-        "cost_per_1m_chars": 0.71575,
-        "fair_cost_delta": 0.20583
+        "rtc": 1.404
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -687,9 +581,7 @@
         "total_words": 29193,
         "chars_per_token": 2.099,
         "fertility": 2.154,
-        "rtc": 2.312,
-        "cost_per_1m_chars": 14.29404,
-        "fair_cost_delta": 8.11139
+        "rtc": 2.312
       },
       "mistral": {
         "num_sentences": 997,
@@ -698,9 +590,7 @@
         "total_words": 29193,
         "chars_per_token": 1.567,
         "fertility": 2.885,
-        "rtc": 2.708,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 2.708
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -709,9 +599,7 @@
         "total_words": 29193,
         "chars_per_token": 3.524,
         "fertility": 1.283,
-        "rtc": 1.353,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.353
       }
     },
     "swh_Latn": {
@@ -722,9 +610,7 @@
         "total_words": 20361,
         "chars_per_token": 3.48,
         "fertility": 1.858,
-        "rtc": 1.409,
-        "cost_per_1m_chars": 0.7184,
-        "fair_cost_delta": 0.20847
+        "rtc": 1.409
       },
       "gpt-4": {
         "num_sentences": 997,
@@ -733,9 +619,7 @@
         "total_words": 20361,
         "chars_per_token": 2.616,
         "fertility": 2.472,
-        "rtc": 1.855,
-        "cost_per_1m_chars": 11.46619,
-        "fair_cost_delta": 5.28354
+        "rtc": 1.855
       },
       "mistral": {
         "num_sentences": 997,
@@ -744,9 +628,7 @@
         "total_words": 20361,
         "chars_per_token": 2.338,
         "fertility": 2.766,
-        "rtc": 1.816,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.816
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -755,15 +637,13 @@
         "total_words": 20361,
         "chars_per_token": 2.596,
         "fertility": 2.492,
-        "rtc": 1.837,
-        "cost_per_1m_chars": 0.0,
-        "fair_cost_delta": 0.0
+        "rtc": 1.837
       }
     }
   },
   "errors": {
-    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69c58f4c-6fe0bba94297c48e11e82081;034e7df2-4562-47e3-bacc-0db1f9dbd999)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
-    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69c58f4f-0ac1d0891a20d3402b9b58e6;606a11b4-162b-45f1-8f25-badc0f005c31)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
+    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69c8eb89-7254aa5b055bc85026bee299;591e6f79-d072-459d-add6-e9bc16af7c39)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
+    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69c8eb8d-0b1e9e4b589c17a31aec9ec0;d264d1e1-9c03-44db-ae42-42aa9c709b88)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
     "claude-sonnet": "ANTHROPIC_API_KEY environment variable is missing.",
     "gemini-pro": "GOOGLE_API_KEY environment variable is missing."
   },

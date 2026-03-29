@@ -1,7 +1,5 @@
 # mothertoken - Model registry for tokenization benchmarks
 # This registry dictates which tokenizers to load and what APIS to query.
-# cost_source_commit_hash points to a LiteLLM pricing commit for reproducibility.
-cost_source_commit_hash: "main"
 
 models:
   - id: gpt-4o

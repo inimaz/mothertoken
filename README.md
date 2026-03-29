@@ -2,7 +2,7 @@
 
 > *Every model has a native tongue. The question is whether yours matches.*
 
-Benchmarking tool and dataset exploring how tokenizer design creates silent cost, quality, and carbon inequities for non-English languages.
+Benchmarking tool and dataset exploring how tokenizer design creates silent efficiency, quality, and carbon inequities for non-English languages.
 
 ## Installation
 
@@ -33,7 +33,7 @@ mothertoken token --text "ChatGPT" --model gpt-4o
 ```
 
 ### 🧠 Analyze custom text
-Analyze your own prompts across multiple models and languages to see cost and efficiency deltas.
+Analyze your own prompts across multiple models and languages to see efficiency gaps and cost multipliers (RTC).
 ```bash
 # Local analysis (uses public tokenizers)
 mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn
@@ -47,7 +47,7 @@ mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn --mode fu
 
 ## 🛠️ Regenerating the Benchmark
 
-If you want to contribute new models or update pricing, you can run the benchmark generator.
+If you want to contribute new models or regenerate the efficiency metrics, you can run the benchmark generator.
 
 ### Setup
 ```bash

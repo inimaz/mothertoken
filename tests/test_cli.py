@@ -55,8 +55,6 @@ FAKE_BENCHMARK = {
                 "chars_per_token": 3.132,
                 "fertility": 1.882,
                 "rtc": 1.565,
-                "cost_per_1m_chars": 0.79813,
-                "fair_cost_delta": 0.2882,
             },
             "qwen2.5": {
                 "num_sentences": 997,
@@ -66,8 +64,6 @@ FAKE_BENCHMARK = {
                 "chars_per_token": 2.585,
                 "fertility": 2.28,
                 "rtc": 1.845,
-                "cost_per_1m_chars": 0.0,
-                "fair_cost_delta": 0.0,
             },
         },
         "eng_Latn": {
@@ -79,8 +75,6 @@ FAKE_BENCHMARK = {
                 "chars_per_token": 4.903,
                 "fertility": 1.219,
                 "rtc": 1.0,
-                "cost_per_1m_chars": 0.50993,
-                "fair_cost_delta": 0.0,
             },
         },
     },
@@ -135,6 +129,7 @@ def test_compare_valid_language():
     assert "arb_Arab" in result.output
     assert "GPT-4o" in result.output
     assert "Qwen 2.5" in result.output
+    assert "RTC (Cost Multiplier)" in result.output
 
 
 def test_compare_invalid_language():
@@ -207,6 +202,7 @@ def test_analyze_text_input():
         result = runner.invoke(app, ["analyze", "--text", "Hello world", "--languages", "eng_Latn"])
     assert result.exit_code == 0, result.output
     assert "GPT-4o" in result.output or "Qwen 2.5" in result.output
+    assert "Cost Multiplier (RTC)" in result.output
 
 
 def test_analyze_file_input(tmp_path):

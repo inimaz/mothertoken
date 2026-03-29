@@ -2,23 +2,25 @@
 
 > *Every model has a native tongue. The question is whether yours matches.*
 
-A benchmarking tool and article exploring how tokenizer design creates silent cost, quality, and carbon inequities — for any language that doesn't match a model's training data dominance.
+A benchmarking tool and article exploring how tokenizer design creates silent efficiency, quality, and carbon inequities — for any language that doesn't match a model's training data dominance.
 
 ---
 
 ## The Core Insight
 
-Tokenizer efficiency is not just a billing quirk — it is a proxy for how well a model understands your language. The cost gap and the quality gap are the same gap:
+Tokenizer efficiency is not a billing quirk — it is a proxy for how well a model understands your language. The efficiency gap and the quality gap are the same gap:
 
 - Underrepresented language in training data
 - → Tokenizer fragments it inefficiently
 - → Model reasons over pieces, not concepts
 - → Output and translation quality degrades
-- → Users pay more, get less context, and emit more CO₂
+- → Users get less context, worse answers, and higher CO₂ per useful output
 
-**This is bidirectional.** A model trained primarily on Chinese (e.g. Qwen) will tokenize Chinese efficiently — but English becomes the relatively expensive language. GPT-4o is last for Chinese users; Qwen is last for English users. There is no universally best model — only the best model *for your language*.
+**This is bidirectional.** A model trained primarily on Chinese (e.g. Qwen) will tokenize Chinese efficiently — but English becomes the fragmented language. GPT-4o is last for Chinese users; Qwen is last for English users. There is no universally best model — only the best model *for your language*.
 
 The ranking flips depending on whose internet the model grew up on.
+
+**Pricing data is out of scope — but the cost argument is not.** RTC is a multiplier the user applies to their own situation. If Arabic needs 2.8x more tokens than English on GPT-4o, then whatever you pay per token, Arabic costs you 2.8x more. That's true regardless of the current price per token, whether you use the API or self-host, and whether prices change next month. The multiplier is the durable fact. The dollar amount is the user's own math to do.
 
 ---
 
@@ -33,10 +35,10 @@ The ranking flips depending on whose internet the model grew up on.
   - **Fertility score** — tokens per word
   - **RTC (Relative Tokenization Cost)** — fertility vs English on the same model (v1 baseline; v2 may parametrize)
   - **Chars/token** — compression efficiency
-  - **Fair cost delta** — overpayment vs theoretical efficient baseline
+  - ~~**Fair cost delta**~~ — replaced by cost multiplier framing (RTC × user's own token price)
 - [x] Confirm project name: `mothertoken` — clean on PyPI, no conflict on GitHub
-- [x] Pricing data source confirmed: LiteLLM `model_prices_and_context_window.json` (MIT, actively maintained, pin commit hash for reproducibility)
-- [x] `tokencost` by AgentOps evaluated and rejected — bot-maintained pricing but thin human oversight, and uses tiktoken under the hood which only tokenizes OpenAI models accurately
+- [x] Pricing data maintenance is out of scope — RTC is the durable multiplier, users apply it to their own costs
+- [x] `tokencost` by AgentOps evaluated and rejected — maintaining live prices is not mothertoken's responsibility
 
 ### Key findings
 
@@ -48,36 +50,62 @@ The ranking flips depending on whose internet the model grew up on.
 
 ---
 
-## Phase 1 — Benchmark Dataset ✅ COMPLETE
+## Phase 1 — Benchmark Dataset
 
-**Goal:** Produce a static, versioned benchmark table (language × model → metrics).
+**Goal:** Produce a static, versioned benchmark table (language × model → tokenization metrics only, no pricing).
 
 ### Tokenizer coverage strategy
 
 | Model | Tokenizer access | Approach |
 |---|---|---|
-| GPT-4o | `cl100k_base` via tiktoken | Local, free, exact |
+| GPT-4o | `o200k_base` via tiktoken | Local, free, exact |
+| GPT-4 | `cl100k_base` via tiktoken | Local, free, exact |
 | LLaMA 3 | Public on Hugging Face | Local, free, exact |
 | Mistral, Qwen, Gemma | Public on Hugging Face | Local, free, exact |
 | Claude | Closed — count_tokens API | API call, cached |
 | Gemini | Closed — count_tokens API | API call, cached |
 
-### Pricing strategy
+### What the benchmark measures
 
-- Use **LiteLLM's `model_prices_and_context_window.json`** (MIT licensed, actively maintained)
-- Pin a specific commit hash at benchmark generation time — pricing changes don't silently alter results
-- Update the pinned version deliberately with each new benchmark release
+Only tokenization efficiency — no pricing:
+
+- **Fertility** — tokens per word for each language × model pair
+- **Chars/token** — compression efficiency
+- **RTC** — relative to English on the same model
+- **Context efficiency** — how much of a typical context window a given language consumes vs English
+
+### HuggingFace access requirements
+
+- FLORES+ (`openlanguagedata/flores_plus`) — gated, requires accepting terms, standard read token sufficient
+- LLaMA 3 — gated, requires Meta approval (hours to days)
+- Gemma 2 — gated, requires Google approval
+- Mistral, Qwen — public, no approval needed
+- HF token must have "Read access to gated repos" permission enabled
 
 ### Outputs
 
-- `benchmark.json` — versioned snapshot of all metrics across models and languages
-- Scripts to regenerate when models or pricing changes (e.g., via a scheduled GitHub Actions workflow that pulls the latest pricing from LiteLLM and opens a PR)
+- `benchmark.json` — versioned snapshot of tokenization metrics across models and languages, no pricing data
+- Scripts to regenerate when new models or tokenizers are released
 
 ---
 
-## Phase 2 — The CLI Tool (`mothertoken`) ✅ COMPLETE
+## Phase 2 — The CLI Tool (`mothertoken`)
 
-**Goal:** Let developers analyze their own text or prompts against the benchmark.
+**Goal:** Let developers and researchers analyze tokenization efficiency for their own text.
+
+### Two user personas
+
+- **Developer** — wants to inspect their own prompts and understand tokenization impact on context window
+- **Researcher** — wants to reproduce or extend the benchmark across new models or languages
+
+### Subcommand structure
+
+```
+mothertoken analyze      # developer — inspect your own text
+mothertoken benchmark    # researcher — run against FLORES-200
+mothertoken models       # list supported models and their key requirements
+mothertoken compare      # compare two languages head to head on a model
+```
 
 ### Two modes
 
@@ -86,7 +114,6 @@ The ranking flips depending on whose internet the model grew up on.
 $ mothertoken analyze --file prompt.txt --languages pt,ar,th --mode local
 
 # Full mode — includes closed models via API
-# (Note: Requires user to provide API keys locally, e.g., OPENAI_API_KEY, ANTHROPIC_API_KEY)
 $ mothertoken analyze --file prompt.txt --languages pt,ar,th --mode full
 ```
 
@@ -95,33 +122,57 @@ $ mothertoken analyze --file prompt.txt --languages pt,ar,th --mode full
 ```
 📊 Results for prompt.txt (2,400 characters)
 
-Model          Language   Tokens   Cost/1M chars   vs English
+Model          Language     Tokens   Chars/token   vs English
 ──────────────────────────────────────────────────────────────
-gpt-4o         English      580      $0.037          1.0x
-gpt-4o         Portuguese   740      $0.047          1.27x
-gpt-4o         Arabic      1630      $0.104          2.8x
-claude-sonnet  English      560      $0.021          1.0x
-claude-sonnet  Arabic      1480      $0.056          2.6x
-qwen-2.5       Arabic       740      $0.028          1.3x  ← best for Arabic
+gpt-4o         English        580       4.1          1.0x
+gpt-4o         Portuguese     740       3.2          1.3x
+gpt-4o         Arabic        1630       1.5          2.8x
+claude-sonnet  English        560       4.3          1.0x
+claude-sonnet  Arabic        1480       1.6          2.7x
+qwen-2.5       Arabic         740       3.2          1.3x  ← most efficient for Arabic
 
-💡 For Arabic users, Qwen 2.5 is 2.2x more efficient than GPT-4o.
-💸 At 2M chars/day, switching models saves ~$55/day (~$20k/year).
+💡 Arabic needs 2.8x more tokens than English on GPT-4o.
+📐 That's 2.8x less effective context window for your Arabic users.
+💸 Whatever you pay per token, Arabic costs you 2.8x more on GPT-4o.
+   → Switching to Qwen 2.5 reduces that to 1.3x.
 ```
 
 ### Additional commands
 
 ```
-# Compare models for a specific language
-$ mothertoken compare --language ar
+# Compare languages head to head
+$ mothertoken compare --languages en,ar --model gpt-4o
 
-# Generate a shareable HTML report
+# Run the full FLORES benchmark (researcher mode)
+$ mothertoken benchmark --setup        # downloads FLORES-200
+$ mothertoken benchmark --language ar  # run for one language
+$ mothertoken benchmark --all          # full run
+
+# Generate a shareable report
 $ mothertoken report --corpus flores200 --output report.html
 
 # Check a single term
 $ mothertoken token --text "ChatGPT" --model gpt-4o
 ```
 
-### Technical stack (proposed)
+### API key behaviour
+
+```
+$ mothertoken analyze --file prompt.txt --language ar
+
+✓ GPT-4o        (public tokenizer)
+✓ LLaMA 3       (public tokenizer)
+✓ Mistral       (public tokenizer)
+✓ Qwen 2.5      (public tokenizer)
+⚠ Claude Sonnet (no API key — skipped)
+⚠ Gemini Pro    (no API key — skipped)
+
+→ Run `mothertoken models setup` to add API keys for full results
+```
+
+Useful immediately without keys. Never fails silently.
+
+### Technical stack
 
 - Python CLI with `typer`
 - `tiktoken` for GPT models
@@ -134,40 +185,38 @@ $ mothertoken token --text "ChatGPT" --model gpt-4o
 
 ## Phase 3 — The Web Tool
 
-**Goal:** Zero-friction, shareable page. Land on it → instantly know if your language is expensive on the model you're using.
+**Goal:** Zero-friction, shareable page. Land on it → instantly know how efficiently your language is tokenized on each model.
 
 ### The locale-detection page
 
-Browser locale detected automatically → instant ranking of models for your language. The ranking is different for every language — including English, which fares poorly on Chinese-optimized models like Qwen.
+Browser locale detected automatically → instant ranking of models for your language. The ranking is different for every language — including English, which fragments on Chinese-optimized models like Qwen.
 
-### The cost calculator (no backend needed)
+### The context efficiency + cost multiplier calculator (no backend, no pricing data)
 
-Instead of translating arbitrary user text, use precomputed efficiency ratios applied to user-input numbers:
+Two complementary outputs from the same RTC number — both derived from precomputed efficiency ratios, no pricing tables needed:
 
 ```
-My language:        [Thai       ▾]
-Messages per day:   [1000       ]
-Avg message length: [200 chars  ]
+My language:          [Thai          ▾]
+My context window:    [128,000 tokens]
 
-Model          Monthly cost    Fair cost*    You overpay
-──────────────────────────────────────────────────────────
-Qwen 2.5       $12             $9            +$3   (+18%)
-GPT-4o         $31             $11           +$20  (+180%)
-Claude Sonnet  $28             $10           +$18  (+160%)
-
-* what you'd pay if your language were tokenized as efficiently
-  as the model's dominant training language
+Model           Usable context   vs English   Cost multiplier
+──────────────────────────────────────────────────────────────
+Qwen 2.5        98,000 tokens     -5%         1.3x your English cost
+GPT-4o          45,000 tokens     -65%        2.8x your English cost
+Claude Sonnet   46,000 tokens     -64%        2.7x your English cost
+Mistral         41,000 tokens     -68%        3.1x your English cost
 ```
 
-"Fair cost" makes the inequality concrete and personal — the dollar overpayment is more visceral than a ratio.
+"You lose 65% of your context window and pay 2.8x more — just by speaking Thai on GPT-4o." The multiplier is the user's own math to apply to their own bill. mothertoken never touches a pricing table.
 
 ### Tech stack
 
-- **Astro** — static site generator, zero JS by default, perfect for a content-heavy benchmark page with minimal interactivity
-- Benchmark data served as a static JSON — no backend needed for the locale page
-- Interactive cost calculator as an Astro island (minimal JS, hydrated on demand)
-- Pricing data sourced from LiteLLM's `model_prices_and_context_window.json` (MIT, pinned at build time)
+- **Astro** — static site generator, zero JS by default
+- Benchmark data served as static JSON, baked in at build time
+- Interactive calculator as an Astro island (minimal JS, hydrated on demand)
+- No pricing data anywhere in the stack
 - Deployable on Cloudflare Pages or Vercel — free tier sufficient
+- Domain: `mothertoken.dev` — buy when Phase 3 begins, not before
 
 ---
 
@@ -177,22 +226,23 @@ Claude Sonnet  $28             $10           +$18  (+160%)
 
 ### Thesis
 
-> Every model has a native tongue — the language its tokenizer was optimized for. If yours matches, you get efficient, affordable, high-quality responses. If it doesn't, you pay more, get less context, and receive subtly worse answers. This is not a bug. Here is how to measure it, and how to pick the right model for your language.
+> Every model has a native tongue — the language its tokenizer was optimized for. If yours matches, you get efficient responses and full use of your context window. If it doesn't, your messages fragment into pieces, your context shrinks, the model understands you less well, and you pay a multiplier on every token. This is not a billing quirk. It is an architectural fact. Here is how to measure it.
 
 ### Angle
 
-Not an academic fairness paper — a practical, data-driven piece for engineers and CTOs making model selection decisions.
+Not an academic fairness paper — a practical, data-driven piece for engineers making model selection decisions. Pricing data is out of scope, but the cost argument is made through RTC multipliers — durable, maintenance-free, and universally applicable regardless of current prices or whether you self-host.
 
 ### Outline
 
 1. What is a tokenizer and why does it matter
 2. The compression ratio as a proxy for training data representation
 3. The vicious cycle: underrepresentation → fragmentation → worse quality → worse translations
-4. The twist: it's bidirectional — English is expensive on Qwen, Chinese is expensive on GPT-4o
-5. Benchmark results across 10 languages × 6 models — the ranking flips
-6. The carbon dimension — more tokens = more compute = more CO₂ (CodeCarbon angle)
-7. What you can do: model selection, the tool, prompt language strategies
-8. What needs to change at the infrastructure level
+4. The twist: it's bidirectional — English fragments on Qwen, Chinese fragments on GPT-4o
+5. Benchmark results across 15 languages × 6 models — the ranking flips
+6. The context window consequence — you're not just paying more, you're getting less
+7. The carbon dimension — more tokens = more compute = more CO₂ (CodeCarbon angle)
+8. What you can do: model selection, the tool
+9. What needs to change at the infrastructure level
 
 ### Publication targets (in order of preference)
 
@@ -209,9 +259,9 @@ This is the differentiating dimension not covered by existing work:
 - Tokenizer inefficiency → more tokens → more inference compute → more CO₂
 - Non-English speakers have a larger carbon footprint **per useful unit of output**
 - The "AI for everyone" narrative has a hidden environmental justice dimension
-- Quantify this using CodeCarbon methodology — measure energy per token, multiply by inefficiency ratio
+- Quantify using CodeCarbon methodology — measure energy per token, multiply by RTC ratio
 
-This connects the project to existing open source credibility and makes it genuinely novel.
+This connects mothertoken to existing open source credibility and makes it genuinely novel.
 
 ---
 
@@ -231,11 +281,11 @@ The concern FLORES maintainers themselves flagged is sentences ending up as plai
 
 ### Mitigations
 
-**Never expose raw sentences publicly** — the web page, CLI output, and any public artifacts only ever show aggregated metrics (fertility scores, chars/token, RTC values). Raw FLORES sentences never leave the researcher's local machine. This is consistent with FLORES maintainers' own request not to re-host plain text.
+**Never expose raw sentences publicly** — the web page, CLI output, and any public artifacts only ever show aggregated metrics (fertility, chars/token, RTC). Raw FLORES sentences never leave the researcher's local machine.
 
-**Use FLORES splits deliberately** — FLORES has dev and test splits. Use dev for the public benchmark, keep test as a private held-out validation set to occasionally check for drift across model versions.
+**Use FLORES splits deliberately** — use `dev` for the public benchmark, keep `devtest` as a private held-out validation set to check for drift across model versions.
 
-**Rotate corpora over time** — v1 uses FLORES-200, future versions can introduce additional corpora so the benchmark stays fresh and harder to game.
+**Rotate corpora over time** — v1 uses FLORES-200, future versions can introduce additional corpora.
 
 **Document the methodology openly** — publish the benchmark scripts so results are reproducible, without publishing the sentences themselves.
 
@@ -243,17 +293,17 @@ The concern FLORES maintainers themselves flagged is sentences ending up as plai
 
 ## Open Questions
 
-- [x] Domain: `mothertoken.dev` (better aligns with developer tools and the article focus)
-- [ ] Whether to frame primarily as a **cost tool** (developer audience) or **fairness tool** (researcher/journalist audience) — probably both, with different entry points
+- [ ] Whether to frame primarily as an **efficiency tool** (developer audience) or **fairness tool** (researcher/journalist audience) — probably both, with different entry points
 - [ ] Carbon methodology: estimate from token count alone, or instrument actual inference?
 - [ ] v2 consideration: parametrized baseline for researchers (compare against any language, not just English)
+- [ ] Domain: buy `mothertoken.dev` at the start of Phase 3
 
 ---
 
 ## Success Metrics
 
-- CLI tool (`mothertoken`) published on PyPI with measurable usage (e.g., 500+ downloads/month)
-- Article published and reaches a wide audience (e.g., front page of HN, top of Dev.to)
-- Web page shareable enough to spread organically ("I just found out GPT-4 is terrible for my language" — or "I just found out Qwen is terrible for English")
-- Conference talk accepted (e.g., EuroPython, PyCon)
+- CLI tool (`mothertoken`) published on PyPI with real usage
+- Article published and referenced by others
+- Web page shareable enough to spread organically ("I just found out I lose 65% of my context window and pay 2.8x more speaking Thai on GPT-4o")
+- Conference talk accepted
 - Potential: cited by a paper or picked up by AI fairness researchers

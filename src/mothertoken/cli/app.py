@@ -51,12 +51,6 @@ def _load_benchmark_or_exit():
         raise typer.Exit(code=1) from e
 
 
-def _fmt_cost(cost: float) -> str:
-    if cost == 0.0:
-        return "—"
-    return f"${cost:.4f}"
-
-
 def _fmt_rtc(rtc: float) -> str:
     return f"{rtc:.2f}x"
 
@@ -126,8 +120,7 @@ def compare(
     table.add_column("Model")
     table.add_column("Chars/Token", justify="right")
     table.add_column("Fertility", justify="right")
-    table.add_column("RTC", justify="right")
-    table.add_column("Cost/1M chars", justify="right")
+    table.add_column("RTC (Cost Multiplier)", justify="right")
 
     for i, (model_id, m) in enumerate(rows, 1):
         name = get_model_name(data, model_id)
@@ -148,7 +141,6 @@ def compare(
             f"{m['chars_per_token']:.3f}",
             f"{m['fertility']:.3f}",
             rtc_text,
-            _fmt_cost(m["cost_per_1m_chars"]),
         )
 
     console.print(table)
@@ -294,14 +286,13 @@ def analyze(
                 results[mid] = {"error": str(e)}
 
     # Build table — one row per model, showing token count and cost estimate
-    # Cost estimate: use benchmark pricing (cost_per_1m_chars for eng_Latn baseline)
     benchmark_metrics = data.get("metrics", {})
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
     table.add_column("Model")
     table.add_column("Tokens", justify="right")
     table.add_column("Chars/Token", justify="right")
-    table.add_column("Est. Cost/1M chars", justify="right")
+    table.add_column("Cost Multiplier (RTC)", justify="right")
 
     # Sort by chars_per_token desc (most efficient first), errors last
     sorted_results = sorted(
@@ -319,25 +310,50 @@ def analyze(
         token_count = res["token_count"]
         cpt = res["chars_per_token"]
 
-        # Derive cost estimate from benchmark input_cost_per_token via any language
-        cost_str = "—"
+        # Derive RTC from benchmark if possible
+        rtc_str = "—"
+        rtc_val = 0.0
         for lang in lang_list:
             lang_metrics = benchmark_metrics.get(lang, {})
-            if mid in lang_metrics and "cost_per_1m_chars" in lang_metrics[mid]:
-                # Scale by actual chars_per_token measured from user text
-
-                bm = lang_metrics[mid]
-                bm_cpt = bm.get("chars_per_token", 0)
-                bm_cost = bm.get("cost_per_1m_chars", 0)
-                if bm_cpt > 0 and bm_cost > 0:
-                    # cost scales inversely with chars/token
-                    estimated_cost = (bm_cpt / cpt) * bm_cost if cpt > 0 else 0
-                    cost_str = _fmt_cost(estimated_cost)
+            if mid in lang_metrics and "rtc" in lang_metrics[mid]:
+                rtc_val = lang_metrics[mid]["rtc"]
+                rtc_str = _fmt_rtc(rtc_val)
                 break
 
-        table.add_row(model_name, str(token_count), f"{cpt:.3f}", cost_str)
+        table.add_row(model_name, str(token_count), f"{cpt:.3f}", rtc_str)
 
     console.print(table)
+
+    # Summary insight like in ROADMAP.md
+    if results:
+        # Pick the most expensive (highest RTC) and least efficient model for the insight
+        # Or just pick the first one if it's the most efficient.
+        # Actually follow the roadmap example: compare first lang if provided.
+        primary_lang = lang_list[0] if lang_list else "your language"
+
+        # Find model with best CPT
+        if sorted_results and "chars_per_token" in sorted_results[0][1]:
+            best_mid, best_res = sorted_results[0]
+            best_name = next((m["name"] for m in candidate_models if m["id"] == best_mid), best_mid)
+
+            # Find a model with high RTC for comparison
+            # This is illustrative, matching the roadmap examples.
+            worst_mid = next((mid for mid, res in reversed(sorted_results) if "chars_per_token" in res), None)
+            if worst_mid:
+                lang_metrics = benchmark_metrics.get(lang_list[0], {}) if lang_list else {}
+                rtc_val = lang_metrics.get(worst_mid, {}).get("rtc", 0.0)
+                if rtc_val > 1.0:
+                    worst_name = next((m["name"] for m in candidate_models if m["id"] == worst_mid), worst_mid)
+                    console.print(
+                        f"\n[bold]💡 {primary_lang.split('_')[0].capitalize()} needs {rtc_val:.1f}x "
+                        f"more tokens than English on {worst_name}.[/]"
+                    )
+                    console.print(f"📐 That's {rtc_val:.1f}x less effective context window for those users.")
+                    console.print(
+                        f"💸 Whatever you pay per token, {primary_lang.split('_')[0].capitalize()} "
+                        f"costs you {rtc_val:.1f}x more on {worst_name}."
+                    )
+                    console.print(f"   → Switching to {best_name} reduces that overhead.\n")
 
     # Print errors
     errored = [(mid, res["error"]) for mid, res in results.items() if "error" in res]

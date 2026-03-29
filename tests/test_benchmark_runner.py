@@ -14,9 +14,8 @@ def test_compute_metrics_basic():
     sentences = ["Hello world", "Test sentence"]
     token_counts = [2, 2]
     english_chars_per_token = 5.0
-    input_cost_per_token = 0.00001
 
-    metrics = compute_metrics(sentences, token_counts, english_chars_per_token, input_cost_per_token)
+    metrics = compute_metrics(sentences, token_counts, english_chars_per_token)
 
     # Total chars: len("Hello world") + len("Test sentence") = 11 + 13 = 24
     assert metrics["total_chars"] == 24
@@ -33,29 +32,21 @@ def test_compute_metrics_basic():
     # rtc: 5.0 / 6.0 = 0.833
     assert metrics["rtc"] == pytest.approx(0.833, abs=1e-3)
 
-    # cost_per_1m_chars: (1,000,000 / 6.0) * 0.00001 = 166,666.666 * 0.00001 = 1.66667
-    assert metrics["cost_per_1m_chars"] == pytest.approx(1.66667, abs=1e-5)
-
-    # fair_cost: (1,000,000 / 5.0) * 0.00001 = 200,000 * 0.00001 = 2.0
-    # fair_cost_delta: 1.66667 - 2.0 = -0.33333
-    assert metrics["fair_cost_delta"] == pytest.approx(-0.33333, abs=1e-5)
-
 
 def test_compute_metrics_zero_tokens():
     sentences = [""]
     token_counts = [0]
-    metrics = compute_metrics(sentences, token_counts, 5.0, 0.00001)
+    metrics = compute_metrics(sentences, token_counts, 5.0)
 
     assert metrics["total_tokens"] == 0
     assert metrics["chars_per_token"] == 0.0
     assert metrics["rtc"] == 0.0
-    assert metrics["cost_per_1m_chars"] == 0.0
 
 
 def test_compute_metrics_zero_words():
     sentences = ["   "]
     token_counts = [1]
-    metrics = compute_metrics(sentences, token_counts, 5.0, 0.00001)
+    metrics = compute_metrics(sentences, token_counts, 5.0)
 
     assert metrics["total_words"] == 0
     assert metrics["fertility"] == 0.0
@@ -67,14 +58,10 @@ def test_compute_metrics_zero_words():
 
 
 @patch("mothertoken.benchmark.runner.load_flores_sentences")
-@patch("mothertoken.benchmark.runner.pricing.fetch_pricing_data")
-@patch("mothertoken.benchmark.runner.pricing.get_model_input_cost")
 @patch("mothertoken.benchmark.runner.tokenizers.tokenize_sentences")
-def test_run_benchmark_flow(mock_tokenize, mock_get_cost, mock_fetch_pricing, mock_load_flores):
+def test_run_benchmark_flow(mock_tokenize, mock_load_flores):
     # Setup mocks
     mock_load_flores.side_effect = lambda lang, split="dev": [f"Sentence in {lang}"] * 2
-    mock_fetch_pricing.return_value = {"dummy": "data"}
-    mock_get_cost.return_value = 0.00002
     mock_tokenize.return_value = [3, 3]  # 6 tokens total per language/model
 
     languages = ["eng_Latn", "tha_Thai"]

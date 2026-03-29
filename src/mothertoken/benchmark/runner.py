@@ -34,7 +34,7 @@ from pathlib import Path
 # Add `src/` to the python path so the `mothertoken` module can be resolved natively
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from mothertoken.core import pricing, tokenizers
+from mothertoken.core import tokenizers
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
@@ -120,16 +120,12 @@ class LanguageMetrics:
     chars_per_token: float  # higher = better
     fertility: float  # tokens per word — lower = better
     rtc: float  # relative tokenization cost vs English baseline
-    cost_per_1m_chars: float  # dollar cost to encode 1M characters
-    fair_cost_delta: float  # difference vs hypothetical fair cost
 
     def to_dict(self):
         return asdict(self)
 
 
-def compute_metrics(
-    sentences: list[str], token_counts: list[int], english_chars_per_token: float, input_cost_per_token: float
-) -> dict:
+def compute_metrics(sentences: list[str], token_counts: list[int], english_chars_per_token: float) -> dict:
     """Compute aggregate metrics from a list of sentences and their token counts."""
     total_chars = sum(len(s) for s in sentences)
     total_tokens = sum(token_counts)
@@ -139,10 +135,6 @@ def compute_metrics(
     fertility = total_tokens / total_words if total_words > 0 else 0.0
     rtc = english_chars_per_token / chars_per_token if chars_per_token > 0 else 0.0
 
-    cost_per_1m_chars = (1_000_000 / chars_per_token) * input_cost_per_token if chars_per_token > 0 else 0.0
-    fair_cost = (1_000_000 / english_chars_per_token) * input_cost_per_token if english_chars_per_token > 0 else 0.0
-    fair_cost_delta = cost_per_1m_chars - fair_cost
-
     return {
         "num_sentences": len(sentences),
         "total_chars": total_chars,
@@ -151,8 +143,6 @@ def compute_metrics(
         "chars_per_token": round(chars_per_token, 3),
         "fertility": round(fertility, 3),
         "rtc": round(rtc, 3),
-        "cost_per_1m_chars": round(cost_per_1m_chars, 5),
-        "fair_cost_delta": round(fair_cost_delta, 5),
     }
 
 
@@ -187,9 +177,6 @@ def run_benchmark(
     results = {}
     tokenizer_cache = {}
 
-    log.info("Fetching pricing data...")
-    pricing_data = pricing.fetch_pricing_data(_get_commit_hash()) if not dry_run else {}
-
     # Step 1: get English baseline chars_per_token for each model
     log.info("Computing English baseline for all models...")
     english_sentences = load_flores_sentences(ENGLISH_CONFIG) if not dry_run else ["Hello world."] * 10
@@ -222,12 +209,9 @@ def run_benchmark(
 
         for model in active_models:
             mid = model["id"]
-            cost_source_id = model.get("cost_source_id", mid)
-            input_cost_per_token = pricing.get_model_input_cost(pricing_data, cost_source_id) if not dry_run else 0.0
-
             try:
                 token_counts = tokenizers.tokenize_sentences(model, sentences, tokenizer_cache, dry_run)
-                metrics = compute_metrics(sentences, token_counts, english_cpt[mid], input_cost_per_token)
+                metrics = compute_metrics(sentences, token_counts, english_cpt[mid])
                 results[lang_config][mid] = metrics
                 log.info(f"  {mid}: {metrics['chars_per_token']:.2f} c/t, RTC {metrics['rtc']:.2f}x")
             except Exception as e:

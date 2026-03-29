@@ -31,6 +31,7 @@ mothertoken-benchmark = "mothertoken.benchmark.runner:main"
 dev = [
     "prek>=0.3.8",
     "ruff>=0.9.9",
+    "autoflake>=2.3.1",
 ]
 tests = [
     "pytest>=9.0.2",
