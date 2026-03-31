@@ -1,0 +1,166 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import benchmark from '../data/benchmark';
+
+const benchmarkJSON = JSON.stringify(benchmark);
+const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
+---
+
+<Base title="mothertoken — benchmark explorer">
+  <div class="max-w-[760px] mx-auto pt-12 px-6 pb-24">
+    <Nav activeTab="benchmark" />
+
+    <div class="flex items-center gap-4 mb-8 animate-fade-in-up stagger-1">
+      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark explorer</span>
+      <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-5 mb-10 animate-fade-in-up stagger-1">
+      <div class="flex items-center gap-2.5">
+        <span class="font-mono text-[11px] text-text-secondary">model</span>
+        <select id="model-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[12px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[140px] shadow-sm">
+          {Object.entries(benchmark.models).map(([id, m]) => (
+            <option value={id} class="bg-bg text-text">{m.name}</option>
+          ))}
+        </select>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="font-mono text-[11px] text-text-secondary">sort</span>
+        <select id="sort-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[12px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[160px] shadow-sm">
+          <option value="asc" class="bg-bg text-text">most efficient first</option>
+          <option value="desc" class="bg-bg text-text">least efficient first</option>
+          <option value="alpha" class="bg-bg text-text">alphabetical</option>
+        </select>
+      </div>
+    </div>
+
+    <table class="w-full border-collapse mb-16 animate-fade-in-up stagger-2 text-[13px] table-fixed" id="full-table">
+      <thead>
+        <tr>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[25%]">language</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[12%]">script</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[20%]">chars/token</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[15%]">fertility</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[10%]">rtc</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[18%]"></th>
+        </tr>
+      </thead>
+      <tbody id="full-body"></tbody>
+    </table>
+
+    <div class="flex items-center gap-4 mb-6 mt-16 animate-fade-in-up stagger-3">
+      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">model × language matrix</span>
+      <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-8 animate-fade-in-up stagger-3" id="matrix-chips">
+      {matrixLangs.map((lid, i) => (
+        <button class:list={['font-mono text-[11.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip', i === 0 ? 'bg-text text-bg border-text shadow-sm' : 'bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50']} data-lang={lid}>
+          {benchmark.languages[lid].name}
+        </button>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 animate-fade-in-up stagger-4" id="matrix-grid"></div>
+
+    <Footer />
+  </div>
+</Base>
+
+<script define:vars={{ benchmarkJSON }}>
+  const benchmark = JSON.parse(benchmarkJSON);
+  const MODELS = Object.keys(benchmark.models);
+  const LANGS = benchmark.languages;
+
+  function getRTC(modelId, langId) {
+    const m = benchmark.models[modelId];
+    if (!m || !m.metrics[langId] || !m.metrics[benchmark.baseline]) return 1;
+    return m.metrics[benchmark.baseline].cpt / m.metrics[langId].cpt;
+  }
+
+  function textColorClass(r) {
+    return r <= 1.3 ? 'text-good-text' : r <= 2.0 ? 'text-mid-text' : 'text-bad-text';
+  }
+
+  function badge(r) {
+    const cls = r <= 1.3 
+      ? 'bg-good-bg text-good-text border-good/20' 
+      : r <= 2.0 
+      ? 'bg-mid-bg text-mid-text border-mid/20' 
+      : 'bg-bad-bg text-bad-text border-bad/20';
+    return `<span class="font-mono text-[10px] px-2.5 py-1 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
+  }
+
+  function renderTable() {
+    const mid = document.getElementById('model-sel').value;
+    const sort = document.getElementById('sort-sel').value;
+
+    let rows = Object.entries(LANGS)
+      .filter(([lid]) => lid !== benchmark.baseline)
+      .map(([lid, l]) => {
+        const d = benchmark.models[mid].metrics[lid] || { cpt: 0, fert: 0 };
+        const r = getRTC(mid, lid);
+        return { lid, ...l, cpt: d.cpt, fert: d.fert, r };
+      });
+
+    if (sort === 'asc')  rows.sort((a, b) => a.r - b.r);
+    else if (sort === 'desc') rows.sort((a, b) => b.r - a.r);
+    else rows.sort((a, b) => a.name.localeCompare(b.name));
+
+    document.getElementById('full-body').innerHTML = rows.map(row => `
+      <tr class="group hover:bg-bg-secondary transition-colors duration-300 ease-quint cursor-default">
+        <td class="font-medium py-3.5 px-4 border-b border-border align-middle text-text-secondary group-hover:text-text transition-colors duration-300">${row.name}</td>
+        <td class="font-mono text-[11px] text-text-tertiary py-3.5 px-4 border-b border-border align-middle">${row.script}</td>
+        <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
+        <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
+        <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.r.toFixed(1)}×</td>
+        <td class="py-3.5 px-4 border-b border-border align-middle pl-6">${badge(row.r)}</td>
+      </tr>`).join('');
+  }
+
+  let activeLang = 'tha';
+
+  function renderMatrix() {
+    document.querySelectorAll('.matrix-chip').forEach(c => {
+      if (c.dataset.lang === activeLang) {
+        c.className = 'font-mono text-[11.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-text text-bg border-text shadow-sm';
+      } else {
+        c.className = 'font-mono text-[11.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50';
+      }
+    });
+
+    document.getElementById('matrix-grid').innerHTML = MODELS.map(mid => {
+      const d = benchmark.models[mid].metrics[activeLang] || { cpt: 0, fert: 0 };
+      const r = getRTC(mid, activeLang);
+      return `
+        <div class="bg-bg border border-border-strong rounded-xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] hover:border-text/30 hover:shadow-md transition-all duration-300 ease-quint group cursor-default">
+          <div class="font-mono text-[11px] font-medium text-text-secondary mb-4 group-hover:text-text transition-colors duration-300">${benchmark.models[mid].name}</div>
+          <div class="flex flex-col gap-2.5">
+            <div class="flex justify-between items-center"><span class="text-[11.5px] text-text-tertiary">chars/tok</span><span class="font-mono text-[12px] font-medium text-text-secondary">${d.cpt.toFixed(1)}</span></div>
+            <div class="flex justify-between items-center"><span class="text-[11.5px] text-text-tertiary">fertility</span><span class="font-mono text-[12px] font-medium text-text-secondary">${d.fert.toFixed(2)}</span></div>
+            <div class="flex justify-between items-center pt-3 mt-1 border-t border-border/60"><span class="text-[11px] uppercase tracking-wider text-text-tertiary">cost multiplier</span><span class="font-mono text-[12.5px] font-semibold ${textColorClass(r)}">${r.toFixed(1)}×</span></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  document.getElementById('model-sel').addEventListener('change', renderTable);
+  document.getElementById('sort-sel').addEventListener('change', renderTable);
+  document.querySelectorAll('.matrix-chips').forEach(c => {
+    // We already attach listeners on inline script block below correctly.
+    // Actually the previous code attaches listeners by querying .chip directly.
+  });
+
+  // Re-attach chip event listeners correctly:
+  document.querySelectorAll('.matrix-chip').forEach(c => {
+    c.addEventListener('click', () => { 
+      activeLang = c.dataset.lang; 
+      renderMatrix(); 
+    });
+  });
+
+  renderTable();
+  renderMatrix();
+</script>

@@ -1,0 +1,135 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base title="mothertoken — methodology">
+  <div class="page">
+    <Nav activeTab="methodology" />
+
+    <div class="section-head">
+      <span class="section-label">corpus</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      <strong>FLORES-200</strong> (CC BY-SA 4.0, managed by OLDI / Meta FAIR). 1,012
+      professionally translated sentences across 200 languages. We use the <strong
+        >dev split</strong
+      > for the public benchmark. The devtest split is kept as a private held-out
+      validation set to monitor for benchmark drift across model versions. Raw sentences
+      are never published — only aggregated metrics.
+    </div>
+
+    <div class="section-head">
+      <span class="section-label">metrics</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      <strong>Chars/token</strong> — total characters divided by total tokens across
+      all benchmark sentences. Higher is better: more meaning per token means the
+      model sees more coherent units.
+    </div>
+    <div class="method-block">
+      <strong>Fertility</strong> — tokens per word. Lower is better: fewer fragments
+      per word means the model reasons over concepts rather than byte sequences.
+    </div>
+    <div class="method-block">
+      <strong>RTC (Relative Tokenization Cost)</strong> — English chars/token divided
+      by the language's chars/token on the same model. A score of 2.8× means that
+      language requires 2.8× more tokens to express the same content as English.
+      English baseline = 1.0× by definition. This is the multiplier you apply to
+      your own token costs.
+    </div>
+
+    <div class="section-head">
+      <span class="section-label">tokenizer coverage</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      Public tokenizers (GPT-4o via tiktoken, LLaMA 3 / Mistral / Qwen / Gemma
+      via HuggingFace) are run locally — no API calls, exact counts. Closed
+      tokenizers (Claude, Gemini) use the official
+      <strong>count_tokens</strong> endpoints provided by Anthropic and Google respectively.
+      Results are cached to avoid redundant API calls.
+    </div>
+
+    <div class="section-head">
+      <span class="section-label">benchmark integrity</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      Tokenizer efficiency is determined at training time and frozen into the
+      model vocabulary. A model cannot overfit its tokenizer to FLORES at
+      inference time — the tokenizer either fragments a word efficiently or it
+      doesn't, regardless of prior exposure. This makes tokenization benchmarks
+      significantly more contamination-resistant than comprehension or
+      translation benchmarks.
+    </div>
+    <div class="method-block">
+      Raw FLORES+ sentences are never published in any public artifact. The
+      benchmark scripts are open source so results are fully reproducible, but
+      the corpus itself must be downloaded directly from HuggingFace with an
+      accepted terms agreement — consistent with FLORES maintainers' request not
+      to re-host plain text.
+    </div>
+
+    <div class="section-head">
+      <span class="section-label">reproducibility</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      Each benchmark release is versioned by date and pins specific tokenizer
+      library versions. The benchmark script is published at <strong
+        >github.com/inimaz/mothertoken</strong
+      >. To reproduce: clone the repo, run <code
+        >mothertoken benchmark --setup</code
+      > then
+      <code>mothertoken benchmark --all</code>.
+    </div>
+
+    <div class="section-head">
+      <span class="section-label">open source</span>
+      <span class="section-rule"></span>
+    </div>
+    <div class="method-block">
+      MIT licensed. Contributions welcome — especially new model support and
+      additional language coverage.
+    </div>
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+  }
+
+  .method-block {
+    background: var(--color-bg-secondary);
+    border-left: 2px solid var(--color-border-strong);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+  }
+
+  .method-block strong {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .method-block code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--color-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 0.5px solid var(--color-border);
+  }
+</style>

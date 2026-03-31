@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: var(--theme-bg);
+  --color-bg-secondary: var(--theme-bg-secondary);
+  --color-text: var(--theme-text);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-text-tertiary: var(--theme-text-tertiary);
+  --color-border: var(--theme-border);
+  --color-border-strong: var(--theme-border-strong);
+  
+  --color-good: var(--theme-good);
+  --color-good-bg: var(--theme-good-bg);
+  --color-good-text: var(--theme-good-text);
+  --color-mid: var(--theme-mid);
+  --color-mid-bg: var(--theme-mid-bg);
+  --color-mid-text: var(--theme-mid-text);
+  --color-bad: var(--theme-bad);
+  --color-bad-bg: var(--theme-bad-bg);
+  --color-bad-text: var(--theme-bad-text);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap');
+
+  :root {
+    --theme-bg: #fcfcfc;
+    --theme-bg-secondary: #f4f4f5;
+    --theme-text: #111113;
+    --theme-text-secondary: #52525b;
+    --theme-text-tertiary: #a1a1aa;
+    --theme-border: rgba(9, 9, 11, 0.08);
+    --theme-border-strong: rgba(9, 9, 11, 0.15);
+    --theme-good: #10b981;
+    --theme-good-bg: #ecfdf5;
+    --theme-good-text: #065f46;
+    --theme-mid: #f59e0b;
+    --theme-mid-bg: #fffbeb;
+    --theme-mid-text: #92400e;
+    --theme-bad: #ef4444;
+    --theme-bad-bg: #fef2f2;
+    --theme-bad-text: #991b1b;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --theme-bg: #0c0c0d;
+      --theme-bg-secondary: #18181b;
+      --theme-text: #f4f4f5;
+      --theme-text-secondary: #a1a1aa;
+      --theme-text-tertiary: #52525b;
+      --theme-border: rgba(255, 255, 255, 0.08);
+      --theme-border-strong: rgba(255, 255, 255, 0.15);
+      --theme-good-bg: rgba(16, 185, 129, 0.15);
+      --theme-good-text: #34d399;
+      --theme-mid-bg: rgba(245, 158, 11, 0.15);
+      --theme-mid-text: #fbbf24;
+      --theme-bad-bg: rgba(239, 68, 68, 0.15);
+      --theme-bad-text: #f87171;
+    }
+  }
+
+  html {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    background: var(--theme-bg);
+    color: var(--theme-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .pulse {
+    @apply w-[6px] h-[6px] rounded-full bg-good inline-block;
+    animation: pulse 2s var(--ease-quint) infinite;
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s var(--ease-quint) both;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
