@@ -118,38 +118,47 @@ def _patch_models():
 
 
 # ---------------------------------------------------------------------------
-# compare
+# rank
 # ---------------------------------------------------------------------------
 
 
-def test_compare_valid_language():
+def test_rank_valid_language():
     with _patch_benchmark():
-        result = runner.invoke(app, ["compare", "--language", "arb_Arab"])
+        result = runner.invoke(app, ["rank", "arb_Arab"])
     assert result.exit_code == 0, result.output
     assert "arb_Arab" in result.output
     assert "GPT-4o" in result.output
     assert "Qwen 2.5" in result.output
-    assert "RTC (Cost Multiplier)" in result.output
+    assert "Cost vs English" in result.output
+    assert "Fertility" not in result.output
 
 
-def test_compare_invalid_language():
+def test_rank_language_alias():
     with _patch_benchmark():
-        result = runner.invoke(app, ["compare", "--language", "xyz_Fake"])
+        result = runner.invoke(app, ["rank", "ar"])
+    assert result.exit_code == 0, result.output
+    assert "arb_Arab" in result.output
+    assert "GPT-4o" in result.output
+
+
+def test_rank_invalid_language():
+    with _patch_benchmark():
+        result = runner.invoke(app, ["rank", "xyz_Fake"])
     assert result.exit_code == 1
     assert "not found" in result.output.lower() or "not found" in (result.stderr or "").lower()
+    assert "arabic" in result.output.lower() or "arabic" in (result.stderr or "").lower()
 
 
-def test_compare_shows_best_model_tip():
+def test_rank_shows_best_model_tip():
     with _patch_benchmark():
-        result = runner.invoke(app, ["compare", "--language", "arb_Arab"])
+        result = runner.invoke(app, ["rank", "arb_Arab"])
     assert result.exit_code == 0
     assert "GPT-4o" in result.output  # highest chars/token = 3.132 wins
 
 
-def test_compare_missing_language_arg():
+def test_rank_missing_language_arg():
     with _patch_benchmark():
-        result = runner.invoke(app, ["compare"])
-    # Should error because --language is required
+        result = runner.invoke(app, ["rank"])
     assert result.exit_code != 0
 
 

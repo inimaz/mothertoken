@@ -4,7 +4,7 @@ mothertoken — cli/app.py
 Typer-based CLI for the mothertoken tool.
 
 Commands:
-    compare   — rank all models for a given language from benchmark data
+    rank      — rank all models for a given language from benchmark data
     token     — count tokens in a text string for a specific model (local tokenizers only)
     analyze   — tokenize user text across models using local or full (API) mode
 """
@@ -55,6 +55,56 @@ def _fmt_rtc(rtc: float) -> str:
     return f"{rtc:.2f}x"
 
 
+LANGUAGE_ALIASES = {
+    "en": "eng_Latn",
+    "english": "eng_Latn",
+    "es": "spa_Latn",
+    "spanish": "spa_Latn",
+    "pt": "por_Latn",
+    "portuguese": "por_Latn",
+    "de": "deu_Latn",
+    "german": "deu_Latn",
+    "fr": "fra_Latn",
+    "french": "fra_Latn",
+    "ar": "arb_Arab",
+    "arabic": "arb_Arab",
+    "zh": "cmn_Hans",
+    "chinese": "cmn_Hans",
+    "ja": "jpn_Jpan",
+    "japanese": "jpn_Jpan",
+    "th": "tha_Thai",
+    "thai": "tha_Thai",
+    "hi": "hin_Deva",
+    "hindi": "hin_Deva",
+    "ko": "kor_Hang",
+    "korean": "kor_Hang",
+    "tr": "tur_Latn",
+    "turkish": "tur_Latn",
+    "uk": "ukr_Cyrl",
+    "ukrainian": "ukr_Cyrl",
+    "vi": "vie_Latn",
+    "vietnamese": "vie_Latn",
+    "sw": "swh_Latn",
+    "swahili": "swh_Latn",
+}
+
+
+def _resolve_language(language: str, available: list[str]) -> str:
+    """Resolve friendly language aliases while still accepting raw FLORES codes."""
+    if language in available:
+        return language
+
+    resolved = LANGUAGE_ALIASES.get(language.strip().lower())
+    if resolved in available:
+        return resolved
+
+    examples = "ar, arabic, es, spanish, eng_Latn"
+    err_console.print(
+        f"[bold red]Error:[/] Language [yellow]{language}[/] not found in benchmark.\nTry one of: {examples}"
+    )
+    raise typer.Exit(code=1)
+
+
 def _load_models_config() -> list[dict]:
     """Load models from data/models.yaml (walk-up strategy, same as benchmark_loader)."""
     import yaml
@@ -77,26 +127,17 @@ def _load_models_config() -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# compare
+# rank
 # ---------------------------------------------------------------------------
 
 
-@app.command()
-def compare(
-    language: Annotated[str, typer.Option("--language", "-l", help="FLORES+ language code, e.g. arb_Arab")],
-):
-    """Rank all models by tokenizer efficiency for a given language."""
+def _show_model_ranking(language: str) -> None:
     data = _load_benchmark_or_exit()
 
     from mothertoken.cli.benchmark_loader import get_language_metrics, get_languages, get_model_name
 
     available = get_languages(data)
-    if language not in available:
-        err_console.print(
-            f"[bold red]Error:[/] Language [yellow]{language}[/] not found in benchmark.\n"
-            f"Available: {', '.join(sorted(available))}"
-        )
-        raise typer.Exit(code=1)
+    language = _resolve_language(language, available)
 
     metrics = get_language_metrics(data, language)
     if not metrics:
@@ -119,8 +160,7 @@ def compare(
     table.add_column("Rank", style="dim", justify="right")
     table.add_column("Model")
     table.add_column("Chars/Token", justify="right")
-    table.add_column("Fertility", justify="right")
-    table.add_column("RTC (Cost Multiplier)", justify="right")
+    table.add_column("Cost vs English", justify="right")
 
     for i, (model_id, m) in enumerate(rows, 1):
         name = get_model_name(data, model_id)
@@ -139,7 +179,6 @@ def compare(
             rank_str,
             name,
             f"{m['chars_per_token']:.3f}",
-            f"{m['fertility']:.3f}",
             rtc_text,
         )
 
@@ -148,6 +187,14 @@ def compare(
     best_model = get_model_name(data, rows[0][0])
     console.print(f"[green]💡 [bold]{best_model}[/] is the most efficient tokenizer for [cyan]{language}[/].[/]")
     console.print()
+
+
+@app.command()
+def rank(
+    language: Annotated[str, typer.Argument(help="Language alias or FLORES+ code, e.g. ar, arabic, arb_Arab")],
+):
+    """Rank models by tokenizer efficiency for one language."""
+    _show_model_ranking(language)
 
 
 # ---------------------------------------------------------------------------

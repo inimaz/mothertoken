@@ -20,10 +20,13 @@ uv pip install -e .
 
 The `mothertoken` command is available after installation.
 
-### 📊 Compare model rankings
+### 📊 Rank models for a language
 Rank all models for a specific language using the precomputed benchmark data.
 ```bash
-mothertoken compare --language spa_Latn
+mothertoken rank spanish
+
+# Raw FLORES+ codes still work
+mothertoken rank spa_Latn
 ```
 
 ### 🔤 Count tokens locally
@@ -83,4 +86,3 @@ Add an entry to `data/models.yaml`:
 
 ## License
 MIT
-
