@@ -26,7 +26,6 @@ FAKE_BENCHMARK = {
             "type": "tiktoken",
             "ref": "o200k_base",
             "api_key_env": None,
-            "cost_source_id": "gpt-4o",
         },
         {
             "id": "qwen2.5",
@@ -34,7 +33,6 @@ FAKE_BENCHMARK = {
             "type": "huggingface",
             "ref": "Qwen/Qwen2.5-7B",
             "api_key_env": None,
-            "cost_source_id": "qwen2.5",
         },
         {
             "id": "claude-sonnet",
@@ -42,7 +40,6 @@ FAKE_BENCHMARK = {
             "type": "anthropic_api",
             "ref": "claude-sonnet-4-6",
             "api_key_env": "ANTHROPIC_API_KEY",
-            "cost_source_id": "claude-3-5-sonnet-20241022",
         },
     ],
     "metrics": {
@@ -88,7 +85,6 @@ FAKE_MODELS_CONFIG = [
         "type": "tiktoken",
         "ref": "o200k_base",
         "api_key_env": None,
-        "cost_source_id": "gpt-4o",
     },
     {
         "id": "qwen2.5",
@@ -96,7 +92,6 @@ FAKE_MODELS_CONFIG = [
         "type": "huggingface",
         "ref": "Qwen/Qwen2.5-7B",
         "api_key_env": None,
-        "cost_source_id": "qwen2.5",
     },
     {
         "id": "claude-sonnet",
@@ -104,7 +99,6 @@ FAKE_MODELS_CONFIG = [
         "type": "anthropic_api",
         "ref": "claude-sonnet-4-6",
         "api_key_env": "ANTHROPIC_API_KEY",
-        "cost_source_id": "claude-3-5-sonnet-20241022",
     },
 ]
 

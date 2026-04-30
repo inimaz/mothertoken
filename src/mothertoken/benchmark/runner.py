@@ -100,10 +100,6 @@ def _get_models() -> list:
     return _get_config().get("models", [])
 
 
-def _get_commit_hash() -> str:
-    return _get_config().get("cost_source_commit_hash", "main")
-
-
 # ---------------------------------------------------------------------------
 # Metrics
 # ---------------------------------------------------------------------------
