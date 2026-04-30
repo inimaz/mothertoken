@@ -1,0 +1,220 @@
+---
+type Tone = 'default' | 'good' | 'warn' | 'muted';
+
+interface Cell {
+  text: string;
+  tone?: Tone;
+}
+
+interface TableData {
+  headers: string[];
+  rows: Array<Array<string | Cell>>;
+}
+
+interface Props {
+  commands?: string[];
+  table?: TableData;
+  notes?: string[];
+  footerCommands?: string[];
+  cursor?: boolean;
+}
+
+const {
+  commands = [],
+  table,
+  notes = [],
+  footerCommands = [],
+  cursor = false,
+} = Astro.props;
+
+const cell = (value: string | Cell): Cell =>
+  typeof value === 'string' ? { text: value, tone: 'default' } : { tone: 'default', ...value };
+---
+
+<div class="terminal">
+  <div class="chrome" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="body">
+    {commands.map(command => (
+      <div class="line command">
+        <span class="prompt">$</span>
+        <span>{command}</span>
+      </div>
+    ))}
+
+    {table && (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              {table.headers.map(header => <th>{header}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map(row => (
+              <tr>
+                {row.map(rawCell => {
+                  const item = cell(rawCell);
+                  return <td class:list={[`tone-${item.tone}`]}>{item.text}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    {footerCommands.map(command => (
+      <div class="line command">
+        <span class="prompt">$</span>
+        <span>{command}</span>
+      </div>
+    ))}
+
+    {notes.map(note => (
+      <div class="line note">
+        <span># {note}</span>
+      </div>
+    ))}
+
+    {cursor && (
+      <div class="line command" aria-hidden="true">
+        <span class="prompt">$</span>
+        <span class="cursor"></span>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+.terminal {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-border-strong) 75%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 28px),
+    color-mix(in srgb, var(--color-bg-secondary) 82%, #111113 18%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.chrome {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+}
+
+.chrome span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-text-tertiary);
+  opacity: 0.5;
+}
+
+.body {
+  min-width: 680px;
+  padding: 1rem 1.1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  display: flex;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.command {
+  color: var(--color-text);
+}
+
+.prompt {
+  width: 12px;
+  flex: 0 0 12px;
+  color: var(--color-text-tertiary);
+  user-select: none;
+}
+
+.note {
+  margin-top: 0.6rem;
+  padding-left: 22px;
+  color: var(--color-text-secondary);
+}
+
+.table-wrap {
+  margin: 0.7rem 0 0.65rem 22px;
+}
+
+table {
+  width: auto;
+  min-width: 560px;
+  border-collapse: collapse;
+  color: var(--color-text-secondary);
+}
+
+th,
+td {
+  padding: 0.08rem 1.4rem 0.08rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--color-border-strong);
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+td:last-child,
+th:last-child {
+  padding-right: 0;
+}
+
+.tone-good {
+  color: #1D9E75;
+  font-weight: 500;
+}
+
+.tone-warn {
+  color: #BA7517;
+}
+
+.tone-muted {
+  color: var(--color-text-tertiary);
+}
+
+.cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  margin-top: 4px;
+  background: var(--color-text);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (max-width: 760px) {
+  .body {
+    min-width: 620px;
+  }
+}
+</style>

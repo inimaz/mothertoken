@@ -39,15 +39,24 @@ mothertoken models --local-only
 ```
 
 ### 🔤 Tokenize exact text
-Count tokens for exact text using local tokenizers.
+Count tokens for exact text using local tokenizers. Add `--language` to estimate the English-equivalent token count from the benchmark multiplier.
 ```bash
-mothertoken tokenize "ChatGPT"
+mothertoken tokenize "Hola Mundo" --language es
 
 # Check one model
-mothertoken tokenize "ChatGPT" --model gpt-4o
+mothertoken tokenize "Hello" --model gpt-4o
+
+# Estimate the English-equivalent count for a known language
+mothertoken tokenize "مرحبا بالعالم" --language ar --model gpt-4o
+
+# Compare against your own English translation
+mothertoken tokenize "مرحبا بالعالم" --language ar --english-text "Hello world"
 
 # Tokenize a file
 mothertoken tokenize --file prompt.txt
+
+# Compare translated files
+mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt
 ```
 
 ---

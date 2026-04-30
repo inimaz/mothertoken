@@ -204,6 +204,72 @@ def test_tokenize_single_model():
     assert "ChatGPT" in result.output
     assert "Chars/Token" in result.output
     assert "Cost Multiplier" not in result.output
+    assert "English Est." not in result.output
+
+
+def test_tokenize_language_adds_benchmark_english_estimate():
+    with (
+        _patch_models(),
+        _patch_benchmark(),
+        patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[156]),
+    ):
+        result = runner.invoke(app, ["tokenize", "مرحبا بالعالم", "--model", "gpt-4o", "--language", "ar"])
+
+    assert result.exit_code == 0, result.output
+    assert "Benchmark language" in result.output
+    assert "arb_Arab" in result.output
+    assert "English Est." in result.output
+    assert "Vs English" in result.output
+    assert "100" in result.output
+    assert "1.56x" in result.output
+
+
+def test_tokenize_english_text_adds_paired_ratio():
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[156, 100]):
+        result = runner.invoke(
+            app,
+            [
+                "tokenize",
+                "مرحبا بالعالم",
+                "--model",
+                "gpt-4o",
+                "--english-text",
+                "Hello world",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    assert "English Tokens" in result.output
+    assert "Paired Ratio" in result.output
+    assert "100" in result.output
+    assert "1.56x" in result.output
+
+
+def test_tokenize_language_and_english_text_can_be_combined():
+    with (
+        _patch_models(),
+        _patch_benchmark(),
+        patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[156, 120]),
+    ):
+        result = runner.invoke(
+            app,
+            [
+                "tokenize",
+                "مرحبا بالعالم",
+                "--model",
+                "gpt-4o",
+                "--language",
+                "arabic",
+                "--english-text",
+                "Hello world",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    assert "English Est." in result.output
+    assert "English" in result.output
+    assert "Tokens" in result.output
+    assert "Paired Ratio" in result.output
 
 
 def test_tokenize_all_local_models_excludes_api_models():
@@ -247,10 +313,32 @@ def test_tokenize_rejects_text_and_file(tmp_path):
     assert "not both" in result.output.lower() or "not both" in (result.stderr or "").lower()
 
 
+def test_tokenize_rejects_english_text_and_file(tmp_path):
+    test_file = tmp_path / "english.txt"
+    test_file.write_text("This is a test prompt.", encoding="utf-8")
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--english-text", "hello", "--english-file", str(test_file)])
+    assert result.exit_code == 1
+    assert "not both" in result.output.lower() or "not both" in (result.stderr or "").lower()
+
+
 def test_tokenize_nonexistent_file():
     with _patch_models():
         result = runner.invoke(app, ["tokenize", "--file", "/nonexistent/path.txt"])
     assert result.exit_code == 1
+
+
+def test_tokenize_nonexistent_english_file():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--english-file", "/nonexistent/path.txt"])
+    assert result.exit_code == 1
+
+
+def test_tokenize_invalid_language():
+    with _patch_models(), _patch_benchmark():
+        result = runner.invoke(app, ["tokenize", "hello", "--language", "xyz_Fake"])
+    assert result.exit_code == 1
+    assert "not found" in result.output.lower() or "not found" in (result.stderr or "").lower()
 
 
 def test_tokenize_api_model_rejected():

@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import CliTerminal from '../components/CliTerminal.astro';
 ---
 
 <Base title="mothertoken — cli">
@@ -12,73 +13,76 @@ import Footer from '../components/Footer.astro';
       <span class="section-label">installation</span>
       <span class="section-rule"></span>
     </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">pip install mothertoken</span></div>
-    </div>
+    <CliTerminal commands={['pip install mothertoken']} />
 
     <div class="section-head">
-      <span class="section-label">analyze your text</span>
+      <span class="section-label">rank models for a language</span>
       <span class="section-rule"></span>
     </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken analyze --file prompt.txt --language ar</span></div>
-      <div class="cl"><span class="co"></span></div>
-      <div class="cl"><span class="co">model            chars/token    fertility    vs english</span></div>
-      <div class="cl"><span class="co">─────────────────────────────────────────────────────</span></div>
-      <div class="cl"><span class="co">gpt-4o           1.5            3.65         <span class="cy">2.8×</span></span></div>
-      <div class="cl"><span class="co">claude-sonnet    1.6            3.71         <span class="cy">2.7×</span></span></div>
-      <div class="cl"><span class="co">qwen-2.5         2.9            2.41         <span class="cg">1.3×  ← most efficient</span></span></div>
-      <div class="cl"><span class="co">mistral          1.8            3.92         <span class="cy">2.9×</span></span></div>
-      <div class="cl"><span class="co">llama-3          1.9            3.80         <span class="cy">2.8×</span></span></div>
-      <div class="cl"><span class="co"></span></div>
-      <div class="cl"><span class="co">arabic needs <span class="cy">2.8×</span> more tokens than english on gpt-4o</span></div>
-      <div class="cl"><span class="co">that is <span class="cy">2.8×</span> less effective context window for arabic users</span></div>
-      <div class="cl"><span class="co">whatever you pay per token, arabic costs you <span class="cy">2.8×</span> more on gpt-4o</span></div>
-    </div>
+    <CliTerminal
+      commands={['mothertoken rank ar']}
+      table={{
+        headers: ['model', 'chars/token', 'cost vs english'],
+        rows: [
+          ['gpt-4o', '3.132', { text: '1.56x  ← most efficient', tone: 'good' }],
+          ['qwen2.5', '2.585', { text: '1.84x', tone: 'warn' }],
+          ['gpt-4', '1.414', { text: '3.43x', tone: 'warn' }],
+          ['mistral', '1.104', { text: '3.85x', tone: 'warn' }],
+        ],
+      }}
+      notes={['aliases work too: arabic, spanish, thai, eng_Latn']}
+    />
 
     <div class="section-head">
-      <span class="section-label">compare languages head to head</span>
+      <span class="section-label">list models</span>
       <span class="section-rule"></span>
     </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken compare --languages en,ar --model gpt-4o</span></div>
-    </div>
+    <CliTerminal
+      commands={['mothertoken models']}
+      table={{
+        headers: ['id', 'name', 'access', 'tokenizer'],
+        rows: [
+          ['gpt-4o', 'GPT-4o', { text: 'local', tone: 'good' }, 'tiktoken / o200k_base'],
+          ['qwen2.5', 'Qwen 2.5', { text: 'local', tone: 'good' }, 'Hugging Face / Qwen/Qwen2.5-7B'],
+          ['claude-sonnet', 'Claude Sonnet', { text: 'API', tone: 'warn' }, 'Anthropic / claude-sonnet-4-6'],
+          ['gemini-pro', 'Gemini Pro', { text: 'API', tone: 'warn' }, 'Google / gemini-1.5-pro'],
+        ],
+      }}
+      footerCommands={['mothertoken models --local-only']}
+    />
 
     <div class="section-head">
-      <span class="section-label">run the benchmark</span>
+      <span class="section-label">tokenize exact text</span>
       <span class="section-rule"></span>
     </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken benchmark --setup</span></div>
-      <div class="cl"><span class="co">downloading flores-200... <span class="cg">done</span></span></div>
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken benchmark --language ar</span></div>
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken benchmark --all</span></div>
-      <div class="cl"><span class="cp">$</span><span class="cursor"></span></div>
-    </div>
+    <CliTerminal
+      commands={['mothertoken tokenize "مرحبا بالعالم" --language ar --model gpt-4o']}
+      table={{
+        headers: ['Model', 'Tokens', 'Chars/Token', 'English Est.', 'Vs English'],
+        rows: [['GPT-4o', '5', '2.600', '3', '1.56x']],
+      }}
+      footerCommands={[
+        'mothertoken tokenize --file prompt.txt',
+        'mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt',
+      ]}
+      notes={[
+        '--language adds benchmark English-equivalent estimates',
+        '--english-text or --english-file adds a paired translation comparison',
+      ]}
+    />
 
     <div class="section-head">
-      <span class="section-label">list available models</span>
+      <span class="section-label">researcher workflow</span>
       <span class="section-rule"></span>
     </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken models list</span></div>
-      <div class="cl"><span class="co"></span></div>
-      <div class="cl"><span class="co"><span class="cg">✓</span>  gpt-4o         public tokenizer (tiktoken/o200k_base)</span></div>
-      <div class="cl"><span class="co"><span class="cg">✓</span>  llama-3        public tokenizer (huggingface)</span></div>
-      <div class="cl"><span class="co"><span class="cg">✓</span>  qwen-2.5       public tokenizer (huggingface)</span></div>
-      <div class="cl"><span class="co"><span class="cg">✓</span>  mistral        public tokenizer (huggingface)</span></div>
-      <div class="cl"><span class="co"><span class="cy">⚠</span>  claude-sonnet  api key required (ANTHROPIC_API_KEY)</span></div>
-      <div class="cl"><span class="co"><span class="cy">⚠</span>  gemini-pro     api key required (GOOGLE_API_KEY)</span></div>
-    </div>
-
-    <div class="section-head">
-      <span class="section-label">output formats</span>
-      <span class="section-rule"></span>
-    </div>
-    <div class="cli-block">
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken analyze --file prompt.txt --language ar --output json</span></div>
-      <div class="cl"><span class="cp">$</span><span class="cc">mothertoken benchmark --all --output benchmark.json</span></div>
-    </div>
+    <CliTerminal
+      commands={[
+        'mothertoken-benchmark --dry-run',
+        'mothertoken-benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5',
+      ]}
+      notes={['benchmark regeneration is documented separately from the everyday CLI']}
+      cursor
+    />
 
     <Footer />
   </div>
@@ -91,36 +95,4 @@ import Footer from '../components/Footer.astro';
   padding: 2rem 1.5rem 5rem;
 }
 
-.cli-block {
-  background: var(--color-bg-secondary);
-  border: 0.5px solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.9;
-  margin-bottom: 1.5rem;
-  overflow-x: auto;
-}
-
-.cl { display: flex; gap: 8px; }
-.cp { color: var(--color-text-tertiary); flex-shrink: 0; }
-.cc { color: var(--color-text); }
-.co { color: var(--color-text-secondary); padding-left: 16px; }
-.cg { color: #1D9E75; font-weight: 500; }
-.cy { color: #BA7517; }
-
-.cursor {
-  display: inline-block;
-  width: 7px;
-  height: 13px;
-  background: var(--color-text);
-  animation: blink 1s step-end infinite;
-  vertical-align: middle;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
 </style>

@@ -49,6 +49,12 @@ def _fmt_rtc(rtc: float) -> str:
     return f"{rtc:.2f}x"
 
 
+def _fmt_token_estimate(value: float | None) -> str:
+    if value is None:
+        return "—"
+    return str(round(value))
+
+
 LANGUAGE_ALIASES = {
     "en": "eng_Latn",
     "english": "eng_Latn",
@@ -254,6 +260,22 @@ def tokenize(
     text: Annotated[str | None, typer.Argument(help="Text to tokenize exactly as provided")] = None,
     file: Annotated[Path | None, typer.Option("--file", "-f", help="Path to a text file to tokenize")] = None,
     model: Annotated[str | None, typer.Option("--model", "-m", help="Model ID, e.g. gpt-4o")] = None,
+    language: Annotated[
+        str | None,
+        typer.Option(
+            "--language",
+            "-l",
+            help="Language alias or FLORES+ code for benchmark English-equivalent estimates",
+        ),
+    ] = None,
+    english_text: Annotated[
+        str | None,
+        typer.Option("--english-text", help="English translation to compare against this text"),
+    ] = None,
+    english_file: Annotated[
+        Path | None,
+        typer.Option("--english-file", help="Path to an English translation file to compare against this text"),
+    ] = None,
 ):
     """Count tokens for exact text using local tokenizers."""
     if text is None and file is None:
@@ -262,6 +284,9 @@ def tokenize(
     if text is not None and file is not None:
         err_console.print("[bold red]Error:[/] Provide text or [bold]--file[/], not both.")
         raise typer.Exit(code=1)
+    if english_text is not None and english_file is not None:
+        err_console.print("[bold red]Error:[/] Provide [bold]--english-text[/] or [bold]--english-file[/], not both.")
+        raise typer.Exit(code=1)
     if file is not None:
         if not file.exists():
             err_console.print(f"[bold red]Error:[/] File not found: {file}")
@@ -269,6 +294,15 @@ def tokenize(
         input_text = file.read_text(encoding="utf-8")
     else:
         input_text = text or ""
+
+    paired_english_text: str | None = None
+    if english_file is not None:
+        if not english_file.exists():
+            err_console.print(f"[bold red]Error:[/] English file not found: {english_file}")
+            raise typer.Exit(code=1)
+        paired_english_text = english_file.read_text(encoding="utf-8")
+    elif english_text is not None:
+        paired_english_text = english_text
 
     all_models = _load_models_config()
     local_models = [m for m in all_models if m["type"] in ("tiktoken", "huggingface")]
@@ -293,10 +327,22 @@ def tokenize(
         err_console.print("[bold red]Error:[/] No local tokenizers are configured.")
         raise typer.Exit(code=1)
 
+    benchmark_metrics: dict[str, dict] = {}
+    resolved_language: str | None = None
+    if language is not None:
+        data = _load_benchmark_or_exit()
+        from mothertoken.cli.benchmark_loader import get_language_metrics, get_languages
+
+        resolved_language = _resolve_language(language, get_languages(data))
+        benchmark_metrics = get_language_metrics(data, resolved_language)
+        if not benchmark_metrics:
+            err_console.print(f"[bold red]Error:[/] No benchmark metrics found for {resolved_language}.")
+            raise typer.Exit(code=1)
+
     from mothertoken.core.tokenizers import tokenize_sentences
 
     cache: dict = {}
-    results: list[tuple[dict, int | None, float | None, str | None]] = []
+    results: list[tuple[dict, int | None, float | None, int | None, str | None]] = []
 
     preview = input_text.strip()[:60].replace("\n", " ")
     if len(input_text) > 60:
@@ -304,36 +350,72 @@ def tokenize(
 
     console.print()
     console.print(f'[bold]Tokenizing:[/] [cyan]"{preview}"[/] ({len(input_text)} chars)\n')
+    if resolved_language is not None:
+        console.print(f"[dim]Benchmark language:[/] [cyan]{resolved_language}[/]")
+    if paired_english_text is not None:
+        console.print("[dim]English comparison:[/] provided by user")
+    if resolved_language is not None or paired_english_text is not None:
+        console.print()
 
     with console.status("Running local tokenizers..."):
         for model_cfg in candidate_models:
             try:
-                counts = tokenize_sentences(model_cfg, [input_text], cache, dry_run=False)
+                sentences = [input_text]
+                if paired_english_text is not None:
+                    sentences.append(paired_english_text)
+                counts = tokenize_sentences(model_cfg, sentences, cache, dry_run=False)
                 token_count = counts[0]
+                english_token_count = counts[1] if paired_english_text is not None else None
                 cpt = len(input_text) / token_count if token_count > 0 else 0.0
-                results.append((model_cfg, token_count, cpt, None))
+                results.append((model_cfg, token_count, cpt, english_token_count, None))
             except Exception as e:
-                results.append((model_cfg, None, None, str(e)))
+                results.append((model_cfg, None, None, None, str(e)))
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
     table.add_column("Model")
     table.add_column("Tokens", justify="right")
     table.add_column("Chars/Token", justify="right")
+    if resolved_language is not None:
+        table.add_column("English Est.", justify="right")
+        table.add_column("Vs English", justify="right")
+    if paired_english_text is not None:
+        table.add_column("English Tokens", justify="right")
+        table.add_column("Paired Ratio", justify="right")
 
     sorted_results = sorted(results, key=lambda row: row[2] if row[2] is not None else -1, reverse=True)
-    for model_cfg, token_count, cpt, error in sorted_results:
+    for model_cfg, token_count, cpt, english_token_count, error in sorted_results:
         if error is not None:
-            table.add_row(model_cfg["name"], "[red]error[/]", "—")
+            row = [model_cfg["name"], "[red]error[/]", "—"]
+            if resolved_language is not None:
+                row.extend(["—", "—"])
+            if paired_english_text is not None:
+                row.extend(["—", "—"])
+            table.add_row(*row)
             continue
-        table.add_row(model_cfg["name"], str(token_count), f"{cpt:.3f}")
+        row = [model_cfg["name"], str(token_count), f"{cpt:.3f}"]
+        if resolved_language is not None:
+            rtc = benchmark_metrics.get(model_cfg["id"], {}).get("rtc")
+            english_estimate = token_count / rtc if token_count is not None and rtc else None
+            row.extend([_fmt_token_estimate(english_estimate), _fmt_rtc(rtc) if rtc else "—"])
+        if paired_english_text is not None:
+            paired_ratio = (
+                token_count / english_token_count if token_count is not None and english_token_count else None
+            )
+            row.extend([str(english_token_count), _fmt_rtc(paired_ratio) if paired_ratio else "—"])
+        table.add_row(*row)
 
     console.print(table)
 
-    errors = [(model_cfg, error) for model_cfg, _, _, error in results if error is not None]
+    errors = [(model_cfg, error) for model_cfg, _, _, _, error in results if error is not None]
     if errors:
         console.print("\n[dim]Errors:[/]")
         for model_cfg, error in errors:
             console.print(f"  [yellow]{model_cfg['name']}[/]: [dim]{error}[/]")
+
+    if resolved_language is not None:
+        console.print("\n[dim]English Est. uses the benchmark vs-English multiplier for this language/model.[/]")
+    if paired_english_text is not None:
+        console.print("[dim]Paired Ratio compares your original text against the supplied English translation.[/]")
 
     if model is not None and errors:
         raise typer.Exit(code=1)
