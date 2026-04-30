@@ -163,111 +163,93 @@ def test_rank_missing_language_arg():
 
 
 # ---------------------------------------------------------------------------
-# token
+# tokenize
 # ---------------------------------------------------------------------------
 
 
-def test_token_tiktoken_model():
+def test_tokenize_single_model():
     with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[3]):
-        result = runner.invoke(app, ["token", "--text", "ChatGPT", "--model", "gpt-4o"])
+        result = runner.invoke(app, ["tokenize", "ChatGPT", "--model", "gpt-4o"])
     assert result.exit_code == 0, result.output
+    assert "GPT-4o" in result.output
     assert "3" in result.output
     assert "ChatGPT" in result.output
+    assert "Chars/Token" in result.output
+    assert "Cost Multiplier" not in result.output
 
 
-def test_token_api_model_graceful():
-    """API-only models should print a helpful message and exit 0."""
-    with _patch_models():
-        result = runner.invoke(app, ["token", "--text", "hello", "--model", "claude-sonnet"])
-    assert result.exit_code == 0
-    assert "closed API" in result.output or "local" in result.output.lower()
-
-
-def test_token_unknown_model():
-    with _patch_models():
-        result = runner.invoke(app, ["token", "--text", "hello", "--model", "nonexistent-model"])
-    assert result.exit_code == 1
-
-
-def test_token_tokenizer_error():
-    """If the tokenizer raises, exit with code 1."""
-    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=Exception("load failed")):
-        result = runner.invoke(app, ["token", "--text", "hello", "--model", "gpt-4o"])
-    assert result.exit_code == 1
-
-
-# ---------------------------------------------------------------------------
-# analyze
-# ---------------------------------------------------------------------------
-
-
-def test_analyze_text_input():
-    mock_counts = [5]  # 5 tokens for "Hello world"
-    with (
-        _patch_models(),
-        _patch_benchmark(),
-        patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=mock_counts),
-    ):
-        result = runner.invoke(app, ["analyze", "--text", "Hello world", "--languages", "eng_Latn"])
-    assert result.exit_code == 0, result.output
-    assert "GPT-4o" in result.output or "Qwen 2.5" in result.output
-    assert "Cost Multiplier (RTC)" in result.output
-
-
-def test_analyze_file_input(tmp_path):
-    test_file = tmp_path / "prompt.txt"
-    test_file.write_text("This is a test prompt.", encoding="utf-8")
-    with _patch_models(), _patch_benchmark(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[6]):
-        result = runner.invoke(app, ["analyze", "--file", str(test_file), "--languages", "eng_Latn"])
-    assert result.exit_code == 0, result.output
-    assert "This is a test prompt" in result.output
-
-
-def test_analyze_missing_input():
-    """Must provide either --text or --file."""
-    with _patch_models(), _patch_benchmark():
-        result = runner.invoke(app, ["analyze", "--languages", "eng_Latn"])
-    assert result.exit_code == 1
-
-
-def test_analyze_nonexistent_file():
-    with _patch_models(), _patch_benchmark():
-        result = runner.invoke(app, ["analyze", "--file", "/nonexistent/path.txt", "--languages", "eng_Latn"])
-    assert result.exit_code == 1
-
-
-def test_analyze_local_mode_excludes_api_models():
-    """In local mode, API models should NOT be called."""
+def test_tokenize_all_local_models_excludes_api_models():
     call_log = []
 
     def fake_tokenize(model_cfg, sentences, cache, dry_run):
         call_log.append(model_cfg["id"])
         return [3]
 
-    with (
-        _patch_models(),
-        _patch_benchmark(),
-        patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize),
-    ):
-        result = runner.invoke(app, ["analyze", "--text", "hello", "--languages", "eng_Latn", "--mode", "local"])
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize):
+        result = runner.invoke(app, ["tokenize", "hello"])
 
-    assert result.exit_code == 0
-    assert "claude-sonnet" not in call_log
+    assert result.exit_code == 0, result.output
+    assert call_log == ["gpt-4o", "qwen2.5"]
+    assert "Claude Sonnet" not in result.output
 
 
-def test_analyze_tokenizer_error_shown_gracefully():
-    """A tokenizer error should be shown in output, not crash the whole command."""
+def test_tokenize_file_input(tmp_path):
+    test_file = tmp_path / "prompt.txt"
+    test_file.write_text("This is a test prompt.", encoding="utf-8")
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[6]):
+        result = runner.invoke(app, ["tokenize", "--file", str(test_file), "--model", "gpt-4o"])
+    assert result.exit_code == 0, result.output
+    assert "This is a test prompt" in result.output
+    assert "6" in result.output
 
-    def fake_tokenize(model_cfg, sentences, cache, dry_run):
-        if model_cfg["id"] == "qwen2.5":
-            raise Exception("HuggingFace load error")
-        return [4]
 
-    with (
-        _patch_models(),
-        _patch_benchmark(),
-        patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize),
-    ):
-        result = runner.invoke(app, ["analyze", "--text", "hello", "--languages", "eng_Latn", "--mode", "local"])
-    assert result.exit_code == 0
-    assert "error" in result.output.lower() or "HuggingFace" in result.output
+def test_tokenize_missing_input():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize"])
+    assert result.exit_code == 1
+    assert "provide text" in result.output.lower() or "provide text" in (result.stderr or "").lower()
+
+
+def test_tokenize_rejects_text_and_file(tmp_path):
+    test_file = tmp_path / "prompt.txt"
+    test_file.write_text("This is a test prompt.", encoding="utf-8")
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--file", str(test_file)])
+    assert result.exit_code == 1
+    assert "not both" in result.output.lower() or "not both" in (result.stderr or "").lower()
+
+
+def test_tokenize_nonexistent_file():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "--file", "/nonexistent/path.txt"])
+    assert result.exit_code == 1
+
+
+def test_tokenize_api_model_rejected():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--model", "claude-sonnet"])
+    assert result.exit_code == 1
+    assert "api-backed" in result.output.lower() or "api-backed" in (result.stderr or "").lower()
+
+
+def test_tokenize_unknown_model():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--model", "nonexistent-model"])
+    assert result.exit_code == 1
+
+
+def test_tokenize_single_model_tokenizer_error_exits_1():
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=Exception("load failed")):
+        result = runner.invoke(app, ["tokenize", "hello", "--model", "gpt-4o"])
+    assert result.exit_code == 1
+    assert "load failed" in result.output
+
+
+def test_old_token_command_removed():
+    result = runner.invoke(app, ["token", "--text", "hello", "--model", "gpt-4o"])
+    assert result.exit_code != 0
+
+
+def test_old_analyze_command_removed():
+    result = runner.invoke(app, ["analyze", "--text", "hello"])
+    assert result.exit_code != 0

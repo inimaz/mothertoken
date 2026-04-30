@@ -29,21 +29,16 @@ mothertoken rank spanish
 mothertoken rank spa_Latn
 ```
 
-### 🔤 Count tokens locally
-Count tokens for a string using real tokenizers (no API needed for local models like GPT-4o, Llama 3, etc.).
+### 🔤 Tokenize exact text
+Count tokens for exact text using local tokenizers.
 ```bash
-mothertoken token --text "ChatGPT" --model gpt-4o
-```
+mothertoken tokenize "ChatGPT"
 
-### 🧠 Analyze custom text
-Analyze your own prompts across multiple models and languages to see efficiency gaps and cost multipliers (RTC).
-```bash
-# Local analysis (uses public tokenizers)
-mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn
+# Check one model
+mothertoken tokenize "ChatGPT" --model gpt-4o
 
-# Full analysis (requires API keys for Claude/Gemini)
-export ANTHROPIC_API_KEY=your_key
-mothertoken analyze --text "Hello world" --languages eng_Latn,spa_Latn --mode full
+# Tokenize a file
+mothertoken tokenize --file prompt.txt
 ```
 
 ---
