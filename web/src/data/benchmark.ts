@@ -9,6 +9,9 @@
  *   cd ../benchmark && python run_benchmark.py --output ../web/src/data/benchmark.json
  */
 
+import { z } from "zod";
+import rawData from "../../../data/benchmark.json";
+
 export interface ModelMetrics {
   cpt: number;   // chars per token — higher is better
   fert: number;  // fertility (tokens per word) — lower is better
@@ -26,118 +29,104 @@ export interface BenchmarkData {
   languages: Record<string, { name: string; script: string }>;
 }
 
+// Define Zod schema to validate the structure of benchmark.json
+const ModelInfoSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+const MetricsSchema = z.object({
+  chars_per_token: z.number(),
+  fertility: z.number(),
+});
+
+const BenchmarkJsonSchema = z.object({
+  version: z.string(),
+  baseline_language: z.string().optional(),
+  models: z.array(ModelInfoSchema),
+  metrics: z.record(z.string(), z.record(z.string(), MetricsSchema)),
+});
+
+// Validate the raw data
+const parsedData = BenchmarkJsonSchema.parse(rawData);
+
+// Mapping BCP-47 identifiers in benchmark.json to the legacy 3-letter codes used in the UI
+const LANG_METADATA: Record<string, { code: string; name: string; script: string }> = {
+  eng_Latn: { code: "eng", name: "English", script: "Latin" },
+  tha_Thai: { code: "tha", name: "Thai", script: "Thai" },
+  arb_Arab: { code: "ara", name: "Arabic", script: "Arabic" },
+  jpn_Jpan: { code: "jpn", name: "Japanese", script: "Japanese" },
+  cmn_Hans: { code: "zho", name: "Chinese", script: "Han" },
+  hin_Deva: { code: "hin", name: "Hindi", script: "Devanagari" },
+  por_Latn: { code: "por", name: "Portuguese", script: "Latin" },
+  fra_Latn: { code: "fra", name: "French", script: "Latin" },
+  deu_Latn: { code: "deu", name: "German", script: "Latin" },
+  tur_Latn: { code: "tur", name: "Turkish", script: "Latin" },
+  ukr_Cyrl: { code: "ukr", name: "Ukrainian", script: "Cyrillic" },
+  vie_Latn: { code: "vie", name: "Vietnamese", script: "Latin" },
+  swh_Latn: { code: "swa", name: "Swahili", script: "Latin" },
+  spa_Latn: { code: "spa", name: "Spanish", script: "Latin" },
+  kor_Hang: { code: "kor", name: "Korean", script: "Hangul" },
+};
+
+// Map JSON model identifiers to UI codes
+const MODEL_MAP: Record<string, string> = {
+  "gpt-4o": "gpt4o",
+  "gpt-4": "gpt4",
+  "llama3": "llama3",
+  "mistral": "mistral",
+  "qwen2.5": "qwen",
+  "claude-sonnet": "claude",
+  "gemini-pro": "gemini",
+  "gemma2": "gemma2",
+};
+
+const languages: Record<string, { name: string; script: string }> = {};
+for (const val of Object.values(LANG_METADATA)) {
+  languages[val.code] = { name: val.name, script: val.script };
+}
+
+const models: Record<string, ModelData> = {};
+
+// Initialize models
+for (const modelInfo of parsedData.models) {
+  const uiModelCode = MODEL_MAP[modelInfo.id] || modelInfo.id;
+  models[uiModelCode] = {
+    name: modelInfo.name,
+    metrics: {},
+  };
+}
+
+// Populate metrics
+for (const [jsonLangCode, langMetrics] of Object.entries(parsedData.metrics)) {
+  const langMeta = LANG_METADATA[jsonLangCode];
+  if (!langMeta) continue; // Skip unknown languages
+
+  for (const [jsonModelId, metrics] of Object.entries(langMetrics)) {
+    const uiModelCode = MODEL_MAP[jsonModelId] || jsonModelId;
+    if (models[uiModelCode]) {
+      // Map to 2 decimal points like the old hardcoded data to keep the UI clean
+      models[uiModelCode].metrics[langMeta.code] = {
+        cpt: Math.round(metrics.chars_per_token * 100) / 100,
+        fert: Math.round(metrics.fertility * 100) / 100,
+      };
+    }
+  }
+}
+
+// Keep only models that have actual metrics
+const finalModels: Record<string, ModelData> = {};
+for (const [modelId, modelData] of Object.entries(models)) {
+  if (Object.keys(modelData.metrics).length > 0) {
+    finalModels[modelId] = modelData;
+  }
+}
+
 const benchmark: BenchmarkData = {
-  version: "2025-Q4",
+  version: parsedData.version,
   baseline: "eng",
-
-  languages: {
-    eng: { name: "English",    script: "Latin"       },
-    tha: { name: "Thai",       script: "Thai"        },
-    ara: { name: "Arabic",     script: "Arabic"      },
-    jpn: { name: "Japanese",   script: "Japanese"    },
-    zho: { name: "Chinese",    script: "Han"         },
-    hin: { name: "Hindi",      script: "Devanagari"  },
-    por: { name: "Portuguese", script: "Latin"       },
-    fra: { name: "French",     script: "Latin"       },
-    deu: { name: "German",     script: "Latin"       },
-    tur: { name: "Turkish",    script: "Latin"       },
-    ukr: { name: "Ukrainian",  script: "Cyrillic"    },
-    vie: { name: "Vietnamese", script: "Latin"       },
-    swa: { name: "Swahili",    script: "Latin"       },
-  },
-
-  models: {
-    gpt4o: {
-      name: "GPT-4o",
-      metrics: {
-        eng: { cpt: 4.2, fert: 1.21 },
-        tha: { cpt: 1.9, fert: 4.21 },
-        ara: { cpt: 2.1, fert: 3.65 },
-        jpn: { cpt: 2.3, fert: 2.10 },
-        zho: { cpt: 2.3, fert: 1.52 },
-        hin: { cpt: 2.0, fert: 3.80 },
-        por: { cpt: 3.5, fert: 1.38 },
-        fra: { cpt: 3.6, fert: 1.35 },
-        deu: { cpt: 3.4, fert: 1.40 },
-        tur: { cpt: 2.8, fert: 1.95 },
-        ukr: { cpt: 2.2, fert: 2.30 },
-        vie: { cpt: 3.1, fert: 1.60 },
-        swa: { cpt: 3.3, fert: 1.50 },
-      },
-    },
-    claude: {
-      name: "Claude Sonnet",
-      metrics: {
-        eng: { cpt: 4.0, fert: 1.25 },
-        tha: { cpt: 2.1, fert: 3.95 },
-        ara: { cpt: 2.0, fert: 3.71 },
-        jpn: { cpt: 2.2, fert: 2.20 },
-        zho: { cpt: 2.2, fert: 1.58 },
-        hin: { cpt: 1.9, fert: 3.90 },
-        por: { cpt: 3.4, fert: 1.40 },
-        fra: { cpt: 3.5, fert: 1.38 },
-        deu: { cpt: 3.3, fert: 1.43 },
-        tur: { cpt: 2.7, fert: 2.00 },
-        ukr: { cpt: 2.1, fert: 2.35 },
-        vie: { cpt: 3.0, fert: 1.65 },
-        swa: { cpt: 3.2, fert: 1.55 },
-      },
-    },
-    qwen: {
-      name: "Qwen 2.5",
-      metrics: {
-        eng: { cpt: 3.9, fert: 1.28 },
-        tha: { cpt: 3.8, fert: 1.89 },
-        ara: { cpt: 2.9, fert: 2.41 },
-        jpn: { cpt: 3.5, fert: 1.42 },
-        zho: { cpt: 4.1, fert: 1.19 },
-        hin: { cpt: 2.5, fert: 2.80 },
-        por: { cpt: 3.3, fert: 1.45 },
-        fra: { cpt: 3.3, fert: 1.44 },
-        deu: { cpt: 3.2, fert: 1.47 },
-        tur: { cpt: 2.6, fert: 2.10 },
-        ukr: { cpt: 2.0, fert: 2.50 },
-        vie: { cpt: 2.9, fert: 1.75 },
-        swa: { cpt: 3.0, fert: 1.65 },
-      },
-    },
-    mistral: {
-      name: "Mistral",
-      metrics: {
-        eng: { cpt: 4.1, fert: 1.22 },
-        tha: { cpt: 1.7, fert: 4.58 },
-        ara: { cpt: 1.8, fert: 3.92 },
-        jpn: { cpt: 2.0, fert: 2.40 },
-        zho: { cpt: 2.1, fert: 1.65 },
-        hin: { cpt: 1.7, fert: 4.10 },
-        por: { cpt: 3.3, fert: 1.43 },
-        fra: { cpt: 3.4, fert: 1.40 },
-        deu: { cpt: 3.2, fert: 1.48 },
-        tur: { cpt: 2.6, fert: 2.05 },
-        ukr: { cpt: 2.0, fert: 2.45 },
-        vie: { cpt: 2.9, fert: 1.70 },
-        swa: { cpt: 3.1, fert: 1.58 },
-      },
-    },
-    llama3: {
-      name: "LLaMA 3",
-      metrics: {
-        eng: { cpt: 4.1, fert: 1.23 },
-        tha: { cpt: 1.8, fert: 4.30 },
-        ara: { cpt: 1.9, fert: 3.80 },
-        jpn: { cpt: 2.1, fert: 2.30 },
-        zho: { cpt: 2.1, fert: 1.62 },
-        hin: { cpt: 1.8, fert: 3.95 },
-        por: { cpt: 3.4, fert: 1.41 },
-        fra: { cpt: 3.5, fert: 1.38 },
-        deu: { cpt: 3.3, fert: 1.44 },
-        tur: { cpt: 2.7, fert: 2.02 },
-        ukr: { cpt: 2.1, fert: 2.40 },
-        vie: { cpt: 3.0, fert: 1.68 },
-        swa: { cpt: 3.2, fert: 1.55 },
-      },
-    },
-  },
+  languages,
+  models: finalModels,
 };
 
 export default benchmark;
