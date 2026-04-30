@@ -24,6 +24,71 @@ The ranking flips depending on whose internet the model grew up on.
 
 ---
 
+## Minimum Publishable Release — v0.1
+
+**Goal:** Publish the smallest version that is genuinely useful: a data-backed CLI for ranking tokenizer efficiency by language and checking exact text with local tokenizers.
+
+### Product promise
+
+> Mothertoken helps developers see which model tokenizers are efficient for which languages. It ships a precomputed FLORES+ benchmark and a CLI for ranking models or checking your own text against local tokenizers.
+
+Avoid promising provider billing parity, fairness diagnostics, CI regression checks, custom datasets, CSV/Markdown reports, or provider drift validation until those features exist.
+
+### Required before publishing
+
+- [ ] **Package benchmark data correctly**
+  - Ensure `data/benchmark.json` and `data/models.yaml` are included in the built wheel.
+  - Add the needed `pyproject.toml` package-data / force-include config.
+  - Verify with `uv build` and install the built wheel into a clean temporary environment.
+
+- [x] **Ship one clear CLI workflow**
+  - `mothertoken rank ar`
+  - `mothertoken models`
+  - `mothertoken models --local-only`
+  - `mothertoken tokenize "Hola mundo" --language es --model gpt-4o`
+  - `mothertoken tokenize --file prompt.txt --language ar`
+  - Implemented in `src/mothertoken/cli/app.py` and covered by CLI tests.
+
+- [x] **Make API-backed models non-confusing**
+  - `tokenize` defaults to local tokenizers.
+  - `tokenize --include-api` includes API-backed provider counters when keys are configured.
+  - Selecting an API-backed model without `--include-api` gives an explicit opt-in message.
+
+- [ ] **Tighten README around what exists**
+  - Describe the package as a precomputed multilingual tokenizer-efficiency benchmark plus local tokenizer CLI.
+  - Document only the supported commands.
+  - Keep custom corpora, reports, CI, and provider parity as roadmap items.
+
+- [ ] **Add publish metadata**
+  - Add or confirm `LICENSE` file.
+  - Add PyPI-ready project metadata as needed: authors, project URLs, classifiers, keywords.
+  - Replace clone-first installation docs with `pip install mothertoken` once published.
+
+- [ ] **Add installed-package smoke test**
+  - Build the wheel.
+  - Install into a clean environment.
+  - Run:
+
+```bash
+mothertoken rank ar
+mothertoken models --local-only
+mothertoken tokenize "Hola mundo" --language es --model gpt-4o
+```
+
+### Explicitly defer
+
+- `mothertoken compare`
+- `mothertoken report`
+- `mothertoken benchmark` as an integrated Typer subcommand
+- User-provided corpus benchmarking
+- CSV/Markdown export
+- CI budget/regression checks
+- Provider parity and tokenizer drift validation
+- Persistent cache for paid provider token counts
+- Direct SentencePiece backend
+
+---
+
 ## Phase 0 — Research & Validation ✅ COMPLETE
 
 **Goal:** Confirm novelty, define scope, establish credibility baseline.
@@ -87,6 +152,19 @@ Only tokenization efficiency — no pricing:
 - `benchmark.json` — versioned snapshot of tokenization metrics across models and languages, no pricing data
 - Scripts to regenerate when new models or tokenizers are released
 
+### Status
+
+- [x] `data/benchmark.json` exists as a versioned aggregate snapshot.
+- [x] `data/models.yaml` exists as the model registry.
+- [x] `mothertoken-benchmark` entry point exists for regeneration.
+- [x] Benchmark docs exist in `docs/benchmarking.md`.
+- [x] Core metrics implemented: fertility, chars/token, RTC.
+- [x] Local tokenizer backends implemented: `tiktoken`, Hugging Face.
+- [x] API tokenizer backends implemented: Anthropic, Google.
+- [ ] API token count cache is persistent across runs. Current cache is in-memory only.
+- [ ] Context efficiency is stored directly in `benchmark.json`. Current tools derive cost/context implications from RTC.
+- [ ] Benchmark data is confirmed to ship inside the built wheel.
+
 ---
 
 ## Phase 2 — The CLI Tool (`mothertoken`)
@@ -101,10 +179,15 @@ Only tokenization efficiency — no pricing:
 ### Subcommand structure
 
 ```
-mothertoken analyze      # developer — inspect your own text
-mothertoken benchmark    # researcher — run against FLORES-200
-mothertoken models       # list supported models and their key requirements
-mothertoken compare      # compare two languages head to head on a model
+mothertoken rank         # implemented — rank models for one benchmark language
+mothertoken models       # implemented — list supported models and tokenizer access
+mothertoken tokenize     # implemented — count exact text with local tokenizers
+mothertoken-benchmark    # implemented — researcher benchmark runner
+
+mothertoken analyze      # deferred — broader prompt/corpus analysis workflow
+mothertoken benchmark    # deferred — integrated Typer subcommand wrapper
+mothertoken compare      # deferred — compare two languages head to head on a model
+mothertoken report       # deferred — shareable report generation
 ```
 
 ### Two modes
@@ -155,6 +238,22 @@ $ mothertoken report --corpus flores200 --output report.html
 $ mothertoken token --text "ChatGPT" --model gpt-4o
 ```
 
+### Status
+
+- [x] `rank` implemented with language aliases and precomputed benchmark data.
+- [x] `models` implemented with `--local-only`.
+- [x] `tokenize` implemented for exact text and files.
+- [x] `tokenize --language` implemented for benchmark English-equivalent estimates.
+- [x] `tokenize --english-text` and `--english-file` implemented for paired translation comparison.
+- [x] API-backed models are opt-in via `tokenize --include-api` instead of appearing broken by default.
+- [x] Separate `mothertoken-benchmark` command exists for researcher regeneration.
+- [ ] Integrated `mothertoken benchmark` subcommand exists.
+- [ ] `compare`, `report`, and legacy `token` commands exist.
+- [x] Provider-backed tokenization opt-in exists in everyday CLI via `--include-api`.
+- [ ] Provider parity / local-vs-API drift validation exists.
+- [ ] CI-friendly threshold command exists.
+- [ ] Machine-readable CLI output modes exist.
+
 ### API key behaviour
 
 ```
@@ -180,6 +279,8 @@ Useful immediately without keys. Never fails silently.
 - Anthropic + Google SDKs for closed model token counting
 - Results cached locally to avoid redundant API calls
 - Packaged on PyPI
+
+Current caveat: tokenizer results are cached only for the current process. Persistent API caching remains a v2 feature.
 
 ---
 
@@ -217,6 +318,19 @@ Mistral         41,000 tokens     -68%        3.1x your English cost
 - No pricing data anywhere in the stack
 - Deployable on Cloudflare Pages or Vercel — free tier sufficient
 - Domain: `mothertoken.dev` — buy when Phase 3 begins, not before
+
+### Status
+
+- [x] Astro web app exists under `web/`.
+- [x] Home page exists with browser-locale detection.
+- [x] Benchmark explorer page exists.
+- [x] CLI documentation page exists.
+- [x] Methodology page exists.
+- [x] Web data is generated from root `data/benchmark.json`.
+- [x] Cost multiplier calculator exists.
+- [ ] Context-window calculator exists as a first-class control.
+- [ ] Production domain is configured.
+- [ ] Deployment target is configured and documented.
 
 ---
 

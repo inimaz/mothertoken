@@ -39,12 +39,16 @@ mothertoken models --local-only
 ```
 
 ### 🔤 Tokenize exact text
-Count tokens for exact text using local tokenizers. Add `--language` to estimate the English-equivalent token count from the benchmark multiplier.
+Count tokens for exact text using local tokenizers by default. Add `--language` to estimate the English-equivalent token count from the benchmark multiplier.
 ```bash
 mothertoken tokenize "Hola Mundo" --language es
 
 # Check one model
 mothertoken tokenize "Hello" --model gpt-4o
+
+# Include API-backed provider token counters when API keys are configured
+mothertoken tokenize "Hello" --include-api
+mothertoken tokenize "Hello" --model claude-sonnet --include-api
 
 # Estimate the English-equivalent count for a known language
 mothertoken tokenize "مرحبا بالعالم" --language ar --model gpt-4o
