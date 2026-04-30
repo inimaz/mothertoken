@@ -287,6 +287,33 @@ def test_tokenize_all_local_models_excludes_api_models():
     assert "Claude Sonnet" not in result.output
 
 
+def test_tokenize_include_api_runs_api_models():
+    call_log = []
+
+    def fake_tokenize(model_cfg, sentences, cache, dry_run):
+        call_log.append(model_cfg["id"])
+        return [3]
+
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize):
+        result = runner.invoke(app, ["tokenize", "hello", "--include-api"])
+
+    assert result.exit_code == 0, result.output
+    assert call_log == ["gpt-4o", "qwen2.5", "claude-sonnet"]
+    assert "Claude Sonnet" in result.output
+    assert "Access" in result.output
+    assert "API-backed tokenizers" in result.output
+
+
+def test_tokenize_api_model_allowed_with_include_api():
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[4]):
+        result = runner.invoke(app, ["tokenize", "hello", "--model", "claude-sonnet", "--include-api"])
+
+    assert result.exit_code == 0, result.output
+    assert "Claude Sonnet" in result.output
+    assert "API" in result.output
+    assert "4" in result.output
+
+
 def test_tokenize_file_input(tmp_path):
     test_file = tmp_path / "prompt.txt"
     test_file.write_text("This is a test prompt.", encoding="utf-8")
@@ -346,6 +373,7 @@ def test_tokenize_api_model_rejected():
         result = runner.invoke(app, ["tokenize", "hello", "--model", "claude-sonnet"])
     assert result.exit_code == 1
     assert "api-backed" in result.output.lower() or "api-backed" in (result.stderr or "").lower()
+    assert "--include-api" in result.output or "--include-api" in (result.stderr or "")
 
 
 def test_tokenize_unknown_model():

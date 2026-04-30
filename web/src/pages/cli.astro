@@ -63,9 +63,12 @@ import CliTerminal from '../components/CliTerminal.astro';
       }}
       footerCommands={[
         'mothertoken tokenize --file prompt.txt',
+        'mothertoken tokenize "Hello" --include-api',
         'mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt',
       ]}
       notes={[
+        'local tokenizers run by default',
+        '--include-api adds provider token counters when API keys are configured',
         '--language adds benchmark English-equivalent estimates',
         '--english-text or --english-file adds a paired translation comparison',
       ]}

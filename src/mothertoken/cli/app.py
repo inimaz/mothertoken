@@ -276,8 +276,15 @@ def tokenize(
         Path | None,
         typer.Option("--english-file", help="Path to an English translation file to compare against this text"),
     ] = None,
+    include_api: Annotated[
+        bool,
+        typer.Option(
+            "--include-api",
+            help="Include API-backed tokenizers. Requires the provider API key environment variables.",
+        ),
+    ] = False,
 ):
-    """Count tokens for exact text using local tokenizers."""
+    """Count tokens for exact text. Defaults to local tokenizers; use --include-api for provider counters."""
     if text is None and file is None:
         err_console.print("[bold red]Error:[/] Provide text or [bold]--file[/].")
         raise typer.Exit(code=1)
@@ -306,25 +313,29 @@ def tokenize(
 
     all_models = _load_models_config()
     local_models = [m for m in all_models if m["type"] in ("tiktoken", "huggingface")]
+    api_models = [m for m in all_models if m["type"] not in ("tiktoken", "huggingface")]
 
     if model is not None:
         model_cfg = next((m for m in all_models if m["id"] == model), None)
         if model_cfg is None:
-            available = ", ".join(m["id"] for m in local_models)
+            available_models = all_models if include_api else local_models
+            available = ", ".join(m["id"] for m in available_models)
+            if not include_api and api_models:
+                available += "\nAPI-backed models require --include-api."
             err_console.print(f"[bold red]Error:[/] Model [yellow]{model}[/] not found.\nAvailable: {available}")
             raise typer.Exit(code=1)
-        if model_cfg["type"] not in ("tiktoken", "huggingface"):
+        if model_cfg["type"] not in ("tiktoken", "huggingface") and not include_api:
             err_console.print(
                 f"[bold red]Error:[/] Model [yellow]{model}[/] uses an API-backed tokenizer. "
-                "The [bold]tokenize[/] command only uses local tokenizers."
+                "Rerun with [bold]--include-api[/] and the required provider API key."
             )
             raise typer.Exit(code=1)
         candidate_models = [model_cfg]
     else:
-        candidate_models = local_models
+        candidate_models = all_models if include_api else local_models
 
     if not candidate_models:
-        err_console.print("[bold red]Error:[/] No local tokenizers are configured.")
+        err_console.print("[bold red]Error:[/] No tokenizers are configured.")
         raise typer.Exit(code=1)
 
     benchmark_metrics: dict[str, dict] = {}
@@ -354,10 +365,13 @@ def tokenize(
         console.print(f"[dim]Benchmark language:[/] [cyan]{resolved_language}[/]")
     if paired_english_text is not None:
         console.print("[dim]English comparison:[/] provided by user")
+    if include_api:
+        console.print("[dim]API-backed tokenizers:[/] enabled")
     if resolved_language is not None or paired_english_text is not None:
         console.print()
 
-    with console.status("Running local tokenizers..."):
+    status_label = "Running local and API tokenizers..." if include_api else "Running local tokenizers..."
+    with console.status(status_label):
         for model_cfg in candidate_models:
             try:
                 sentences = [input_text]
@@ -373,6 +387,8 @@ def tokenize(
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
     table.add_column("Model")
+    if include_api:
+        table.add_column("Access")
     table.add_column("Tokens", justify="right")
     table.add_column("Chars/Token", justify="right")
     if resolved_language is not None:
@@ -384,15 +400,22 @@ def tokenize(
 
     sorted_results = sorted(results, key=lambda row: row[2] if row[2] is not None else -1, reverse=True)
     for model_cfg, token_count, cpt, english_token_count, error in sorted_results:
+        access = _model_access(model_cfg)
         if error is not None:
-            row = [model_cfg["name"], "[red]error[/]", "—"]
+            row = [model_cfg["name"]]
+            if include_api:
+                row.append(access)
+            row.extend(["[red]error[/]", "—"])
             if resolved_language is not None:
                 row.extend(["—", "—"])
             if paired_english_text is not None:
                 row.extend(["—", "—"])
             table.add_row(*row)
             continue
-        row = [model_cfg["name"], str(token_count), f"{cpt:.3f}"]
+        row = [model_cfg["name"]]
+        if include_api:
+            row.append(access)
+        row.extend([str(token_count), f"{cpt:.3f}"])
         if resolved_language is not None:
             rtc = benchmark_metrics.get(model_cfg["id"], {}).get("rtc")
             english_estimate = token_count / rtc if token_count is not None and rtc else None
@@ -416,6 +439,8 @@ def tokenize(
         console.print("\n[dim]English Est. uses the benchmark vs-English multiplier for this language/model.[/]")
     if paired_english_text is not None:
         console.print("[dim]Paired Ratio compares your original text against the supplied English translation.[/]")
+    if include_api:
+        console.print("[dim]API-backed rows use provider token counters and require provider API keys.[/]")
 
     if model is not None and errors:
         raise typer.Exit(code=1)
