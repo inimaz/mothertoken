@@ -163,6 +163,40 @@ def test_rank_missing_language_arg():
 
 
 # ---------------------------------------------------------------------------
+# models
+# ---------------------------------------------------------------------------
+
+
+def test_models_lists_supported_models():
+    with _patch_models():
+        result = runner.invoke(app, ["models"])
+    assert result.exit_code == 0, result.output
+    assert "gpt-4o" in result.output
+    assert "Qwen 2.5" in result.output
+    assert "claude-sonnet" in result.output
+    assert "local" in result.output
+    assert "API" in result.output
+    assert "tiktoken / o200k_base" in result.output
+
+
+def test_models_local_only_hides_api_models():
+    with _patch_models():
+        result = runner.invoke(app, ["models", "--local-only"])
+    assert result.exit_code == 0, result.output
+    assert "gpt-4o" in result.output
+    assert "qwen2.5" in result.output
+    assert "claude-sonnet" not in result.output
+    assert "API" not in result.output
+
+
+def test_models_empty_config_errors():
+    with patch("mothertoken.cli.app._load_models_config", return_value=[]):
+        result = runner.invoke(app, ["models"])
+    assert result.exit_code == 1
+    assert "no models" in result.output.lower() or "no models" in (result.stderr or "").lower()
+
+
+# ---------------------------------------------------------------------------
 # tokenize
 # ---------------------------------------------------------------------------
 

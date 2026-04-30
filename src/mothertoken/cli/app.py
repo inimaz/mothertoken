@@ -5,6 +5,7 @@ Typer-based CLI for the mothertoken tool.
 
 Commands:
     rank      — rank all models for a given language from benchmark data
+    models    — list supported models and tokenizer access
     tokenize  — count tokens in exact user-provided text
 """
 
@@ -119,6 +120,22 @@ def _load_models_config() -> list[dict]:
     return cfg.get("models", [])
 
 
+def _model_access(model: dict) -> str:
+    if model["type"] in ("tiktoken", "huggingface"):
+        return "local"
+    return "API"
+
+
+def _tokenizer_backend(model: dict) -> str:
+    labels = {
+        "tiktoken": "tiktoken",
+        "huggingface": "Hugging Face",
+        "anthropic_api": "Anthropic",
+        "google_api": "Google",
+    }
+    return f"{labels.get(model['type'], model['type'])} / {model['ref']}"
+
+
 # ---------------------------------------------------------------------------
 # rank
 # ---------------------------------------------------------------------------
@@ -188,6 +205,43 @@ def rank(
 ):
     """Rank models by tokenizer efficiency for one language."""
     _show_model_ranking(language)
+
+
+# ---------------------------------------------------------------------------
+# models
+# ---------------------------------------------------------------------------
+
+
+@app.command()
+def models(
+    local_only: Annotated[bool, typer.Option("--local-only", help="Show only local tokenizers")] = False,
+):
+    """List supported models and tokenizer access."""
+    models_cfg = _load_models_config()
+    if local_only:
+        models_cfg = [m for m in models_cfg if m["type"] in ("tiktoken", "huggingface")]
+
+    if not models_cfg:
+        err_console.print("[bold red]Error:[/] No models are configured.")
+        raise typer.Exit(code=1)
+
+    table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
+    table.add_column("ID")
+    table.add_column("Name")
+    table.add_column("Access")
+    table.add_column("Tokenizer")
+
+    for model_cfg in models_cfg:
+        table.add_row(
+            model_cfg["id"],
+            model_cfg["name"],
+            _model_access(model_cfg),
+            _tokenizer_backend(model_cfg),
+        )
+
+    console.print()
+    console.print(table)
+    console.print()
 
 
 # ---------------------------------------------------------------------------
