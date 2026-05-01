@@ -30,9 +30,8 @@ def main() -> None:
         [
             "Model ranking for",
             "arb_Arab",
-            "GPT-4o",
             "Cost vs English",
-            "1.56x",
+            "is the most efficient tokenizer for arb_Arab",
         ],
     )
 
@@ -40,10 +39,11 @@ def main() -> None:
     assert_contains(
         list_output,
         [
-            "gpt-4o",
-            "qwen2.5",
-            "local",
-            "tiktoken / o200k_base",
+            "ID",
+            "Name",
+            "Used by",
+            "Access",
+            "Tokenizer",
         ],
     )
     if "claude-sonnet" in list_output or "API" in list_output:
