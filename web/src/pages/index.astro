@@ -20,12 +20,15 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       <div class="flex flex-wrap items-center gap-3 mb-6">
         <span class="pulse"></span>
         <span class="font-mono text-[14px] text-text-tertiary" id="locale-label">detecting locale...</span>
-        <label class="sr-only" for="language-sel">language</label>
-        <select id="language-sel" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[170px] shadow-sm">
-          {languageOptions.map(([id, language]) => (
-            <option value={id} class="bg-bg text-text">{language.name}</option>
-          ))}
-        </select>
+        <div class="language-picker">
+          <label class="sr-only" for="language-sel">language</label>
+          <select id="language-sel" aria-describedby="language-hint" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[170px] shadow-sm">
+            {languageOptions.map(([id, language]) => (
+              <option value={id} class="bg-bg text-text">{language.name}</option>
+            ))}
+          </select>
+          <span id="language-hint" class="language-hint" hidden>try other languages</span>
+        </div>
       </div>
       <h1 class="text-[3.5rem] font-medium leading-[1.06] text-text mb-6 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
       <p class="text-[21px] text-text-secondary leading-[1.6] max-w-[680px] mb-12">
@@ -116,6 +119,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
   const benchmark = JSON.parse(benchmarkJSON);
   const MODELS = Object.keys(benchmark.models);
   const languageSelect = document.getElementById('language-sel');
+  const languageHint = document.getElementById('language-hint');
   const analysisLabel = document.getElementById('analysis-label');
   const viewTabs = document.querySelectorAll('[data-view-tab]');
   const viewPanels = document.querySelectorAll('[data-view-panel]');
@@ -170,6 +174,10 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       : `${lang.name} across tokenizers`;
   }
 
+  function updateLanguageHint() {
+    languageHint.hidden = activeLangId !== benchmark.baseline;
+  }
+
   function setView(view) {
     activeView = view;
     viewTabs.forEach(tab => {
@@ -212,6 +220,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
 
     languageSelect.value = activeLangId;
     setAnalysisLabel();
+    updateLanguageHint();
 
     const rows = MODELS.map(mid => {
       const model = benchmark.models[mid];
@@ -298,3 +307,61 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     `${detected.locale} — ${benchmark.languages[activeLangId].name} detected`;
   renderHero(activeLangId);
 </script>
+
+<style>
+  .language-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .language-hint {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--theme-text-tertiary);
+    white-space: nowrap;
+  }
+
+  .language-hint::before {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: color-mix(in srgb, var(--theme-text-tertiary) 62%, transparent);
+  }
+
+  .language-hint::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border-left: 1px solid color-mix(in srgb, var(--theme-text-tertiary) 70%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--theme-text-tertiary) 70%, transparent);
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 640px) {
+    .language-picker {
+      flex-wrap: wrap;
+      row-gap: 0.5rem;
+    }
+
+    .language-hint {
+      flex-basis: 100%;
+      margin-left: 0.25rem;
+      white-space: normal;
+    }
+
+    .language-hint::before,
+    .language-hint::after {
+      display: none;
+    }
+  }
+</style>
