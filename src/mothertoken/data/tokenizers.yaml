@@ -1,0 +1,102 @@
+# mothertoken - Tokenizer registry for tokenization benchmarks
+# This registry dictates which tokenizers to load and which provider APIs to query.
+# `used_by_examples` is discoverability metadata, not a complete model database.
+
+tokenizers:
+  - id: gpt-4o
+    name: "OpenAI o200k_base"
+    provider: openai
+    type: tiktoken
+    ref: o200k_base
+    access: local
+    tokenizer_source: tiktoken
+    verification_method: local_fixture_count
+    used_by_examples:
+      - GPT-4o
+      - GPT-4.1
+    api_key_env: null
+
+  - id: gpt-4
+    name: "OpenAI cl100k_base"
+    provider: openai
+    type: tiktoken
+    ref: cl100k_base
+    access: local
+    tokenizer_source: tiktoken
+    verification_method: local_fixture_count
+    used_by_examples:
+      - GPT-4
+      - GPT-3.5 Turbo
+    api_key_env: null
+
+  - id: llama3
+    name: "Llama 3 tokenizer"
+    provider: meta
+    type: huggingface
+    ref: meta-llama/Meta-Llama-3-8B
+    access: local
+    tokenizer_source: huggingface
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Llama 3
+    api_key_env: null
+
+  - id: mistral
+    name: "Mistral 7B tokenizer"
+    provider: mistral
+    type: huggingface
+    ref: mistralai/Mistral-7B-v0.1
+    access: local
+    tokenizer_source: huggingface
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Mistral 7B
+    api_key_env: null
+
+  - id: qwen2.5
+    name: "Qwen 2.5 tokenizer"
+    provider: qwen
+    type: huggingface
+    ref: Qwen/Qwen2.5-7B
+    access: local
+    tokenizer_source: huggingface
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Qwen 2.5
+    api_key_env: null
+
+  - id: gemma2
+    name: "Gemma 2 tokenizer"
+    provider: google
+    type: huggingface
+    ref: google/gemma-2-9b
+    access: local
+    tokenizer_source: huggingface
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Gemma 2
+    api_key_env: null
+
+  - id: claude-sonnet
+    name: "Claude Sonnet tokenizer"
+    provider: anthropic
+    type: anthropic_api
+    ref: claude-sonnet-4-6
+    access: api
+    tokenizer_source: provider_api
+    verification_method: provider_count_tokens
+    used_by_examples:
+      - Claude Sonnet
+    api_key_env: ANTHROPIC_API_KEY
+
+  - id: gemini-pro
+    name: "Gemini Pro tokenizer"
+    provider: google
+    type: google_api
+    ref: gemini-1.5-pro
+    access: api
+    tokenizer_source: provider_api
+    verification_method: provider_count_tokens
+    used_by_examples:
+      - Gemini Pro
+    api_key_env: GOOGLE_API_KEY

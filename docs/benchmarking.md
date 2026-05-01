@@ -59,22 +59,28 @@ export GOOGLE_API_KEY=your_key
 
 If a key is missing, the benchmark runner records the error and skips that model.
 
-## Add A Model
+## Add A Tokenizer
 
-Add an entry to `src/mothertoken/data/models.yaml`:
+Add an entry to `src/mothertoken/data/tokenizers.yaml`:
 
 ```yaml
-  - id: my-model
-    name: "My Model"
+  - id: my-tokenizer
+    name: "My tokenizer"
+    provider: example
     type: huggingface       # tiktoken | huggingface | anthropic_api | google_api
     ref: org/model-name     # tokenizer ref
+    access: local           # local | api
+    tokenizer_source: huggingface
+    verification_method: local_fixture_count
+    used_by_examples:
+      - My Model
     api_key_env: null       # env var name, or null if no key needed
 ```
 
 Then run a focused benchmark before regenerating everything:
 
 ```bash
-uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-model
+uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-tokenizer
 ```
 
 ## Output Contract
@@ -82,8 +88,8 @@ uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-model
 `src/mothertoken/data/benchmark.json` should remain a versioned aggregate dataset with:
 
 - benchmark metadata
-- model metadata
-- per-language, per-model aggregate metrics
+- tokenizer metadata
+- per-language, per-tokenizer aggregate metrics
 - tokenizer errors
 
 It should not contain raw corpus text.

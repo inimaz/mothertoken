@@ -22,13 +22,13 @@ def get_languages(data: dict[str, Any]) -> list[str]:
 
 
 def get_model_ids(data: dict[str, Any]) -> list[str]:
-    """Return all model IDs present in the benchmark."""
-    return [m["id"] for m in data.get("models", [])]
+    """Return all tokenizer IDs present in the benchmark."""
+    return [m["id"] for m in data.get("tokenizers", data.get("models", []))]
 
 
 def get_model_name(data: dict[str, Any], model_id: str) -> str:
-    """Return the display name for a model ID, falling back to the ID itself."""
-    for m in data.get("models", []):
+    """Return the display name for a tokenizer ID, falling back to the ID itself."""
+    for m in data.get("tokenizers", data.get("models", [])):
         if m["id"] == model_id:
             return m["name"]
     return model_id

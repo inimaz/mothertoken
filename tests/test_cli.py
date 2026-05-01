@@ -108,7 +108,7 @@ def _patch_benchmark():
 
 
 def _patch_models():
-    return patch("mothertoken.cli.app._load_models_config", return_value=FAKE_MODELS_CONFIG)
+    return patch("mothertoken.cli.app._load_tokenizers_config", return_value=FAKE_MODELS_CONFIG)
 
 
 # ---------------------------------------------------------------------------
@@ -184,7 +184,7 @@ def test_list_local_only_hides_api_tokenizers():
 
 
 def test_list_empty_config_errors():
-    with patch("mothertoken.cli.app._load_models_config", return_value=[]):
+    with patch("mothertoken.cli.app._load_tokenizers_config", return_value=[]):
         result = runner.invoke(app, ["list"])
     assert result.exit_code == 1
     assert "no tokenizers" in result.output.lower() or "no tokenizers" in (result.stderr or "").lower()
