@@ -4,6 +4,9 @@
 
 Benchmarking tool and dataset exploring how tokenizer design creates silent efficiency, quality, and carbon inequities for non-English languages.
 
+> [!NOTE]
+> **Alpha release:** tokenizer coverage is still expanding. The current tokenizer list is useful for comparison, but it is not complete yet.
+
 ## Installation
 
 ```bash

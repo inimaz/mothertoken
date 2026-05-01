@@ -1,0 +1,46 @@
+<aside class="alpha-banner animate-fade-in-up stagger-1" aria-label="Alpha release notice">
+  <span class="alpha-kicker">alpha release</span>
+  <p>
+    The current list of tokenizers is useful for comparison, it is not complete yet.
+  </p>
+</aside>
+
+<style>
+  .alpha-banner {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    margin: -2.5rem 0 3rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--theme-mid) 32%, var(--theme-border));
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--theme-mid-bg) 72%, var(--theme-bg));
+  }
+
+  .alpha-kicker {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.65;
+    text-transform: uppercase;
+    color: var(--theme-mid-text);
+  }
+
+  .alpha-banner p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--theme-text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .alpha-banner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: -2rem;
+    }
+  }
+</style>

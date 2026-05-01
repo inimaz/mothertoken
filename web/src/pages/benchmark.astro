@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
+import AlphaBanner from '../components/AlphaBanner.astro';
 import Footer from '../components/Footer.astro';
 import benchmark from '../data/benchmark';
 
@@ -11,6 +12,7 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
 <Base title="mothertoken — benchmark explorer">
   <div class="max-w-[760px] mx-auto pt-12 px-6 pb-24">
     <Nav activeTab="benchmark" />
+    <AlphaBanner />
 
     <div class="flex items-center gap-4 mb-8 animate-fade-in-up stagger-1">
       <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark explorer</span>

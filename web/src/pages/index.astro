@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
+import AlphaBanner from '../components/AlphaBanner.astro';
 import Footer from '../components/Footer.astro';
 import benchmark from '../data/benchmark';
 
@@ -11,7 +12,8 @@ const benchmarkJSON = JSON.stringify(benchmark);
 <Base>
   <div class="max-w-[760px] mx-auto pt-12 px-6 pb-24">
     <Nav activeTab="home" />
-
+    <AlphaBanner />
+    
     <section class="mb-14 animate-fade-in-up stagger-1">
       <div class="flex items-center gap-3 mb-6">
         <span class="pulse"></span>
@@ -24,7 +26,7 @@ const benchmarkJSON = JSON.stringify(benchmark);
         less effective context window, worse reasoning, higher cost multiplier.
       </p>
     </section>
-
+    
     <div class="flex items-center gap-4 mb-6 animate-fade-in-up stagger-2">
       <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language on all models</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
