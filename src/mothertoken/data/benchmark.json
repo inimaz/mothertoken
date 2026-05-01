@@ -249,76 +249,6 @@
       "api_key_env": null
     },
     {
-      "id": "all-minilm-l6-v2",
-      "name": "all-MiniLM-L6-v2 tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/all-MiniLM-L6-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "all-MiniLM-L6-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "paraphrase-multilingual-minilm",
-      "name": "Paraphrase multilingual MiniLM tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "paraphrase-multilingual-MiniLM-L12-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "all-mpnet-base-v2",
-      "name": "all-mpnet-base-v2 tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/all-mpnet-base-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "all-mpnet-base-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "bge-m3",
-      "name": "BGE-M3 tokenizer",
-      "provider": "baai",
-      "type": "huggingface",
-      "ref": "BAAI/bge-m3",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "BGE-M3"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "multilingual-e5-small",
-      "name": "Multilingual E5 small tokenizer",
-      "provider": "intfloat",
-      "type": "huggingface",
-      "ref": "intfloat/multilingual-e5-small",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "multilingual-e5-small"
-      ],
-      "api_key_env": null
-    },
-    {
       "id": "deberta-v3-base",
       "name": "DeBERTa v3 base tokenizer",
       "provider": "microsoft",
@@ -607,76 +537,6 @@
       "api_key_env": null
     },
     {
-      "id": "all-minilm-l6-v2",
-      "name": "all-MiniLM-L6-v2 tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/all-MiniLM-L6-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "all-MiniLM-L6-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "paraphrase-multilingual-minilm",
-      "name": "Paraphrase multilingual MiniLM tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "paraphrase-multilingual-MiniLM-L12-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "all-mpnet-base-v2",
-      "name": "all-mpnet-base-v2 tokenizer",
-      "provider": "sentence-transformers",
-      "type": "huggingface",
-      "ref": "sentence-transformers/all-mpnet-base-v2",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "all-mpnet-base-v2"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "bge-m3",
-      "name": "BGE-M3 tokenizer",
-      "provider": "baai",
-      "type": "huggingface",
-      "ref": "BAAI/bge-m3",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "BGE-M3"
-      ],
-      "api_key_env": null
-    },
-    {
-      "id": "multilingual-e5-small",
-      "name": "Multilingual E5 small tokenizer",
-      "provider": "intfloat",
-      "type": "huggingface",
-      "ref": "intfloat/multilingual-e5-small",
-      "access": "local",
-      "tokenizer_source": "huggingface",
-      "verification_method": "local_fixture_count",
-      "used_by_examples": [
-        "multilingual-e5-small"
-      ],
-      "api_key_env": null
-    },
-    {
       "id": "deberta-v3-base",
       "name": "DeBERTa v3 base tokenizer",
       "provider": "microsoft",
@@ -855,51 +715,6 @@
         "chars_per_token": 4.524,
         "fertility": 1.321,
         "rtc": 1.0
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 125194,
-        "total_tokens": 27673,
-        "total_words": 20954,
-        "chars_per_token": 4.524,
-        "fertility": 1.321,
-        "rtc": 1.0
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 125194,
-        "total_tokens": 30989,
-        "total_words": 20954,
-        "chars_per_token": 4.04,
-        "fertility": 1.479,
-        "rtc": 1.0
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 125194,
-        "total_tokens": 27673,
-        "total_words": 20954,
-        "chars_per_token": 4.524,
-        "fertility": 1.321,
-        "rtc": 1.0
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 125194,
-        "total_tokens": 30989,
-        "total_words": 20954,
-        "chars_per_token": 4.04,
-        "fertility": 1.479,
-        "rtc": 1.0
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 125194,
-        "total_tokens": 30989,
-        "total_words": 20954,
-        "chars_per_token": 4.04,
-        "fertility": 1.479,
-        "rtc": 1.0
       }
     },
     "fra_Latn": {
@@ -1037,51 +852,6 @@
         "chars_per_token": 3.076,
         "fertility": 2.003,
         "rtc": 1.471
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 148789,
-        "total_tokens": 48366,
-        "total_words": 24146,
-        "chars_per_token": 3.076,
-        "fertility": 2.003,
-        "rtc": 1.471
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 148789,
-        "total_tokens": 39439,
-        "total_words": 24146,
-        "chars_per_token": 3.773,
-        "fertility": 1.633,
-        "rtc": 1.071
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 148789,
-        "total_tokens": 48366,
-        "total_words": 24146,
-        "chars_per_token": 3.076,
-        "fertility": 2.003,
-        "rtc": 1.471
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 148789,
-        "total_tokens": 39439,
-        "total_words": 24146,
-        "chars_per_token": 3.773,
-        "fertility": 1.633,
-        "rtc": 1.071
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 148789,
-        "total_tokens": 39439,
-        "total_words": 24146,
-        "chars_per_token": 3.773,
-        "fertility": 1.633,
-        "rtc": 1.071
       }
     },
     "spa_Latn": {
@@ -1219,51 +989,6 @@
         "chars_per_token": 2.976,
         "fertility": 2.02,
         "rtc": 1.52
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 149187,
-        "total_tokens": 50122,
-        "total_words": 24819,
-        "chars_per_token": 2.976,
-        "fertility": 2.02,
-        "rtc": 1.52
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 149187,
-        "total_tokens": 36769,
-        "total_words": 24819,
-        "chars_per_token": 4.057,
-        "fertility": 1.481,
-        "rtc": 0.996
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 149187,
-        "total_tokens": 50122,
-        "total_words": 24819,
-        "chars_per_token": 2.976,
-        "fertility": 2.02,
-        "rtc": 1.52
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 149187,
-        "total_tokens": 36769,
-        "total_words": 24819,
-        "chars_per_token": 4.057,
-        "fertility": 1.481,
-        "rtc": 0.996
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 149187,
-        "total_tokens": 36769,
-        "total_words": 24819,
-        "chars_per_token": 4.057,
-        "fertility": 1.481,
-        "rtc": 0.996
       }
     },
     "por_Latn": {
@@ -1401,51 +1126,6 @@
         "chars_per_token": 2.822,
         "fertility": 2.151,
         "rtc": 1.603
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 136009,
-        "total_tokens": 48198,
-        "total_words": 22409,
-        "chars_per_token": 2.822,
-        "fertility": 2.151,
-        "rtc": 1.603
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 136009,
-        "total_tokens": 34308,
-        "total_words": 22409,
-        "chars_per_token": 3.964,
-        "fertility": 1.531,
-        "rtc": 1.019
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 136009,
-        "total_tokens": 48198,
-        "total_words": 22409,
-        "chars_per_token": 2.822,
-        "fertility": 2.151,
-        "rtc": 1.603
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 136009,
-        "total_tokens": 34308,
-        "total_words": 22409,
-        "chars_per_token": 3.964,
-        "fertility": 1.531,
-        "rtc": 1.019
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 136009,
-        "total_tokens": 34308,
-        "total_words": 22409,
-        "chars_per_token": 3.964,
-        "fertility": 1.531,
-        "rtc": 1.019
       }
     },
     "deu_Latn": {
@@ -1583,51 +1263,6 @@
         "chars_per_token": 2.825,
         "fertility": 2.482,
         "rtc": 1.602
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 146558,
-        "total_tokens": 51887,
-        "total_words": 20903,
-        "chars_per_token": 2.825,
-        "fertility": 2.482,
-        "rtc": 1.602
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 146558,
-        "total_tokens": 35800,
-        "total_words": 20903,
-        "chars_per_token": 4.094,
-        "fertility": 1.713,
-        "rtc": 0.987
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 146558,
-        "total_tokens": 51887,
-        "total_words": 20903,
-        "chars_per_token": 2.825,
-        "fertility": 2.482,
-        "rtc": 1.602
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 146558,
-        "total_tokens": 35800,
-        "total_words": 20903,
-        "chars_per_token": 4.094,
-        "fertility": 1.713,
-        "rtc": 0.987
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 146558,
-        "total_tokens": 35800,
-        "total_words": 20903,
-        "chars_per_token": 4.094,
-        "fertility": 1.713,
-        "rtc": 0.987
       }
     },
     "arb_Arab": {
@@ -1765,51 +1400,6 @@
         "chars_per_token": 1.201,
         "fertility": 4.909,
         "rtc": 3.768
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 110574,
-        "total_tokens": 92095,
-        "total_words": 18759,
-        "chars_per_token": 1.201,
-        "fertility": 4.909,
-        "rtc": 3.768
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 110574,
-        "total_tokens": 36187,
-        "total_words": 18759,
-        "chars_per_token": 3.056,
-        "fertility": 1.929,
-        "rtc": 1.322
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 110574,
-        "total_tokens": 92095,
-        "total_words": 18759,
-        "chars_per_token": 1.201,
-        "fertility": 4.909,
-        "rtc": 3.768
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 110574,
-        "total_tokens": 36187,
-        "total_words": 18759,
-        "chars_per_token": 3.056,
-        "fertility": 1.929,
-        "rtc": 1.322
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 110574,
-        "total_tokens": 36187,
-        "total_words": 18759,
-        "chars_per_token": 3.056,
-        "fertility": 1.929,
-        "rtc": 1.322
       }
     },
     "cmn_Hans": {
@@ -1947,51 +1537,6 @@
         "chars_per_token": 1.028,
         "fertility": 20.1,
         "rtc": 4.4
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 42179,
-        "total_tokens": 41024,
-        "total_words": 2041,
-        "chars_per_token": 1.028,
-        "fertility": 20.1,
-        "rtc": 4.4
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 42179,
-        "total_tokens": 30451,
-        "total_words": 2041,
-        "chars_per_token": 1.385,
-        "fertility": 14.92,
-        "rtc": 2.917
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 42179,
-        "total_tokens": 41024,
-        "total_words": 2041,
-        "chars_per_token": 1.028,
-        "fertility": 20.1,
-        "rtc": 4.4
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 42179,
-        "total_tokens": 30451,
-        "total_words": 2041,
-        "chars_per_token": 1.385,
-        "fertility": 14.92,
-        "rtc": 2.917
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 42179,
-        "total_tokens": 30451,
-        "total_words": 2041,
-        "chars_per_token": 1.385,
-        "fertility": 14.92,
-        "rtc": 2.917
       }
     },
     "jpn_Jpan": {
@@ -2129,51 +1674,6 @@
         "chars_per_token": 1.025,
         "fertility": 50.146,
         "rtc": 4.412
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 54658,
-        "total_tokens": 53305,
-        "total_words": 1063,
-        "chars_per_token": 1.025,
-        "fertility": 50.146,
-        "rtc": 4.412
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 54658,
-        "total_tokens": 34255,
-        "total_words": 1063,
-        "chars_per_token": 1.596,
-        "fertility": 32.225,
-        "rtc": 2.532
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 54658,
-        "total_tokens": 53305,
-        "total_words": 1063,
-        "chars_per_token": 1.025,
-        "fertility": 50.146,
-        "rtc": 4.412
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 54658,
-        "total_tokens": 34255,
-        "total_words": 1063,
-        "chars_per_token": 1.596,
-        "fertility": 32.225,
-        "rtc": 2.532
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 54658,
-        "total_tokens": 34255,
-        "total_words": 1063,
-        "chars_per_token": 1.596,
-        "fertility": 32.225,
-        "rtc": 2.532
       }
     },
     "tha_Thai": {
@@ -2311,51 +1811,6 @@
         "chars_per_token": 15.678,
         "fertility": 1.861,
         "rtc": 0.289
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 120268,
-        "total_tokens": 7671,
-        "total_words": 4123,
-        "chars_per_token": 15.678,
-        "fertility": 1.861,
-        "rtc": 0.289
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 120268,
-        "total_tokens": 33375,
-        "total_words": 4123,
-        "chars_per_token": 3.604,
-        "fertility": 8.095,
-        "rtc": 1.121
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 120268,
-        "total_tokens": 7671,
-        "total_words": 4123,
-        "chars_per_token": 15.678,
-        "fertility": 1.861,
-        "rtc": 0.289
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 120268,
-        "total_tokens": 33375,
-        "total_words": 4123,
-        "chars_per_token": 3.604,
-        "fertility": 8.095,
-        "rtc": 1.121
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 120268,
-        "total_tokens": 33376,
-        "total_words": 4123,
-        "chars_per_token": 3.603,
-        "fertility": 8.095,
-        "rtc": 1.121
       }
     },
     "hin_Deva": {
@@ -2493,51 +1948,6 @@
         "chars_per_token": 1.674,
         "fertility": 3.043,
         "rtc": 2.702
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 125366,
-        "total_tokens": 74883,
-        "total_words": 24607,
-        "chars_per_token": 1.674,
-        "fertility": 3.043,
-        "rtc": 2.702
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 125366,
-        "total_tokens": 38633,
-        "total_words": 24607,
-        "chars_per_token": 3.245,
-        "fertility": 1.57,
-        "rtc": 1.245
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 125366,
-        "total_tokens": 74883,
-        "total_words": 24607,
-        "chars_per_token": 1.674,
-        "fertility": 3.043,
-        "rtc": 2.702
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 125366,
-        "total_tokens": 38633,
-        "total_words": 24607,
-        "chars_per_token": 3.245,
-        "fertility": 1.57,
-        "rtc": 1.245
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 125366,
-        "total_tokens": 38633,
-        "total_words": 24607,
-        "chars_per_token": 3.245,
-        "fertility": 1.57,
-        "rtc": 1.245
       }
     },
     "kor_Hang": {
@@ -2675,51 +2085,6 @@
         "chars_per_token": 0.715,
         "fertility": 5.965,
         "rtc": 6.323
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 63011,
-        "total_tokens": 88070,
-        "total_words": 14764,
-        "chars_per_token": 0.715,
-        "fertility": 5.965,
-        "rtc": 6.323
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 63011,
-        "total_tokens": 35562,
-        "total_words": 14764,
-        "chars_per_token": 1.772,
-        "fertility": 2.409,
-        "rtc": 2.28
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 63011,
-        "total_tokens": 88070,
-        "total_words": 14764,
-        "chars_per_token": 0.715,
-        "fertility": 5.965,
-        "rtc": 6.323
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 63011,
-        "total_tokens": 35562,
-        "total_words": 14764,
-        "chars_per_token": 1.772,
-        "fertility": 2.409,
-        "rtc": 2.28
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 63011,
-        "total_tokens": 35562,
-        "total_words": 14764,
-        "chars_per_token": 1.772,
-        "fertility": 2.409,
-        "rtc": 2.28
       }
     },
     "tur_Latn": {
@@ -2857,51 +2222,6 @@
         "chars_per_token": 2.276,
         "fertility": 3.384,
         "rtc": 1.988
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 128573,
-        "total_tokens": 56491,
-        "total_words": 16692,
-        "chars_per_token": 2.276,
-        "fertility": 3.384,
-        "rtc": 1.988
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 128573,
-        "total_tokens": 32104,
-        "total_words": 16692,
-        "chars_per_token": 4.005,
-        "fertility": 1.923,
-        "rtc": 1.009
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 128573,
-        "total_tokens": 56491,
-        "total_words": 16692,
-        "chars_per_token": 2.276,
-        "fertility": 3.384,
-        "rtc": 1.988
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 128573,
-        "total_tokens": 32104,
-        "total_words": 16692,
-        "chars_per_token": 4.005,
-        "fertility": 1.923,
-        "rtc": 1.009
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 128573,
-        "total_tokens": 32104,
-        "total_words": 16692,
-        "chars_per_token": 4.005,
-        "fertility": 1.923,
-        "rtc": 1.009
       }
     },
     "ukr_Cyrl": {
@@ -3039,51 +2359,6 @@
         "chars_per_token": 1.176,
         "fertility": 5.958,
         "rtc": 3.846
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 128847,
-        "total_tokens": 109533,
-        "total_words": 18385,
-        "chars_per_token": 1.176,
-        "fertility": 5.958,
-        "rtc": 3.846
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 128847,
-        "total_tokens": 37138,
-        "total_words": 18385,
-        "chars_per_token": 3.469,
-        "fertility": 2.02,
-        "rtc": 1.164
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 128847,
-        "total_tokens": 109533,
-        "total_words": 18385,
-        "chars_per_token": 1.176,
-        "fertility": 5.958,
-        "rtc": 3.846
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 128847,
-        "total_tokens": 37138,
-        "total_words": 18385,
-        "chars_per_token": 3.469,
-        "fertility": 2.02,
-        "rtc": 1.164
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 128847,
-        "total_tokens": 37138,
-        "total_words": 18385,
-        "chars_per_token": 3.469,
-        "fertility": 2.02,
-        "rtc": 1.164
       }
     },
     "vie_Latn": {
@@ -3221,51 +2496,6 @@
         "chars_per_token": 2.488,
         "fertility": 1.817,
         "rtc": 1.818
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 131990,
-        "total_tokens": 53042,
-        "total_words": 29193,
-        "chars_per_token": 2.488,
-        "fertility": 1.817,
-        "rtc": 1.818
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 131990,
-        "total_tokens": 36207,
-        "total_words": 29193,
-        "chars_per_token": 3.645,
-        "fertility": 1.24,
-        "rtc": 1.108
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 131990,
-        "total_tokens": 53042,
-        "total_words": 29193,
-        "chars_per_token": 2.488,
-        "fertility": 1.817,
-        "rtc": 1.818
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 131990,
-        "total_tokens": 36207,
-        "total_words": 29193,
-        "chars_per_token": 3.645,
-        "fertility": 1.24,
-        "rtc": 1.108
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 131990,
-        "total_tokens": 36207,
-        "total_words": 29193,
-        "chars_per_token": 3.645,
-        "fertility": 1.24,
-        "rtc": 1.108
       }
     },
     "swh_Latn": {
@@ -3403,57 +2633,12 @@
         "chars_per_token": 2.519,
         "fertility": 2.567,
         "rtc": 1.796
-      },
-      "all-minilm-l6-v2": {
-        "num_sentences": 997,
-        "total_chars": 131675,
-        "total_tokens": 52270,
-        "total_words": 20361,
-        "chars_per_token": 2.519,
-        "fertility": 2.567,
-        "rtc": 1.796
-      },
-      "paraphrase-multilingual-minilm": {
-        "num_sentences": 997,
-        "total_chars": 131675,
-        "total_tokens": 35757,
-        "total_words": 20361,
-        "chars_per_token": 3.682,
-        "fertility": 1.756,
-        "rtc": 1.097
-      },
-      "all-mpnet-base-v2": {
-        "num_sentences": 997,
-        "total_chars": 131675,
-        "total_tokens": 52270,
-        "total_words": 20361,
-        "chars_per_token": 2.519,
-        "fertility": 2.567,
-        "rtc": 1.796
-      },
-      "bge-m3": {
-        "num_sentences": 997,
-        "total_chars": 131675,
-        "total_tokens": 35757,
-        "total_words": 20361,
-        "chars_per_token": 3.682,
-        "fertility": 1.756,
-        "rtc": 1.097
-      },
-      "multilingual-e5-small": {
-        "num_sentences": 997,
-        "total_chars": 131675,
-        "total_tokens": 35757,
-        "total_words": 20361,
-        "chars_per_token": 3.682,
-        "fertility": 1.756,
-        "rtc": 1.097
       }
     }
   },
   "errors": {
-    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69f48886-55d69fb35b8ee9b56bd9132a;da7bfce5-eab2-4a30-9010-7ff4b5a9b97d)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
-    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69f488af-3f7a1915106211055d268a73;48e84960-3d98-401b-a632-7c06fe961993)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
+    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69f4f906-79e30e0a00a715a97cda182f;5184a939-d716-41bf-aa89-dcdf19c22bda)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
+    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69f4f914-7e3d284033b4df4804c3d7a5;1def03e3-c0bf-4490-890d-d7624fad5d50)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
     "deberta-v3-base": "Error parsing line b'\\x0e' in /home/inigo/.cache/huggingface/hub/models--microsoft--deberta-v3-base/snapshots/8ccc9b6f36199bec6961081d44eb72fb3f7353f3/spm.model",
     "claude-sonnet": "ANTHROPIC_API_KEY environment variable is missing.",
     "gemini-pro": "GOOGLE_API_KEY environment variable is missing."
