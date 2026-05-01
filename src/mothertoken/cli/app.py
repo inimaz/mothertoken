@@ -5,7 +5,7 @@ Typer-based CLI for the mothertoken tool.
 
 Commands:
     rank      — rank all models for a given language from benchmark data
-    models    — list supported models and tokenizer access
+    list      — list supported tokenizers and access
     tokenize  — count tokens in exact user-provided text
 """
 
@@ -206,21 +206,21 @@ def rank(
 
 
 # ---------------------------------------------------------------------------
-# models
+# list
 # ---------------------------------------------------------------------------
 
 
-@app.command()
-def models(
+@app.command("list")
+def list_tokenizers(
     local_only: Annotated[bool, typer.Option("--local-only", help="Show only local tokenizers")] = False,
 ):
-    """List supported models and tokenizer access."""
+    """List supported tokenizers and access."""
     models_cfg = _load_models_config()
     if local_only:
         models_cfg = [m for m in models_cfg if m["type"] in LOCAL_MODEL_TYPES]
 
     if not models_cfg:
-        err_console.print("[bold red]Error:[/] No models are configured.")
+        err_console.print("[bold red]Error:[/] No tokenizers are configured.")
         raise typer.Exit(code=1)
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")

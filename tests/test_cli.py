@@ -157,13 +157,13 @@ def test_rank_missing_language_arg():
 
 
 # ---------------------------------------------------------------------------
-# models
+# list
 # ---------------------------------------------------------------------------
 
 
-def test_models_lists_supported_models():
+def test_list_lists_supported_tokenizers():
     with _patch_models():
-        result = runner.invoke(app, ["models"])
+        result = runner.invoke(app, ["list"])
     assert result.exit_code == 0, result.output
     assert "gpt-4o" in result.output
     assert "Qwen 2.5" in result.output
@@ -173,9 +173,9 @@ def test_models_lists_supported_models():
     assert "tiktoken / o200k_base" in result.output
 
 
-def test_models_local_only_hides_api_models():
+def test_list_local_only_hides_api_tokenizers():
     with _patch_models():
-        result = runner.invoke(app, ["models", "--local-only"])
+        result = runner.invoke(app, ["list", "--local-only"])
     assert result.exit_code == 0, result.output
     assert "gpt-4o" in result.output
     assert "qwen2.5" in result.output
@@ -183,11 +183,11 @@ def test_models_local_only_hides_api_models():
     assert "API" not in result.output
 
 
-def test_models_empty_config_errors():
+def test_list_empty_config_errors():
     with patch("mothertoken.cli.app._load_models_config", return_value=[]):
-        result = runner.invoke(app, ["models"])
+        result = runner.invoke(app, ["list"])
     assert result.exit_code == 1
-    assert "no models" in result.output.lower() or "no models" in (result.stderr or "").lower()
+    assert "no tokenizers" in result.output.lower() or "no tokenizers" in (result.stderr or "").lower()
 
 
 # ---------------------------------------------------------------------------
