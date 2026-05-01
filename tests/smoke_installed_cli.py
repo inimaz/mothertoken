@@ -36,9 +36,9 @@ def main() -> None:
         ],
     )
 
-    models_output = run_cli(args.bin_dir, "models", "--local-only")
+    list_output = run_cli(args.bin_dir, "list", "--local-only")
     assert_contains(
-        models_output,
+        list_output,
         [
             "gpt-4o",
             "qwen2.5",
@@ -46,8 +46,8 @@ def main() -> None:
             "tiktoken / o200k_base",
         ],
     )
-    if "claude-sonnet" in models_output or "API" in models_output:
-        raise AssertionError(f"--local-only should not show API-backed models:\n{models_output}")
+    if "claude-sonnet" in list_output or "API" in list_output:
+        raise AssertionError(f"--local-only should not show API-backed tokenizers:\n{list_output}")
 
     tokenize_output = run_cli(args.bin_dir, "tokenize", "Hola mundo", "--language", "es", "--model", "gpt-4o")
     assert_contains(

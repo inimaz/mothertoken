@@ -33,13 +33,13 @@ mothertoken rank spanish
 mothertoken rank spa_Latn
 ```
 
-### 🧭 List models
-See which model IDs can be used with `--model`.
+### 🧭 List tokenizers
+See which tokenizer IDs can be used.
 ```bash
-mothertoken models
+mothertoken list
 
 # Only local tokenizers
-mothertoken models --local-only
+mothertoken list --local-only
 ```
 
 ### 🔤 Tokenize exact text

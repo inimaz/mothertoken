@@ -34,11 +34,11 @@ import CliTerminal from '../components/CliTerminal.astro';
     />
 
     <div class="section-head">
-      <span class="section-label">list models</span>
+      <span class="section-label">list tokenizers</span>
       <span class="section-rule"></span>
     </div>
     <CliTerminal
-      commands={['mothertoken models']}
+      commands={['mothertoken list']}
       table={{
         headers: ['id', 'name', 'access', 'tokenizer'],
         rows: [
@@ -48,7 +48,7 @@ import CliTerminal from '../components/CliTerminal.astro';
           ['gemini-pro', 'Gemini Pro', { text: 'API', tone: 'warn' }, 'Google / gemini-1.5-pro'],
         ],
       }}
-      footerCommands={['mothertoken models --local-only']}
+      footerCommands={['mothertoken list --local-only']}
     />
 
     <div class="section-head">
