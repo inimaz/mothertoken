@@ -1,0 +1,25 @@
+name: Check website build
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+      - ".github/workflows/web-deploy.yml"
+
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build the website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install and build
+        uses: withastro/action@44706356b4eb735f8b9035699eb4796241a040c4 # v6.1.0
+        with:
+          path: web

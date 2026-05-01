@@ -7,7 +7,7 @@ package = true
 
 [project]
 name = "mothertoken"
-version = "0.1.0"
+version = "0.1.0.0a1"
 description = "Benchmarking tool for tokenizer efficiency across languages and models"
 readme = "README.md"
 requires-python = ">=3.11"
