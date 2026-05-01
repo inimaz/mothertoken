@@ -36,9 +36,9 @@ Avoid promising provider billing parity, fairness diagnostics, CI regression che
 
 ### Required before publishing
 
-- [ ] **Package benchmark data correctly**
-  - Ensure `data/benchmark.json` and `data/models.yaml` are included in the built wheel.
-  - Add the needed `pyproject.toml` package-data / force-include config.
+- [x] **Package benchmark data correctly**
+  - Keep `src/mothertoken/data/benchmark.json` and `src/mothertoken/data/models.yaml` inside the runtime package.
+  - Ensure package data is included in the built wheel.
   - Verify with `uv build` and install the built wheel into a clean temporary environment.
 
 - [x] **Ship one clear CLI workflow**
@@ -59,12 +59,12 @@ Avoid promising provider billing parity, fairness diagnostics, CI regression che
   - Document only the supported commands.
   - Keep custom corpora, reports, CI, and provider parity as roadmap items.
 
-- [ ] **Add publish metadata**
+- [x] **Add publish metadata**
   - Add or confirm `LICENSE` file.
   - Add PyPI-ready project metadata as needed: authors, project URLs, classifiers, keywords.
   - Replace clone-first installation docs with `pip install mothertoken` once published.
 
-- [ ] **Add installed-package smoke test**
+- [x] **Add installed-package smoke test**
   - Build the wheel.
   - Install into a clean environment.
   - Run:
@@ -154,8 +154,8 @@ Only tokenization efficiency — no pricing:
 
 ### Status
 
-- [x] `data/benchmark.json` exists as a versioned aggregate snapshot.
-- [x] `data/models.yaml` exists as the model registry.
+- [x] `src/mothertoken/data/benchmark.json` exists as a versioned aggregate snapshot.
+- [x] `src/mothertoken/data/models.yaml` exists as the model registry.
 - [x] `mothertoken-benchmark` entry point exists for regeneration.
 - [x] Benchmark docs exist in `docs/benchmarking.md`.
 - [x] Core metrics implemented: fertility, chars/token, RTC.
@@ -163,7 +163,7 @@ Only tokenization efficiency — no pricing:
 - [x] API tokenizer backends implemented: Anthropic, Google.
 - [ ] API token count cache is persistent across runs. Current cache is in-memory only.
 - [ ] Context efficiency is stored directly in `benchmark.json`. Current tools derive cost/context implications from RTC.
-- [ ] Benchmark data is confirmed to ship inside the built wheel.
+- [x] Benchmark data is confirmed to ship inside the built wheel.
 
 ---
 
@@ -326,7 +326,7 @@ Mistral         41,000 tokens     -68%        3.1x your English cost
 - [x] Benchmark explorer page exists.
 - [x] CLI documentation page exists.
 - [x] Methodology page exists.
-- [x] Web data is generated from root `data/benchmark.json`.
+- [x] Web data is generated from `src/mothertoken/data/benchmark.json`.
 - [x] Cost multiplier calculator exists.
 - [ ] Context-window calculator exists as a first-class control.
 - [ ] Production domain is configured.

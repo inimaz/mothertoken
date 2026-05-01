@@ -2,13 +2,13 @@
 
 This document is for maintainers and researchers who want to regenerate or extend the benchmark dataset.
 
-Most users do not need this workflow. The regular CLI reads the precomputed `data/benchmark.json` file.
+Most users do not need this workflow. The regular CLI reads the precomputed `src/mothertoken/data/benchmark.json` file.
 
 ## What The Benchmark Does
 
 The benchmark computes aggregate tokenizer-efficiency metrics across languages and models using FLORES+.
 
-Output is written to `data/benchmark.json`.
+Output is written to `src/mothertoken/data/benchmark.json`.
 
 The output contains only aggregate metrics. Raw FLORES+ sentences are never written to disk or included in public artifacts.
 
@@ -61,7 +61,7 @@ If a key is missing, the benchmark runner records the error and skips that model
 
 ## Add A Model
 
-Add an entry to `data/models.yaml`:
+Add an entry to `src/mothertoken/data/models.yaml`:
 
 ```yaml
   - id: my-model
@@ -79,7 +79,7 @@ uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-model
 
 ## Output Contract
 
-`data/benchmark.json` should remain a versioned aggregate dataset with:
+`src/mothertoken/data/benchmark.json` should remain a versioned aggregate dataset with:
 
 - benchmark metadata
 - model metadata

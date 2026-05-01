@@ -106,23 +106,10 @@ def _resolve_language(language: str, available: list[str]) -> str:
 
 
 def _load_models_config() -> list[dict]:
-    """Load models from data/models.yaml (walk-up strategy, same as benchmark_loader)."""
-    import yaml
+    """Load the model registry."""
+    from mothertoken.core.resources import load_models_config
 
-    # Walk up from __file__ to find the project root containing data/models.yaml
-    candidate = Path(__file__).resolve()
-    config_path = None
-    for _ in range(8):
-        candidate = candidate.parent
-        p = candidate / "data" / "models.yaml"
-        if p.exists():
-            config_path = p
-            break
-    if config_path is None:
-        raise FileNotFoundError("data/models.yaml not found. Ensure you are running from the project root.")
-
-    with open(config_path, encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)
+    cfg = load_models_config()
     return cfg.get("models", [])
 
 

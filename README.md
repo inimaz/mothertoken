@@ -7,11 +7,15 @@ Benchmarking tool and dataset exploring how tokenizer design creates silent effi
 ## Installation
 
 ```bash
-# Clone the repo
+# Published package
+pip install mothertoken
+```
+
+For local development:
+
+```bash
 git clone https://github.com/inimaz/mothertoken
 cd mothertoken
-
-# Install dependencies and the package in editable mode
 uv sync
 uv pip install -e .
 ```

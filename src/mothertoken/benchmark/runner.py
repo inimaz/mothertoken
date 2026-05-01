@@ -4,7 +4,7 @@ mothertoken — benchmark/run_benchmark.py
 Computes tokenization efficiency metrics across languages and models
 using the FLORES+ corpus (openlanguagedata/flores_plus, CC BY-SA 4.0).
 
-Outputs: data/benchmark.json — versioned, never contains raw sentences.
+Outputs: src/mothertoken/data/benchmark.json — versioned, never contains raw sentences.
 
 Usage:
     # Full run (all languages, all models)
@@ -35,6 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from mothertoken.core import tokenizers
+from mothertoken.core.resources import load_models_config
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
@@ -74,19 +75,7 @@ DEFAULT_LANGUAGES = [
 
 # Model registry and Configuration
 def load_config() -> dict:
-    from pathlib import Path
-
-    import yaml
-
-    # Walk up from __file__ to find the project root containing data/models.yaml
-    candidate = Path(__file__).resolve()
-    for _ in range(8):
-        candidate = candidate.parent
-        p = candidate / "data" / "models.yaml"
-        if p.exists():
-            with open(p, encoding="utf-8") as f:
-                return yaml.safe_load(f)
-    raise FileNotFoundError("data/models.yaml not found. Run from the project root.")
+    return load_models_config()
 
 
 def _get_config() -> dict:
@@ -269,7 +258,7 @@ def main():
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).resolve().parent.parent.parent.parent / "data" / "benchmark.json",
+        default=Path(__file__).resolve().parent.parent / "data" / "benchmark.json",
         help="Output path for benchmark.json",
     )
     parser.add_argument(
