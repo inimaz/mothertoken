@@ -84,6 +84,7 @@ FAKE_MODELS_CONFIG = [
         "name": "GPT-4o",
         "type": "tiktoken",
         "ref": "o200k_base",
+        "used_by_examples": ["GPT-4o", "GPT-4.1"],
         "api_key_env": None,
     },
     {
@@ -91,6 +92,7 @@ FAKE_MODELS_CONFIG = [
         "name": "Qwen 2.5",
         "type": "huggingface",
         "ref": "Qwen/Qwen2.5-7B",
+        "used_by_examples": ["Qwen 2.5"],
         "api_key_env": None,
     },
     {
@@ -98,6 +100,7 @@ FAKE_MODELS_CONFIG = [
         "name": "Claude Sonnet",
         "type": "anthropic_api",
         "ref": "claude-sonnet-4-6",
+        "used_by_examples": ["Claude Sonnet"],
         "api_key_env": "ANTHROPIC_API_KEY",
     },
 ]
@@ -170,6 +173,8 @@ def test_list_lists_supported_tokenizers():
     assert "claude-sonnet" in result.output
     assert "local" in result.output
     assert "API" in result.output
+    assert "Used by" in result.output
+    assert "GPT-4.1" in result.output
     assert "tiktoken / o200k_base" in result.output
 
 

@@ -28,7 +28,7 @@ const benchmarkJSON = JSON.stringify(benchmark);
     </section>
     
     <div class="flex items-center gap-4 mb-6 animate-fade-in-up stagger-2">
-      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language on all models</span>
+      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language across tokenizers</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
@@ -36,7 +36,7 @@ const benchmarkJSON = JSON.stringify(benchmark);
       <thead>
         <tr>
           <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-10">#</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[35%]">model</th>
+          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[35%]">tokenizer</th>
           <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[18%]">chars/token</th>
           <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[18%]">fertility</th>
           <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[14%]">vs english</th>
@@ -105,6 +105,27 @@ const benchmarkJSON = JSON.stringify(benchmark);
     return `<span class="font-mono text-[10px] px-2.5 py-1 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
   }
 
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    })[char]);
+  }
+
+  function usedByText(model) {
+    return model.usedByExamples?.length ? model.usedByExamples.join(', ') : 'model family varies';
+  }
+
+  function tokenizerLabel(model) {
+    return `
+      <div class="font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
+      <div class="font-mono text-[10.5px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
+    `;
+  }
+
   function detectLang() {
     const map = {
       th: 'tha', ar: 'ara', ja: 'jpn', zh: 'zho',
@@ -123,12 +144,13 @@ const benchmarkJSON = JSON.stringify(benchmark);
     document.getElementById('locale-label').textContent =
       `${locale} — ${lang.name} detected`;
     document.getElementById('hero-lang-label').textContent =
-      `${lang.name} on all models`;
+      `${lang.name} across tokenizers`;
 
     const rows = MODELS.map(mid => {
-      const d = benchmark.models[mid].metrics[lid] || { cpt: 0, fert: 0 };
-      const r = getRTC(mid, lid);
-      return { mid, name: benchmark.models[mid].name, cpt: d.cpt, fert: d.fert, r };
+      const model = benchmark.models[mid];
+      const d = benchmark.models[mid].metrics[activeLangId] || { cpt: 0, fert: 0 };
+      const r = getRTC(mid, activeLangId);
+      return { mid, model, name: model.name, cpt: d.cpt, fert: d.fert, r };
     }).sort((a, b) => a.r - b.r);
 
     const maxR = Math.max(...rows.map(x => x.r));
@@ -136,7 +158,7 @@ const benchmarkJSON = JSON.stringify(benchmark);
     document.getElementById('hero-body').innerHTML = rows.map((row, i) => `
       <tr class="group hover:bg-bg-secondary transition-colors duration-300 ease-quint cursor-default">
         <td class="font-mono text-[10px] text-text-tertiary w-8 py-3.5 px-4 border-b border-border align-middle">${i + 1}</td>
-        <td class="text-[14px] font-medium py-3.5 px-4 border-b border-border align-middle text-text-secondary group-hover:text-text transition-colors duration-300">${row.name}</td>
+        <td class="text-[14px] py-3.5 px-4 border-b border-border align-middle">${tokenizerLabel(row.model)}</td>
         <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
         <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
         <td class="py-3.5 px-4 border-b border-border align-middle">
@@ -155,14 +177,14 @@ const benchmarkJSON = JSON.stringify(benchmark);
 
     document.getElementById('insight-strip').innerHTML = `
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">optimal model</div>
+        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">best tokenizer</div>
         <div class="font-mono text-[1.25rem] font-medium mb-1 ${strokeColor(best.r)}">${best.name}</div>
-        <div class="text-[11px] text-text-secondary">${best.r.toFixed(1)}× relative cost</div>
+        <div class="text-[11px] text-text-secondary">used by ${escapeHTML(usedByText(best.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">worst model</div>
+        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">least efficient</div>
         <div class="font-mono text-[1.25rem] font-medium mb-1 ${strokeColor(worst.r)}">${worst.name}</div>
-        <div class="text-[11px] text-text-secondary">${worst.r.toFixed(1)}× relative cost</div>
+        <div class="text-[11px] text-text-secondary">used by ${escapeHTML(usedByText(worst.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
         <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">efficiency spread</div>
@@ -177,13 +199,17 @@ const benchmarkJSON = JSON.stringify(benchmark);
     if (!lid) lid = detectLang().lid;
     const rate = parseFloat(document.getElementById('calc-rate').value) || 10;
     const rows = MODELS.map(mid => {
+      const model = benchmark.models[mid];
       const r = getRTC(mid, lid);
-      return { name: benchmark.models[mid].name, r, cost: rate * r };
+      return { model, name: model.name, r, cost: rate * r };
     }).sort((a, b) => a.r - b.r);
 
     document.getElementById('calc-results').innerHTML = rows.map(row => `
-      <div class="flex justify-between items-center py-1">
-        <span class="text-[13.5px] text-text-secondary font-medium transition-colors duration-300 hover:text-text cursor-default select-none">${row.name}</span>
+      <div class="flex justify-between items-start gap-4 py-1.5">
+        <span class="cursor-default select-none">
+          <span class="block text-[13.5px] text-text-secondary font-medium transition-colors duration-300 hover:text-text">${escapeHTML(row.name)}</span>
+          <span class="block font-mono text-[10px] text-text-tertiary mt-0.5">used by ${escapeHTML(usedByText(row.model))}</span>
+        </span>
         <span class="text-[12px] font-medium font-mono ${textColorClass(row.r)}">
           ${row.r.toFixed(1)}×
           <span class="text-text-tertiary text-[11px] ml-2">($${row.cost.toFixed(2)}/1M tags)</span>
