@@ -18,14 +18,14 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
     <AlphaBanner />
 
     <div class="flex items-center gap-4 mb-8 animate-fade-in-up stagger-1">
-      <span class="font-mono text-[11px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark explorer</span>
+      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark explorer</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
     <div class="flex flex-wrap items-center gap-5 mb-10 animate-fade-in-up stagger-1">
       <div class="flex items-center gap-2.5">
-        <span class="font-mono text-[12px] text-text-secondary">tokenizer</span>
-        <select id="model-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[13px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[140px] shadow-sm">
+        <span class="font-mono text-[15px] text-text-secondary">tokenizer</span>
+        <select id="model-sel" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[170px] shadow-sm">
           {tokenizerOptions.map(([id, m]) => (
             <option value={id} class="bg-bg text-text">
               {m.usedByExamples.length ? `${m.name} (${m.usedByExamples.join(', ')})` : m.name}
@@ -34,40 +34,42 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
         </select>
       </div>
       <div class="flex items-center gap-2.5">
-        <span class="font-mono text-[12px] text-text-secondary">sort</span>
-        <select id="sort-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[13px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[160px] shadow-sm">
+        <span class="font-mono text-[15px] text-text-secondary">sort</span>
+        <select id="sort-sel" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[190px] shadow-sm">
           <option value="asc" class="bg-bg text-text">most efficient first</option>
           <option value="desc" class="bg-bg text-text">least efficient first</option>
           <option value="alpha" class="bg-bg text-text">alphabetical</option>
         </select>
       </div>
-      <p class="basis-full text-[15px] text-text-tertiary leading-[1.6] max-w-[680px]">
+      <p class="basis-full text-[18px] text-text-tertiary leading-[1.6] max-w-[760px]">
         MotherToken benchmarks tokenizers. Model names are shown as examples because several models can share the same tokenizer.
       </p>
     </div>
 
-    <table class="w-full border-collapse mb-16 animate-fade-in-up stagger-2 text-[15px] table-fixed" id="full-table">
-      <thead>
-        <tr>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[25%]">language</th>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[12%]">script</th>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[20%]">chars/token</th>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[15%]">fertility</th>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[10%]">rtc</th>
-          <th class="font-mono text-[11px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[18%]"></th>
-        </tr>
-      </thead>
-      <tbody id="full-body"></tbody>
-    </table>
+    <div class="data-table-scroll mb-16 animate-fade-in-up stagger-2" style="--table-row-height: 57px;">
+      <table class="w-full border-collapse text-[18px] table-fixed" id="full-table">
+        <thead>
+          <tr>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[25%]">language</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[12%]">script</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[20%]">chars/token</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[15%]">fertility</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[10%]">rtc</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[18%]"></th>
+          </tr>
+        </thead>
+        <tbody id="full-body"></tbody>
+      </table>
+    </div>
 
     <div class="flex items-center gap-4 mb-6 mt-16 animate-fade-in-up stagger-3">
-      <span class="font-mono text-[11px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">tokenizer × language matrix</span>
+      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">tokenizer × language matrix</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
     <div class="flex flex-wrap gap-2 mb-8 animate-fade-in-up stagger-3" id="matrix-chips">
       {matrixLangs.map((lid, i) => (
-        <button class:list={['font-mono text-[12.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip', i === 0 ? 'bg-text text-bg border-text shadow-sm' : 'bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50']} data-lang={lid}>
+        <button class:list={['font-mono text-[15px] px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip', i === 0 ? 'bg-text text-bg border-text shadow-sm' : 'bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50']} data-lang={lid}>
           {benchmark.languages[lid].name}
         </button>
       ))}
@@ -120,7 +122,7 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
       : r <= 2.0 
       ? 'bg-mid-bg text-mid-text border-mid/20' 
       : 'bg-bad-bg text-bad-text border-bad/20';
-    return `<span class="font-mono text-[11px] px-2.5 py-1 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
+    return `<span class="font-mono text-[13px] px-3 py-1.5 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
   }
 
   function escapeHTML(value) {
@@ -155,12 +157,12 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
 
     document.getElementById('full-body').innerHTML = rows.map(row => `
       <tr class="group hover:bg-bg-secondary transition-colors duration-300 ease-quint cursor-default">
-        <td class="font-medium py-3.5 px-4 border-b border-border align-middle text-text-secondary group-hover:text-text transition-colors duration-300">${row.name}</td>
-        <td class="font-mono text-[12px] text-text-tertiary py-3.5 px-4 border-b border-border align-middle">${row.script}</td>
-        <td class="font-mono text-[13px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
-        <td class="font-mono text-[13px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
-        <td class="font-mono text-[13px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.r.toFixed(1)}×</td>
-        <td class="py-3.5 px-4 border-b border-border align-middle pl-6">${badge(row.r)}</td>
+        <td class="font-medium py-4 px-4 border-b border-border align-middle text-text-secondary group-hover:text-text transition-colors duration-300">${row.name}</td>
+        <td class="font-mono text-[14px] text-text-tertiary py-4 px-4 border-b border-border align-middle">${row.script}</td>
+        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
+        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
+        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.r.toFixed(1)}×</td>
+        <td class="py-4 px-4 border-b border-border align-middle pl-6">${badge(row.r)}</td>
       </tr>`).join('');
   }
 
@@ -169,9 +171,9 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
   function renderMatrix() {
     document.querySelectorAll('.matrix-chip').forEach(c => {
       if (c.dataset.lang === activeLang) {
-        c.className = 'font-mono text-[12.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-text text-bg border-text shadow-sm';
+        c.className = 'font-mono text-[15px] px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-text text-bg border-text shadow-sm';
       } else {
-        c.className = 'font-mono text-[12.5px] px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50';
+        c.className = 'font-mono text-[15px] px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer select-none matrix-chip bg-transparent text-text-secondary border-border-strong hover:text-text hover:border-border-strong hover:bg-border/50';
       }
     });
 
@@ -180,15 +182,15 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
       const d = benchmark.models[mid].metrics[activeLang] || { cpt: 0, fert: 0 };
       const r = getRTC(mid, activeLang);
       return `
-        <div class="bg-bg border border-border-strong rounded-xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] hover:border-text/30 hover:shadow-md transition-all duration-300 ease-quint group cursor-default">
+        <div class="bg-bg border border-border-strong rounded-xl p-6 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] hover:border-text/30 hover:shadow-md transition-all duration-300 ease-quint group cursor-default">
           <div class="mb-4">
-            <div class="font-mono text-[12px] font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
-            <div class="font-mono text-[11px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
+            <div class="font-mono text-[15px] font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
+            <div class="font-mono text-[13px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
           </div>
           <div class="flex flex-col gap-2.5">
-            <div class="flex justify-between items-center"><span class="text-[12.5px] text-text-tertiary">chars/tok</span><span class="font-mono text-[13px] font-medium text-text-secondary">${d.cpt.toFixed(1)}</span></div>
-            <div class="flex justify-between items-center"><span class="text-[12.5px] text-text-tertiary">fertility</span><span class="font-mono text-[13px] font-medium text-text-secondary">${d.fert.toFixed(2)}</span></div>
-            <div class="flex justify-between items-center pt-3 mt-1 border-t border-border/60"><span class="text-[12px] uppercase tracking-wider text-text-tertiary">cost multiplier</span><span class="font-mono text-[13.5px] font-semibold ${textColorClass(r)}">${r.toFixed(1)}×</span></div>
+            <div class="flex justify-between items-center"><span class="text-[15px] text-text-tertiary">chars/tok</span><span class="font-mono text-[16px] font-medium text-text-secondary">${d.cpt.toFixed(1)}</span></div>
+            <div class="flex justify-between items-center"><span class="text-[15px] text-text-tertiary">fertility</span><span class="font-mono text-[16px] font-medium text-text-secondary">${d.fert.toFixed(2)}</span></div>
+            <div class="flex justify-between items-center pt-3 mt-1 border-t border-border/60"><span class="text-[14px] uppercase tracking-wider text-text-tertiary">cost multiplier</span><span class="font-mono text-[16px] font-semibold ${textColorClass(r)}">${r.toFixed(1)}×</span></div>
           </div>
         </div>`;
     }).join('');
