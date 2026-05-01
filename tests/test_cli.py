@@ -168,6 +168,7 @@ def test_list_lists_supported_tokenizers():
     with _patch_models():
         result = runner.invoke(app, ["list"])
     assert result.exit_code == 0, result.output
+    normalized_output = " ".join(result.output.split())
     assert "gpt-4o" in result.output
     assert "Qwen 2.5" in result.output
     assert "claude-sonnet" in result.output
@@ -175,7 +176,7 @@ def test_list_lists_supported_tokenizers():
     assert "API" in result.output
     assert "Used by" in result.output
     assert "GPT-4.1" in result.output
-    assert "tiktoken / o200k_base" in result.output
+    assert "tiktoken / o200k_base" in normalized_output
 
 
 def test_list_local_only_hides_api_tokenizers():
