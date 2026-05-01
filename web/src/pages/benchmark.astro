@@ -7,6 +7,9 @@ import benchmark from '../data/benchmark';
 
 const benchmarkJSON = JSON.stringify(benchmark);
 const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
+const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
+  a.name.localeCompare(b.name)
+);
 ---
 
 <Base title="mothertoken — benchmark explorer">
@@ -21,10 +24,12 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
 
     <div class="flex flex-wrap items-center gap-5 mb-10 animate-fade-in-up stagger-1">
       <div class="flex items-center gap-2.5">
-        <span class="font-mono text-[11px] text-text-secondary">model</span>
+        <span class="font-mono text-[11px] text-text-secondary">tokenizer</span>
         <select id="model-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[12px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[140px] shadow-sm">
-          {Object.entries(benchmark.models).map(([id, m]) => (
-            <option value={id} class="bg-bg text-text">{m.name}</option>
+          {tokenizerOptions.map(([id, m]) => (
+            <option value={id} class="bg-bg text-text">
+              {m.usedByExamples.length ? `${m.name} (${m.usedByExamples.join(', ')})` : m.name}
+            </option>
           ))}
         </select>
       </div>
@@ -36,6 +41,9 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
           <option value="alpha" class="bg-bg text-text">alphabetical</option>
         </select>
       </div>
+      <p class="basis-full text-[12px] text-text-tertiary leading-[1.6] max-w-[560px]">
+        MotherToken benchmarks tokenizers. Model names are shown as examples because several models can share the same tokenizer.
+      </p>
     </div>
 
     <table class="w-full border-collapse mb-16 animate-fade-in-up stagger-2 text-[13px] table-fixed" id="full-table">
@@ -53,7 +61,7 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
     </table>
 
     <div class="flex items-center gap-4 mb-6 mt-16 animate-fade-in-up stagger-3">
-      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">model × language matrix</span>
+      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">tokenizer × language matrix</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
@@ -82,6 +90,26 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
     return m.metrics[benchmark.baseline].cpt / m.metrics[langId].cpt;
   }
 
+  function detectLang() {
+    const map = {
+      th: 'tha', ar: 'ara', ja: 'jpn', zh: 'zho',
+      hi: 'hin', pt: 'por', fr: 'fra', de: 'deu',
+      tr: 'tur', uk: 'ukr', vi: 'vie', sw: 'swa',
+      es: 'spa', ko: 'kor',
+    };
+    const locales = navigator.languages?.length ? navigator.languages : [navigator.language || 'en-US'];
+    const matchedLocale = locales.find(locale => map[locale.split('-')[0]]);
+    const locale = matchedLocale || locales[0] || 'en-US';
+    const code = locale.split('-')[0];
+    return map[code] || benchmark.baseline;
+  }
+
+  function highestRTCModel(langId) {
+    return MODELS.reduce((highest, mid) => (
+      getRTC(mid, langId) > getRTC(highest, langId) ? mid : highest
+    ), MODELS[0]);
+  }
+
   function textColorClass(r) {
     return r <= 1.3 ? 'text-good-text' : r <= 2.0 ? 'text-mid-text' : 'text-bad-text';
   }
@@ -93,6 +121,20 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
       ? 'bg-mid-bg text-mid-text border-mid/20' 
       : 'bg-bad-bg text-bad-text border-bad/20';
     return `<span class="font-mono text-[10px] px-2.5 py-1 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    })[char]);
+  }
+
+  function usedByText(model) {
+    return model.usedByExamples?.length ? model.usedByExamples.join(', ') : 'model family varies';
   }
 
   function renderTable() {
@@ -134,11 +176,15 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
     });
 
     document.getElementById('matrix-grid').innerHTML = MODELS.map(mid => {
+      const model = benchmark.models[mid];
       const d = benchmark.models[mid].metrics[activeLang] || { cpt: 0, fert: 0 };
       const r = getRTC(mid, activeLang);
       return `
         <div class="bg-bg border border-border-strong rounded-xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] hover:border-text/30 hover:shadow-md transition-all duration-300 ease-quint group cursor-default">
-          <div class="font-mono text-[11px] font-medium text-text-secondary mb-4 group-hover:text-text transition-colors duration-300">${benchmark.models[mid].name}</div>
+          <div class="mb-4">
+            <div class="font-mono text-[11px] font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
+            <div class="font-mono text-[10px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
+          </div>
           <div class="flex flex-col gap-2.5">
             <div class="flex justify-between items-center"><span class="text-[11.5px] text-text-tertiary">chars/tok</span><span class="font-mono text-[12px] font-medium text-text-secondary">${d.cpt.toFixed(1)}</span></div>
             <div class="flex justify-between items-center"><span class="text-[11.5px] text-text-tertiary">fertility</span><span class="font-mono text-[12px] font-medium text-text-secondary">${d.fert.toFixed(2)}</span></div>
@@ -163,6 +209,7 @@ const matrixLangs = ['tha', 'ara', 'zho', 'jpn', 'hin', 'por'];
     });
   });
 
+  document.getElementById('model-sel').value = highestRTCModel(detectLang());
   renderTable();
   renderMatrix();
 </script>

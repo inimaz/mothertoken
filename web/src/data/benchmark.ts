@@ -19,6 +19,7 @@ export interface ModelMetrics {
 
 export interface ModelData {
   name: string;
+  usedByExamples: string[];
   metrics: Record<string, ModelMetrics>; // keyed by language id
 }
 
@@ -33,6 +34,7 @@ export interface BenchmarkData {
 const ModelInfoSchema = z.object({
   id: z.string(),
   name: z.string(),
+  used_by_examples: z.array(z.string()).optional(),
 });
 
 const MetricsSchema = z.object({
@@ -93,6 +95,7 @@ for (const modelInfo of parsedData.models) {
   const uiModelCode = MODEL_MAP[modelInfo.id] || modelInfo.id;
   models[uiModelCode] = {
     name: modelInfo.name,
+    usedByExamples: modelInfo.used_by_examples ?? [],
     metrics: {},
   };
 }

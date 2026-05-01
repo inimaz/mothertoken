@@ -27,8 +27,8 @@ uv pip install -e .
 
 The `mothertoken` command is available after installation.
 
-### 📊 Rank models for a language
-Rank all models for a specific language using the precomputed benchmark data.
+### 📊 Rank tokenizers for a language
+Rank supported tokenizers for a specific language using the precomputed benchmark data.
 ```bash
 mothertoken rank spanish
 
@@ -37,7 +37,7 @@ mothertoken rank spa_Latn
 ```
 
 ### 🧭 List tokenizers
-See which tokenizer IDs can be used.
+See which tokenizer IDs can be used and which familiar models use them.
 ```bash
 mothertoken list
 

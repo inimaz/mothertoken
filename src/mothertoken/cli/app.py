@@ -132,6 +132,11 @@ def _tokenizer_backend(model: dict) -> str:
     return f"{labels.get(model['type'], model['type'])} / {model['ref']}"
 
 
+def _used_by_examples(model: dict) -> str:
+    examples = model.get("used_by_examples") or []
+    return ", ".join(examples) if examples else "—"
+
+
 # ---------------------------------------------------------------------------
 # rank
 # ---------------------------------------------------------------------------
@@ -226,6 +231,7 @@ def list_tokenizers(
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
     table.add_column("ID")
     table.add_column("Name")
+    table.add_column("Used by")
     table.add_column("Access")
     table.add_column("Tokenizer")
 
@@ -233,6 +239,7 @@ def list_tokenizers(
         table.add_row(
             tokenizer_cfg["id"],
             tokenizer_cfg["name"],
+            _used_by_examples(tokenizer_cfg),
             _model_access(tokenizer_cfg),
             _tokenizer_backend(tokenizer_cfg),
         )
