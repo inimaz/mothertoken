@@ -35,7 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from mothertoken.core import tokenizers
-from mothertoken.core.resources import load_models_config
+from mothertoken.core.resources import load_tokenizers_config
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
@@ -73,20 +73,20 @@ DEFAULT_LANGUAGES = [
 ]
 
 
-# Model registry and Configuration
+# Tokenizer registry and Configuration
 def load_config() -> dict:
-    return load_models_config()
+    return load_tokenizers_config()
 
 
 def _get_config() -> dict:
-    """Lazy loader so importing this module doesn't crash if models.yaml is absent."""
+    """Lazy loader so importing this module doesn't crash if tokenizers.yaml is absent."""
     if not hasattr(_get_config, "_cache"):
         _get_config._cache = load_config()  # type: ignore[attr-defined]
     return _get_config._cache  # type: ignore[attr-defined]
 
 
 def _get_models() -> list:
-    return _get_config().get("models", [])
+    return _get_config().get("tokenizers", [])
 
 
 # ---------------------------------------------------------------------------
@@ -222,6 +222,7 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
         "flores_dataset": FLORES_DATASET,
         "baseline_language": ENGLISH_CONFIG,
         "models": [m for m in _get_models() if m["id"] in model_ids],
+        "tokenizers": [m for m in _get_models() if m["id"] in model_ids],
         "metrics": results,
         "errors": errors,
         "note": (

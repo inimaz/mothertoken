@@ -31,12 +31,12 @@ def load_benchmark_data() -> dict[str, Any]:
         return json.load(f)
 
 
-def load_models_config() -> dict[str, Any]:
-    """Load bundled models.yaml."""
+def load_tokenizers_config() -> dict[str, Any]:
+    """Load bundled tokenizers.yaml."""
     import yaml
 
-    config_path = _find_data_path("models.yaml")
+    config_path = _find_data_path("tokenizers.yaml")
     if not config_path.exists():
-        raise FileNotFoundError(f"models.yaml not found at {config_path}. Reinstall mothertoken.")
+        raise FileNotFoundError(f"tokenizers.yaml not found at {config_path}. Reinstall mothertoken.")
     with open(config_path, encoding="utf-8") as f:
         return yaml.safe_load(f)
