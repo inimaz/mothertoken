@@ -36,49 +36,77 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     </section>
     
     <AlphaBanner />
-    <div class="flex items-center gap-4 mb-6 animate-fade-in-up stagger-2">
-      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language across tokenizers</span>
-      <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
-    </div>
-    <div class="data-table-scroll mb-10 animate-fade-in-up stagger-2" style="--table-row-height: 76px;">
-      <table class="w-full border-collapse table-fixed" id="hero-table">
-        <thead>
-          <tr>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-10">#</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[35%]">tokenizer</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">chars/token</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">fertility</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[14%]">vs english</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[15%]">efficiency</th>
-          </tr>
-        </thead>
-        <tbody id="hero-body">
-          <tr><td colspan="6" class="font-mono text-[16px] text-text-tertiary py-8 px-4 border-b border-border text-center">detecting your language...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid grid-cols-3 gap-px bg-border rounded-xl overflow-hidden mb-8 animate-fade-in-up stagger-3" id="insight-strip"></div>
-
-    <div class="flex items-center gap-4 mb-6 mt-14 animate-fade-in-up stagger-3">
-      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">cost multiplier</span>
-      <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
-    </div>
-
-    <div class="bg-bg-secondary p-6 rounded-xl border border-border animate-fade-in-up stagger-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)]">
-      <div class="flex items-center gap-3 mb-5 flex-wrap">
-        <span class="font-mono text-[15px] text-text-secondary">your token rate / 1m</span>
-        <div class="relative flex items-center">
-          <span class="absolute left-3 font-mono text-[15px] text-text-tertiary">$</span>
-          <input type="number" id="calc-rate" value="10" min="0" step="0.5" class="bg-bg border border-border-strong rounded-md py-2 pl-7 pr-3 font-mono text-[15px] text-text w-[110px] outline-none focus:border-text transition-colors duration-300" />
+    <section class="animate-fade-in-up stagger-2">
+      <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center">
+        <div class="flex items-center gap-4 min-w-0 flex-1">
+          <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="analysis-label">compare tokenizers</span>
+          <span class="hidden sm:block flex-1 h-[1px] bg-border-strong opacity-40"></span>
+        </div>
+        <div class="inline-grid grid-cols-2 gap-px bg-border p-px rounded-lg w-full sm:w-auto" role="tablist" aria-label="analysis view">
+          <button
+            type="button"
+            id="compare-view-tab"
+            data-view-tab="compare"
+            class="view-tab rounded-[7px] py-2.5 px-4 font-mono text-[13px] transition-colors duration-300 bg-bg text-text shadow-sm"
+            role="tab"
+            aria-selected="true"
+            aria-controls="compare-view"
+          >
+            compare
+          </button>
+          <button
+            type="button"
+            id="cost-view-tab"
+            data-view-tab="cost"
+            class="view-tab rounded-[7px] py-2.5 px-4 font-mono text-[13px] transition-colors duration-300 text-text-tertiary hover:text-text"
+            role="tab"
+            aria-selected="false"
+            aria-controls="cost-view"
+          >
+            cost
+          </button>
         </div>
       </div>
-      <div class="border-t border-border pt-4 flex flex-col gap-2" id="calc-results"></div>
-      <p class="font-mono text-[13px] text-text-tertiary mt-6 leading-[1.6]">
-        * mothertoken owns no pricing data. the rtc multiplier is yours to apply.<br />
-        whatever you pay per token × multiplier = what your language actually costs.
-      </p>
-    </div>
+
+      <div id="compare-view" data-view-panel="compare" role="tabpanel" aria-labelledby="compare-view-tab">
+        <div class="data-table-scroll mb-10" style="--table-row-height: 76px;">
+          <table class="w-full border-collapse table-fixed" id="hero-table">
+            <thead>
+              <tr>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-10">#</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[35%]">tokenizer</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">chars/token</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">fertility</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[14%]">vs english</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[15%]">efficiency</th>
+              </tr>
+            </thead>
+            <tbody id="hero-body">
+              <tr><td colspan="6" class="font-mono text-[16px] text-text-tertiary py-8 px-4 border-b border-border text-center">detecting your language...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="cost-view" data-view-panel="cost" role="tabpanel" aria-labelledby="cost-view-tab" hidden>
+        <div class="bg-bg-secondary p-6 rounded-xl border border-border shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] mb-10">
+          <div class="flex items-center gap-3 mb-5 flex-wrap">
+            <span class="font-mono text-[15px] text-text-secondary">your token rate / 1m</span>
+            <div class="relative flex items-center">
+              <span class="absolute left-3 font-mono text-[15px] text-text-tertiary">$</span>
+              <input type="number" id="calc-rate" value="10" min="0" step="0.5" class="bg-bg border border-border-strong rounded-md py-2 pl-7 pr-3 font-mono text-[15px] text-text w-[110px] outline-none focus:border-text transition-colors duration-300" />
+            </div>
+          </div>
+          <div class="border-t border-border pt-4 flex flex-col gap-2" id="calc-results"></div>
+          <p class="font-mono text-[13px] text-text-tertiary mt-6 leading-[1.6]">
+            * mothertoken owns no pricing data. the rtc multiplier is yours to apply.<br />
+            whatever you pay per token × multiplier = what your language actually costs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-3 gap-px bg-border rounded-xl overflow-hidden mb-8 animate-fade-in-up stagger-3" id="insight-strip"></div>
 
     <Footer />
   </div>
@@ -88,7 +116,11 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
   const benchmark = JSON.parse(benchmarkJSON);
   const MODELS = Object.keys(benchmark.models);
   const languageSelect = document.getElementById('language-sel');
+  const analysisLabel = document.getElementById('analysis-label');
+  const viewTabs = document.querySelectorAll('[data-view-tab]');
+  const viewPanels = document.querySelectorAll('[data-view-panel]');
   let activeLangId = benchmark.baseline;
+  let activeView = 'compare';
 
   function getRTC(modelId, langId) {
     const m = benchmark.models[modelId];
@@ -131,6 +163,29 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     return model.usedByExamples?.length ? model.usedByExamples.join(', ') : 'model family varies';
   }
 
+  function setAnalysisLabel() {
+    const lang = benchmark.languages[activeLangId];
+    analysisLabel.textContent = activeView === 'cost'
+      ? `${lang.name} cost multiplier`
+      : `${lang.name} across tokenizers`;
+  }
+
+  function setView(view) {
+    activeView = view;
+    viewTabs.forEach(tab => {
+      const isActive = tab.dataset.viewTab === view;
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.classList.toggle('bg-bg', isActive);
+      tab.classList.toggle('text-text', isActive);
+      tab.classList.toggle('shadow-sm', isActive);
+      tab.classList.toggle('text-text-tertiary', !isActive);
+    });
+    viewPanels.forEach(panel => {
+      panel.hidden = panel.dataset.viewPanel !== view;
+    });
+    setAnalysisLabel();
+  }
+
   function tokenizerLabel(model) {
     return `
       <div class="font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
@@ -156,8 +211,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     const lang = benchmark.languages[activeLangId];
 
     languageSelect.value = activeLangId;
-    document.getElementById('hero-lang-label').textContent =
-      `${lang.name} across tokenizers`;
+    setAnalysisLabel();
 
     const rows = MODELS.map(mid => {
       const model = benchmark.models[mid];
@@ -230,6 +284,9 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
   }
 
   document.getElementById('calc-rate').addEventListener('input', () => renderCalc());
+  viewTabs.forEach(tab => {
+    tab.addEventListener('click', () => setView(tab.dataset.viewTab));
+  });
   languageSelect.addEventListener('change', event => {
     document.getElementById('locale-label').textContent = 'manual language selection';
     renderHero(event.target.value);
