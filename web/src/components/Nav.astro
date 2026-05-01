@@ -13,7 +13,7 @@ const tabs = [
 ---
 
 <nav class="flex items-center justify-between mt-6 mb-16 animate-fade-in-up">
-  <a href="/" class="flex items-center gap-2 text-[15px] font-semibold text-text tracking-tight no-underline group">
+  <a href="/" class="flex items-center gap-2 text-[20px] font-semibold text-text tracking-tight no-underline group">
     <img src="/favicon.svg" alt="" class="h-5 w-5" />
     <span>mothertoken<span class="text-text-tertiary group-hover:text-text transition-colors duration-300">_</span></span>
   </a>
@@ -22,7 +22,7 @@ const tabs = [
       <a
         href={tab.href}
         class:list={[
-          'font-mono text-[11px] px-[14px] py-[6px] rounded-md cursor-pointer transition-all duration-300 ease-quint no-underline select-none',
+          'font-mono text-[14px] px-[16px] py-[8px] rounded-md cursor-pointer transition-all duration-300 ease-quint no-underline select-none',
           activeTab === tab.id 
             ? 'bg-bg text-text shadow-sm border border-border-strong' 
             : 'text-text-tertiary hover:text-text hover:bg-border border border-transparent'

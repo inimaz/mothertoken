@@ -13,23 +13,23 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
 ---
 
 <Base>
-  <div class="max-w-[760px] mx-auto pt-12 px-6 pb-24">
+  <div class="max-w-[1120px] mx-auto pt-12 px-6 pb-24">
     <Nav activeTab="home" />
     <AlphaBanner />
     
     <section class="mb-14 animate-fade-in-up stagger-1">
       <div class="flex flex-wrap items-center gap-3 mb-6">
         <span class="pulse"></span>
-        <span class="font-mono text-[11px] text-text-tertiary" id="locale-label">detecting locale...</span>
+        <span class="font-mono text-[14px] text-text-tertiary" id="locale-label">detecting locale...</span>
         <label class="sr-only" for="language-sel">language</label>
-        <select id="language-sel" class="bg-bg border border-border-strong rounded-md py-1.5 px-3 font-mono text-[12px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[150px] shadow-sm">
+        <select id="language-sel" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[170px] shadow-sm">
           {languageOptions.map(([id, language]) => (
             <option value={id} class="bg-bg text-text">{language.name}</option>
           ))}
         </select>
       </div>
-      <h1 class="text-[2.25rem] font-medium leading-[1.1] text-text mb-4 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
-      <p class="text-[14.5px] text-text-secondary leading-[1.65] max-w-[540px] mb-10">
+      <h1 class="text-[3.5rem] font-medium leading-[1.06] text-text mb-6 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
+      <p class="text-[21px] text-text-secondary leading-[1.6] max-w-[680px] mb-12">
         Tokenizer efficiency is a proxy for how well a model understands your language.
         The same content in Thai needs 2.8× more tokens than in English —
         less effective context window, worse reasoning, higher cost multiplier.
@@ -37,43 +37,43 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     </section>
     
     <div class="flex items-center gap-4 mb-6 animate-fade-in-up stagger-2">
-      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language across tokenizers</span>
+      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="hero-lang-label">your language across tokenizers</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
     <table class="w-full border-collapse mb-10 animate-fade-in-up stagger-2 table-fixed" id="hero-table">
       <thead>
         <tr>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-10">#</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[35%]">tokenizer</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[18%]">chars/token</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[18%]">fertility</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-right py-3 px-4 border-b border-border w-[14%]">vs english</th>
-          <th class="font-mono text-[10px] tracking-[.1em] text-text-tertiary font-normal text-left py-3 px-4 border-b border-border w-[15%]">efficiency</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-10">#</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[35%]">tokenizer</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">chars/token</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">fertility</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[14%]">vs english</th>
+          <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[15%]">efficiency</th>
         </tr>
       </thead>
       <tbody id="hero-body">
-        <tr><td colspan="6" class="font-mono text-[12px] text-text-tertiary py-8 px-4 border-b border-border text-center">detecting your language...</td></tr>
+        <tr><td colspan="6" class="font-mono text-[16px] text-text-tertiary py-8 px-4 border-b border-border text-center">detecting your language...</td></tr>
       </tbody>
     </table>
 
     <div class="grid grid-cols-3 gap-px bg-border rounded-xl overflow-hidden mb-8 animate-fade-in-up stagger-3" id="insight-strip"></div>
 
     <div class="flex items-center gap-4 mb-6 mt-14 animate-fade-in-up stagger-3">
-      <span class="font-mono text-[10px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">cost multiplier</span>
+      <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">cost multiplier</span>
       <span class="flex-1 h-[1px] bg-border-strong opacity-40"></span>
     </div>
 
     <div class="bg-bg-secondary p-6 rounded-xl border border-border animate-fade-in-up stagger-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)]">
       <div class="flex items-center gap-3 mb-5 flex-wrap">
-        <span class="font-mono text-[11px] text-text-secondary">your token rate / 1m</span>
+        <span class="font-mono text-[15px] text-text-secondary">your token rate / 1m</span>
         <div class="relative flex items-center">
-          <span class="absolute left-3 font-mono text-[12px] text-text-tertiary">$</span>
-          <input type="number" id="calc-rate" value="10" min="0" step="0.5" class="bg-bg border border-border-strong rounded-md py-1.5 pl-7 pr-3 font-mono text-[12px] text-text w-[100px] outline-none focus:border-text transition-colors duration-300" />
+          <span class="absolute left-3 font-mono text-[15px] text-text-tertiary">$</span>
+          <input type="number" id="calc-rate" value="10" min="0" step="0.5" class="bg-bg border border-border-strong rounded-md py-2 pl-7 pr-3 font-mono text-[15px] text-text w-[110px] outline-none focus:border-text transition-colors duration-300" />
         </div>
       </div>
       <div class="border-t border-border pt-4 flex flex-col gap-2" id="calc-results"></div>
-      <p class="font-mono text-[10px] text-text-tertiary mt-6 leading-[1.6]">
+      <p class="font-mono text-[13px] text-text-tertiary mt-6 leading-[1.6]">
         * mothertoken owns no pricing data. the rtc multiplier is yours to apply.<br />
         whatever you pay per token × multiplier = what your language actually costs.
       </p>
@@ -113,7 +113,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       : r <= 2.0 
       ? 'bg-mid-bg text-mid-text border-mid/20' 
       : 'bg-bad-bg text-bad-text border-bad/20';
-    return `<span class="font-mono text-[10px] px-2.5 py-1 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
+    return `<span class="font-mono text-[13px] px-3 py-1.5 rounded-full font-medium whitespace-nowrap border ${cls}">${r.toFixed(1)}×</span>`;
   }
 
   function escapeHTML(value) {
@@ -133,7 +133,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
   function tokenizerLabel(model) {
     return `
       <div class="font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
-      <div class="font-mono text-[10.5px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
+      <div class="font-mono text-[14px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
     `;
   }
 
@@ -169,18 +169,18 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
 
     document.getElementById('hero-body').innerHTML = rows.map((row, i) => `
       <tr class="group hover:bg-bg-secondary transition-colors duration-300 ease-quint cursor-default">
-        <td class="font-mono text-[10px] text-text-tertiary w-8 py-3.5 px-4 border-b border-border align-middle">${i + 1}</td>
-        <td class="text-[14px] py-3.5 px-4 border-b border-border align-middle">${tokenizerLabel(row.model)}</td>
-        <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
-        <td class="font-mono text-[12px] text-text-secondary text-right py-3.5 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
-        <td class="py-3.5 px-4 border-b border-border align-middle">
+        <td class="font-mono text-[13px] text-text-tertiary w-8 py-4 px-4 border-b border-border align-middle">${i + 1}</td>
+        <td class="text-[19px] py-4 px-4 border-b border-border align-middle">${tokenizerLabel(row.model)}</td>
+        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
+        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
+        <td class="py-4 px-4 border-b border-border align-middle">
           <div class="flex items-center gap-3 justify-end">
             <div class="w-full max-w-[70px] h-[3px] bg-border-strong rounded-full overflow-hidden">
               <div class="h-full rounded-full transition-all duration-700 ease-quint" style="width:${Math.round((row.r / maxR) * 100)}%;background:${fillBgColor(row.r)}"></div>
             </div>
           </div>
         </td>
-        <td class="py-3.5 px-4 border-b border-border align-middle pr-4">${badge(row.r)}</td>
+        <td class="py-4 px-4 border-b border-border align-middle pr-4">${badge(row.r)}</td>
       </tr>`).join('');
 
     const best = rows[0];
@@ -189,19 +189,19 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
 
     document.getElementById('insight-strip').innerHTML = `
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">best tokenizer</div>
-        <div class="font-mono text-[1.25rem] font-medium mb-1 ${strokeColor(best.r)}">${best.name}</div>
-        <div class="text-[11px] text-text-secondary">used by ${escapeHTML(usedByText(best.model))}</div>
+        <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">best tokenizer</div>
+        <div class="font-mono text-[1.875rem] font-medium mb-1 ${strokeColor(best.r)}">${best.name}</div>
+        <div class="text-[16px] text-text-secondary">used by ${escapeHTML(usedByText(best.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">least efficient</div>
-        <div class="font-mono text-[1.25rem] font-medium mb-1 ${strokeColor(worst.r)}">${worst.name}</div>
-        <div class="text-[11px] text-text-secondary">used by ${escapeHTML(usedByText(worst.model))}</div>
+        <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">least efficient</div>
+        <div class="font-mono text-[1.875rem] font-medium mb-1 ${strokeColor(worst.r)}">${worst.name}</div>
+        <div class="text-[16px] text-text-secondary">used by ${escapeHTML(usedByText(worst.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[10px] text-text-tertiary tracking-[.08em] uppercase mb-1.5 font-mono">efficiency spread</div>
-        <div class="font-mono text-[1.25rem] font-medium text-text mb-1">${spread}%</div>
-        <div class="text-[11px] text-text-secondary">gap between best & worst</div>
+        <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">efficiency spread</div>
+        <div class="font-mono text-[1.875rem] font-medium text-text mb-1">${spread}%</div>
+        <div class="text-[16px] text-text-secondary">gap between best & worst</div>
       </div>`;
 
     renderCalc(activeLangId);
@@ -218,12 +218,12 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     document.getElementById('calc-results').innerHTML = rows.map(row => `
       <div class="flex justify-between items-start gap-4 py-1.5">
         <span class="cursor-default select-none">
-          <span class="block text-[13.5px] text-text-secondary font-medium transition-colors duration-300 hover:text-text">${escapeHTML(row.name)}</span>
-          <span class="block font-mono text-[10px] text-text-tertiary mt-0.5">used by ${escapeHTML(usedByText(row.model))}</span>
+          <span class="block text-[18px] text-text-secondary font-medium transition-colors duration-300 hover:text-text">${escapeHTML(row.name)}</span>
+          <span class="block font-mono text-[14px] text-text-tertiary mt-0.5">used by ${escapeHTML(usedByText(row.model))}</span>
         </span>
-        <span class="text-[12px] font-medium font-mono ${textColorClass(row.r)}">
+        <span class="text-[16px] font-medium font-mono ${textColorClass(row.r)}">
           ${row.r.toFixed(1)}×
-          <span class="text-text-tertiary text-[11px] ml-2">($${row.cost.toFixed(2)}/1M tags)</span>
+          <span class="text-text-tertiary text-[14px] ml-2">($${row.cost.toFixed(2)}/1M tags)</span>
         </span>
       </div>`).join('');
   }
