@@ -6,6 +6,8 @@ Handles tokenization across different models and providers.
 
 import logging
 
+from mothertoken.core.registry import ModelType
+
 log = logging.getLogger("mothertoken")
 
 
@@ -85,20 +87,20 @@ def tokenize_sentences(model: dict, sentences: list[str], cache: dict, dry_run: 
 
     tok_cache_key = ("tokenizer", mtype, ref)
 
-    if mtype == "tiktoken":
+    if mtype == ModelType.TIKTOKEN:
         if tok_cache_key not in cache:
             cache[tok_cache_key] = load_tiktoken_tokenizer(ref)
         counts = tokenize_tiktoken(cache[tok_cache_key], sentences)
 
-    elif mtype == "huggingface":
+    elif mtype == ModelType.HUGGINGFACE:
         if tok_cache_key not in cache:
             cache[tok_cache_key] = load_hf_tokenizer(ref)
         counts = tokenize_hf(cache[tok_cache_key], sentences)
 
-    elif mtype == "anthropic_api":
+    elif mtype == ModelType.ANTHROPIC_API:
         counts = tokenize_anthropic_api(ref, sentences)
 
-    elif mtype == "google_api":
+    elif mtype == ModelType.GOOGLE_API:
         counts = tokenize_google_api(ref, sentences)
 
     else:

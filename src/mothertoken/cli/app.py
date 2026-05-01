@@ -20,6 +20,8 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
+from mothertoken.core.registry import LOCAL_MODEL_TYPES, AccessMode, ModelType
+
 app = typer.Typer(
     name="mothertoken",
     help="Rank language efficiency and tokenize text across models.",
@@ -114,17 +116,18 @@ def _load_models_config() -> list[dict]:
 
 
 def _model_access(model: dict) -> str:
-    if model["type"] in ("tiktoken", "huggingface"):
-        return "local"
-    return "API"
+    access = model.get("access")
+    if access:
+        return "API" if access == AccessMode.API else access
+    return AccessMode.LOCAL.value if model["type"] in LOCAL_MODEL_TYPES else "API"
 
 
 def _tokenizer_backend(model: dict) -> str:
     labels = {
-        "tiktoken": "tiktoken",
-        "huggingface": "Hugging Face",
-        "anthropic_api": "Anthropic",
-        "google_api": "Google",
+        ModelType.TIKTOKEN.value: "tiktoken",
+        ModelType.HUGGINGFACE.value: "Hugging Face",
+        ModelType.ANTHROPIC_API.value: "Anthropic",
+        ModelType.GOOGLE_API.value: "Google",
     }
     return f"{labels.get(model['type'], model['type'])} / {model['ref']}"
 
@@ -157,6 +160,8 @@ def _show_model_ranking(language: str) -> None:
 
     console.print()
     console.print(f"[bold]📊 Model ranking for[/] [cyan]{language}[/]")
+    if data.get("version"):
+        console.print(f"[dim]Benchmark version:[/] {data['version']}")
     console.print()
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
@@ -212,7 +217,7 @@ def models(
     """List supported models and tokenizer access."""
     models_cfg = _load_models_config()
     if local_only:
-        models_cfg = [m for m in models_cfg if m["type"] in ("tiktoken", "huggingface")]
+        models_cfg = [m for m in models_cfg if m["type"] in LOCAL_MODEL_TYPES]
 
     if not models_cfg:
         err_console.print("[bold red]Error:[/] No models are configured.")
@@ -299,8 +304,8 @@ def tokenize(
         paired_english_text = english_text
 
     all_models = _load_models_config()
-    local_models = [m for m in all_models if m["type"] in ("tiktoken", "huggingface")]
-    api_models = [m for m in all_models if m["type"] not in ("tiktoken", "huggingface")]
+    local_models = [m for m in all_models if m["type"] in LOCAL_MODEL_TYPES]
+    api_models = [m for m in all_models if m["type"] not in LOCAL_MODEL_TYPES]
 
     if model is not None:
         model_cfg = next((m for m in all_models if m["id"] == model), None)
@@ -311,7 +316,7 @@ def tokenize(
                 available += "\nAPI-backed models require --include-api."
             err_console.print(f"[bold red]Error:[/] Model [yellow]{model}[/] not found.\nAvailable: {available}")
             raise typer.Exit(code=1)
-        if model_cfg["type"] not in ("tiktoken", "huggingface") and not include_api:
+        if model_cfg["type"] not in LOCAL_MODEL_TYPES and not include_api:
             err_console.print(
                 f"[bold red]Error:[/] Model [yellow]{model}[/] uses an API-backed tokenizer. "
                 "Rerun with [bold]--include-api[/] and the required provider API key."
