@@ -56,7 +56,7 @@ def main() -> None:
             'Tokenizing: "Hola mundo"',
             "Benchmark language:",
             "spa_Latn",
-            "GPT-4o",
+            "OpenAI o200k_base",
             "English Est.",
             "Vs English",
         ],

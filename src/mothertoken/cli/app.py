@@ -378,7 +378,7 @@ def tokenize(
                 results.append((tokenizer_cfg, None, None, None, str(e)))
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
-    table.add_column("Model")
+    table.add_column("ID")
     if include_api:
         table.add_column("Access")
     table.add_column("Tokens", justify="right")
