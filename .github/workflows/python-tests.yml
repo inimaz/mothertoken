@@ -4,9 +4,13 @@ on:
   pull_request:
     paths:
       - "**/*.py"
-      - "data/benchmark.json"
+      - "src/mothertoken/data/benchmark.json"
+      - "src/mothertoken/data/models.yaml"
+      - "README.md"
+      - "LICENSE"
       - "pyproject.toml"
       - "uv.lock"
+      - ".github/workflows/python-tests.yml"
 
 env:
   PYTHON_VERSION: "3.11"
@@ -34,3 +38,32 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+
+  package-smoke:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081
+        with:
+          enable-cache: true
+
+      - name: Install Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Build package
+        run: uv build
+
+      - name: Install built wheel
+        run: |
+          python -m venv .smoke-venv
+          .smoke-venv/bin/pip install dist/mothertoken-*.whl
+
+      - name: Smoke test installed CLI
+        run: python tests/smoke_installed_cli.py --bin-dir .smoke-venv/bin

@@ -11,6 +11,24 @@ version = "0.1.0"
 description = "Benchmarking tool for tokenizer efficiency across languages and models"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Inigo" },
+]
+keywords = ["tokenizer", "llm", "multilingual", "benchmark", "fairness"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+]
 dependencies = [
     "datasets>=2.14.0",
     "huggingface_hub>=0.20.0",
@@ -26,6 +44,22 @@ dependencies = [
 [project.scripts]
 mothertoken = "mothertoken.cli.app:app"
 mothertoken-benchmark = "mothertoken.benchmark.runner:main"
+
+[project.urls]
+Homepage = "https://github.com/inimaz/mothertoken"
+Repository = "https://github.com/inimaz/mothertoken"
+Issues = "https://github.com/inimaz/mothertoken/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mothertoken"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
 
 [dependency-groups]
 dev = [

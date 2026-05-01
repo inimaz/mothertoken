@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "web/**"
-      - "data/benchmark.json"
+      - "src/mothertoken/data/benchmark.json"
 
 env:
   NODE_VERSION: "20"

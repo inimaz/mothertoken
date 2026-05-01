@@ -6,35 +6,14 @@ Loads the bundled benchmark.json and provides helpers to query it.
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
 from typing import Any
 
-
-# Walk up from __file__ to find the project root containing data/benchmark.json.
-# This works for both editable installs (src layout) and regular installs.
-def _find_benchmark_path() -> Path:
-    candidate = Path(__file__).resolve()
-    for _ in range(8):
-        candidate = candidate.parent
-        p = candidate / "data" / "benchmark.json"
-        if p.exists():
-            return p
-    # Fallback: standard install places data/ alongside the package root
-    return Path(__file__).resolve().parent.parent.parent.parent / "data" / "benchmark.json"
-
-
-_BENCHMARK_PATH = _find_benchmark_path()
+from mothertoken.core.resources import load_benchmark_data
 
 
 def load_benchmark() -> dict[str, Any]:
     """Load benchmark.json. Raises FileNotFoundError if not found."""
-    if not _BENCHMARK_PATH.exists():
-        raise FileNotFoundError(
-            f"benchmark.json not found at {_BENCHMARK_PATH}. Run the benchmark runner first to generate it."
-        )
-    with open(_BENCHMARK_PATH, encoding="utf-8") as f:
-        return json.load(f)
+    return load_benchmark_data()
 
 
 def get_languages(data: dict[str, Any]) -> list[str]:
