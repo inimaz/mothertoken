@@ -33,8 +33,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       <h1 class="text-[3.5rem] font-medium leading-[1.06] text-text mb-6 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
       <p class="text-[21px] text-text-secondary leading-[1.6] max-w-[680px] mb-12">
         Tokenizer efficiency is a proxy for how well a model understands your language.
-        The same content in Thai needs 2.8× more tokens than in English —
-        less effective context window, worse reasoning, higher cost multiplier.
+        <span id="hero-language-stat">Different tokenizers spend tokens differently across languages.</span>
       </p>
     </section>
     
@@ -121,6 +120,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
   const languageSelect = document.getElementById('language-sel');
   const languageHint = document.getElementById('language-hint');
   const analysisLabel = document.getElementById('analysis-label');
+  const heroLanguageStat = document.getElementById('hero-language-stat');
   const viewTabs = document.querySelectorAll('[data-view-tab]');
   const viewPanels = document.querySelectorAll('[data-view-panel]');
   let activeLangId = benchmark.baseline;
@@ -194,6 +194,16 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     setAnalysisLabel();
   }
 
+  function setHeroLanguageStat(lang, rows) {
+    if (activeLangId === benchmark.baseline) {
+      heroLanguageStat.textContent = `${lang.name} is the 1.0x baseline for the comparison table.`;
+      return;
+    }
+
+    const worst = rows[rows.length - 1];
+    heroLanguageStat.textContent = `The same content in ${lang.name} might need ${worst.r.toFixed(1)}× as many tokens as English. This means less effective context window, worse reasoning, higher cost multiplier.`;
+  }
+
   function tokenizerLabel(model) {
     return `
       <div class="font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
@@ -230,6 +240,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     }).sort((a, b) => a.r - b.r);
 
     const maxR = Math.max(...rows.map(x => x.r));
+    setHeroLanguageStat(lang, rows);
 
     document.getElementById('hero-body').innerHTML = rows.map((row, i) => `
       <tr class="group hover:bg-bg-secondary transition-colors duration-300 ease-quint cursor-default">
@@ -287,7 +298,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
         </span>
         <span class="text-[16px] font-medium font-mono ${textColorClass(row.r)}">
           ${row.r.toFixed(1)}×
-          <span class="text-text-tertiary text-[14px] ml-2">($${row.cost.toFixed(2)}/1M tags)</span>
+          <span class="text-text-tertiary text-[14px] ml-2">($${row.cost.toFixed(2)}/1M tokens)</span>
         </span>
       </div>`).join('');
   }

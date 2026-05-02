@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
 import AlphaBanner from "../components/AlphaBanner.astro";
 import Footer from "../components/Footer.astro";
+import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../constants";
 ---
 
 <Base title="mothertoken — methodology">
@@ -15,12 +16,12 @@ import Footer from "../components/Footer.astro";
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      <strong>FLORES-200</strong> (CC BY-SA 4.0, managed by OLDI / Meta FAIR). 1,012
+      <strong> <a href={FLORES_URL} target="_blank" rel="noopener noreferrer">FLORES-200</a></strong> (CC BY-SA 4.0, managed by OLDI / Meta FAIR). 1,012
       professionally translated sentences across 200 languages. We use the <strong
         >dev split</strong
       > for the public benchmark. The devtest split is kept as a private held-out
       validation set to monitor for benchmark drift across model versions. Raw sentences
-      are never published — only aggregated metrics.
+      are never published — only aggregated metrics. 
     </div>
 
     <div class="section-head">
@@ -82,11 +83,8 @@ import Footer from "../components/Footer.astro";
     </div>
     <div class="method-block">
       Each benchmark release is versioned by date and pins specific tokenizer
-      library versions. The benchmark script is published at <strong
-        >github.com/inimaz/mothertoken</strong
-      >. To reproduce: clone the repo, authenticate with Hugging Face if
-      needed, then run <code>mothertoken-benchmark --dry-run</code> and
-      <code>mothertoken-benchmark</code>.
+      library versions. The benchmark script is published at <strong><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/inimaz/mothertoken</a></strong>.
+      To reproduce it yourself, see the <strong><a href={MOTHERTOKEN_BENCHMARK_DOCS_URL} target="_blank" rel="noopener noreferrer">benchmarking documentation</a></strong> for detailed instructions.
     </div>
 
     <div class="section-head">
