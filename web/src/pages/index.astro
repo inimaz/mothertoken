@@ -298,7 +298,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
         </span>
         <span class="text-[16px] font-medium font-mono ${textColorClass(row.r)}">
           ${row.r.toFixed(1)}×
-          <span class="text-text-tertiary text-[14px] ml-2">($${row.cost.toFixed(2)}/1M tags)</span>
+          <span class="text-text-tertiary text-[14px] ml-2">($${row.cost.toFixed(2)}/1M tokens)</span>
         </span>
       </div>`).join('');
   }
