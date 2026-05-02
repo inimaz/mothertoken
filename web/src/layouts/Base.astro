@@ -15,6 +15,24 @@ const {
 <!doctype html>
 <html lang="en">
   <head>
+    <script is:inline>
+      (() => {
+        const storageKey = 'mothertoken-theme';
+        const root = document.documentElement;
+
+        try {
+          const savedTheme = localStorage.getItem(storageKey);
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          const theme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemTheme;
+
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+        } catch {
+          root.dataset.theme = 'light';
+          root.style.colorScheme = 'light';
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />

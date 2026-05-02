@@ -12,24 +12,81 @@ const tabs = [
 ];
 ---
 
-<nav class="flex items-center justify-between mt-6 mb-16 animate-fade-in-up">
+<nav class="flex flex-wrap items-center justify-between gap-4 mt-6 mb-16 animate-fade-in-up">
   <a href="/" class="flex items-center gap-2 text-[20px] font-semibold text-text tracking-tight no-underline group">
     <img src="/favicon.svg" alt="" class="h-5 w-5" />
     <span>mothertoken<span class="text-text-tertiary group-hover:text-text transition-colors duration-300">_</span></span>
   </a>
-  <div class="flex items-center gap-1 bg-bg-secondary p-1 rounded-lg border border-border">
-    {tabs.map(tab => (
-      <a
-        href={tab.href}
-        class:list={[
-          'font-mono text-[14px] px-[16px] py-[8px] rounded-md cursor-pointer transition-all duration-300 ease-quint no-underline select-none',
-          activeTab === tab.id 
-            ? 'bg-bg text-text shadow-sm border border-border-strong' 
-            : 'text-text-tertiary hover:text-text hover:bg-border border border-transparent'
-        ]}
-      >
-        {tab.label}
-      </a>
-    ))}
+  <div class="flex w-full min-w-0 items-center gap-2 sm:w-auto">
+    <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-lg border border-border bg-bg-secondary p-1">
+      {tabs.map(tab => (
+        <a
+          href={tab.href}
+          class:list={[
+            'font-mono text-[14px] px-[16px] py-[8px] rounded-md cursor-pointer transition-all duration-300 ease-quint no-underline select-none whitespace-nowrap',
+            activeTab === tab.id
+              ? 'bg-bg text-text shadow-sm border border-border-strong'
+              : 'text-text-tertiary hover:text-text hover:bg-border border border-transparent'
+          ]}
+        >
+          {tab.label}
+        </a>
+      ))}
+    </div>
+    <button
+      type="button"
+      class="theme-toggle"
+      data-theme-toggle
+      aria-label="Switch color theme"
+      title="Switch color theme"
+    >
+      <svg data-theme-icon="moon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z" />
+      </svg>
+      <svg data-theme-icon="sun" aria-hidden="true" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2.5v2.1M12 19.4v2.1M4.6 4.6l1.5 1.5M17.9 17.9l1.5 1.5M2.5 12h2.1M19.4 12h2.1M4.6 19.4l1.5-1.5M17.9 6.1l1.5-1.5" />
+      </svg>
+    </button>
   </div>
 </nav>
+
+<script>
+  const themeButtons = document.querySelectorAll('[data-theme-toggle]');
+  const themeStorageKey = 'mothertoken-theme';
+  const themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function getTheme() {
+    const savedTheme = localStorage.getItem(themeStorageKey);
+    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    return themeQuery.matches ? 'dark' : 'light';
+  }
+
+  function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+
+    themeButtons.forEach((button) => {
+      const nextTheme = theme === 'dark' ? 'light' : 'dark';
+      button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+      button.setAttribute('title', `Switch to ${nextTheme} mode`);
+      button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    });
+  }
+
+  themeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(themeStorageKey, nextTheme);
+      setTheme(nextTheme);
+    });
+  });
+
+  themeQuery.addEventListener('change', () => {
+    if (!localStorage.getItem(themeStorageKey)) {
+      setTheme(getTheme());
+    }
+  });
+
+  setTheme(getTheme());
+</script>
