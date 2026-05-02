@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="web/public/favicon.svg" alt="mothertoken logo" width="96" height="96">
+</p>
+
 # mothertoken
 
 > *Every model has a native tongue. The question is whether yours matches.*
