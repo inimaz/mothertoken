@@ -1,7 +1,6 @@
 ---
 import benchmark from "../data/benchmark";
-
-const GITHUB_URL = "https://github.com/inimaz/mothertoken";
+import { GITHUB_URL, FLORES_URL} from "../constants";
 ---
 
 <footer
@@ -9,7 +8,7 @@ const GITHUB_URL = "https://github.com/inimaz/mothertoken";
 >
   <div class="flex gap-4">
     <span class="font-mono text-[14px] text-text-tertiary"
-      >corpus <span class="text-text">flores-200</span>
+      >corpus <span class="text-text"><a href={FLORES_URL} target="_blank" rel="noopener noreferrer">flores-200</a></span>
     </span>
     <span class="text-[14px] text-border-strong">/</span>
     <span class="font-mono text-[14px] text-text-tertiary"

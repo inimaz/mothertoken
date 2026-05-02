@@ -23,7 +23,7 @@ src/
     Footer.astro        ← corpus + license info
   pages/
     index.astro         ← home: locale detection + ranked table + calculator
-    benchmark.astro     ← full benchmark explorer + model × language matrix
+    benchmark.astro     ← full benchmark explorer by tokenizer
     cli.astro           ← CLI usage examples
     methodology.astro   ← corpus, metrics, integrity, reproducibility
   styles/
