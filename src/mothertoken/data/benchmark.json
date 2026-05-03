@@ -1,5 +1,5 @@
 {
-  "version": "2026-05-01",
+  "version": "2026-05-03",
   "flores_split": "dev",
   "flores_dataset": "openlanguagedata/flores_plus",
   "baseline_language": "eng_Latn",
@@ -15,7 +15,12 @@
       "verification_method": "local_fixture_count",
       "used_by_examples": [
         "GPT-4o",
-        "GPT-4.1"
+        "GPT-4.1",
+        "GPT-4.5",
+        "GPT-5",
+        "o1",
+        "o3",
+        "o4-mini"
       ],
       "api_key_env": null
     },
@@ -108,31 +113,71 @@
     },
     {
       "id": "gpt-oss",
-      "name": "GPT-OSS tokenizer",
+      "name": "OpenAI o200k_harmony",
       "provider": "openai",
-      "type": "huggingface",
-      "ref": "openai/gpt-oss-20b",
+      "type": "tiktoken",
+      "ref": "o200k_harmony",
       "access": "local",
-      "tokenizer_source": "huggingface",
+      "tokenizer_source": "tiktoken",
       "verification_method": "local_fixture_count",
       "used_by_examples": [
-        "GPT-OSS 20B",
-        "GPT-OSS 120B"
+        "GPT-OSS"
       ],
       "api_key_env": null
     },
     {
       "id": "gpt2",
-      "name": "GPT-2 tokenizer",
+      "name": "OpenAI gpt2",
       "provider": "openai",
-      "type": "huggingface",
-      "ref": "openai-community/gpt2",
+      "type": "tiktoken",
+      "ref": "gpt2",
       "access": "local",
-      "tokenizer_source": "huggingface",
+      "tokenizer_source": "tiktoken",
       "verification_method": "local_fixture_count",
       "used_by_examples": [
-        "GPT-2",
-        "DistilGPT2"
+        "GPT-2"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "gpt-3",
+      "name": "OpenAI r50k_base",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "r50k_base",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "GPT-3"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "codex",
+      "name": "OpenAI p50k_base",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "p50k_base",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "Codex"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "codex-edit",
+      "name": "OpenAI p50k_edit",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "p50k_edit",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "Codex edit"
       ],
       "api_key_env": null
     },
@@ -303,7 +348,12 @@
       "verification_method": "local_fixture_count",
       "used_by_examples": [
         "GPT-4o",
-        "GPT-4.1"
+        "GPT-4.1",
+        "GPT-4.5",
+        "GPT-5",
+        "o1",
+        "o3",
+        "o4-mini"
       ],
       "api_key_env": null
     },
@@ -396,31 +446,71 @@
     },
     {
       "id": "gpt-oss",
-      "name": "GPT-OSS tokenizer",
+      "name": "OpenAI o200k_harmony",
       "provider": "openai",
-      "type": "huggingface",
-      "ref": "openai/gpt-oss-20b",
+      "type": "tiktoken",
+      "ref": "o200k_harmony",
       "access": "local",
-      "tokenizer_source": "huggingface",
+      "tokenizer_source": "tiktoken",
       "verification_method": "local_fixture_count",
       "used_by_examples": [
-        "GPT-OSS 20B",
-        "GPT-OSS 120B"
+        "GPT-OSS"
       ],
       "api_key_env": null
     },
     {
       "id": "gpt2",
-      "name": "GPT-2 tokenizer",
+      "name": "OpenAI gpt2",
       "provider": "openai",
-      "type": "huggingface",
-      "ref": "openai-community/gpt2",
+      "type": "tiktoken",
+      "ref": "gpt2",
       "access": "local",
-      "tokenizer_source": "huggingface",
+      "tokenizer_source": "tiktoken",
       "verification_method": "local_fixture_count",
       "used_by_examples": [
-        "GPT-2",
-        "DistilGPT2"
+        "GPT-2"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "gpt-3",
+      "name": "OpenAI r50k_base",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "r50k_base",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "GPT-3"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "codex",
+      "name": "OpenAI p50k_base",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "p50k_base",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "Codex"
+      ],
+      "api_key_env": null
+    },
+    {
+      "id": "codex-edit",
+      "name": "OpenAI p50k_edit",
+      "provider": "openai",
+      "type": "tiktoken",
+      "ref": "p50k_edit",
+      "access": "local",
+      "tokenizer_source": "tiktoken",
+      "verification_method": "local_fixture_count",
+      "used_by_examples": [
+        "Codex edit"
       ],
       "api_key_env": null
     },
@@ -653,6 +743,33 @@
         "fertility": 1.228,
         "rtc": 1.0
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 125194,
+        "total_tokens": 25741,
+        "total_words": 20954,
+        "chars_per_token": 4.864,
+        "fertility": 1.228,
+        "rtc": 1.0
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 125194,
+        "total_tokens": 25741,
+        "total_words": 20954,
+        "chars_per_token": 4.864,
+        "fertility": 1.228,
+        "rtc": 1.0
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 125194,
+        "total_tokens": 25741,
+        "total_words": 20954,
+        "chars_per_token": 4.864,
+        "fertility": 1.228,
+        "rtc": 1.0
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 125194,
@@ -782,6 +899,33 @@
         "rtc": 1.133
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 148789,
+        "total_tokens": 51029,
+        "total_words": 24146,
+        "chars_per_token": 2.916,
+        "fertility": 2.113,
+        "rtc": 1.668
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 148789,
+        "total_tokens": 51029,
+        "total_words": 24146,
+        "chars_per_token": 2.916,
+        "fertility": 2.113,
+        "rtc": 1.668
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 148789,
+        "total_tokens": 51029,
+        "total_words": 24146,
+        "chars_per_token": 2.916,
+        "fertility": 2.113,
+        "rtc": 1.668
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 148789,
         "total_tokens": 51029,
@@ -927,6 +1071,33 @@
         "fertility": 2.058,
         "rtc": 1.665
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 149187,
+        "total_tokens": 51075,
+        "total_words": 24819,
+        "chars_per_token": 2.921,
+        "fertility": 2.058,
+        "rtc": 1.665
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 149187,
+        "total_tokens": 51075,
+        "total_words": 24819,
+        "chars_per_token": 2.921,
+        "fertility": 2.058,
+        "rtc": 1.665
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 149187,
+        "total_tokens": 51075,
+        "total_words": 24819,
+        "chars_per_token": 2.921,
+        "fertility": 2.058,
+        "rtc": 1.665
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 149187,
@@ -1064,6 +1235,33 @@
         "fertility": 2.212,
         "rtc": 1.773
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 136009,
+        "total_tokens": 49574,
+        "total_words": 22409,
+        "chars_per_token": 2.744,
+        "fertility": 2.212,
+        "rtc": 1.773
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 136009,
+        "total_tokens": 49573,
+        "total_words": 22409,
+        "chars_per_token": 2.744,
+        "fertility": 2.212,
+        "rtc": 1.773
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 136009,
+        "total_tokens": 49573,
+        "total_words": 22409,
+        "chars_per_token": 2.744,
+        "fertility": 2.212,
+        "rtc": 1.773
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 136009,
@@ -1193,6 +1391,33 @@
         "rtc": 1.113
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 146558,
+        "total_tokens": 55059,
+        "total_words": 20903,
+        "chars_per_token": 2.662,
+        "fertility": 2.634,
+        "rtc": 1.827
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 146558,
+        "total_tokens": 55059,
+        "total_words": 20903,
+        "chars_per_token": 2.662,
+        "fertility": 2.634,
+        "rtc": 1.827
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 146558,
+        "total_tokens": 55059,
+        "total_words": 20903,
+        "chars_per_token": 2.662,
+        "fertility": 2.634,
+        "rtc": 1.827
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 146558,
         "total_tokens": 55059,
@@ -1338,6 +1563,33 @@
         "fertility": 5.994,
         "rtc": 4.946
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 110574,
+        "total_tokens": 112439,
+        "total_words": 18759,
+        "chars_per_token": 0.983,
+        "fertility": 5.994,
+        "rtc": 4.946
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 110574,
+        "total_tokens": 112439,
+        "total_words": 18759,
+        "chars_per_token": 0.983,
+        "fertility": 5.994,
+        "rtc": 4.946
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 110574,
+        "total_tokens": 112439,
+        "total_words": 18759,
+        "chars_per_token": 0.983,
+        "fertility": 5.994,
+        "rtc": 4.946
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 110574,
@@ -1467,6 +1719,33 @@
         "rtc": 3.756
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 42179,
+        "total_tokens": 82405,
+        "total_words": 2041,
+        "chars_per_token": 0.512,
+        "fertility": 40.375,
+        "rtc": 9.502
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 42179,
+        "total_tokens": 82405,
+        "total_words": 2041,
+        "chars_per_token": 0.512,
+        "fertility": 40.375,
+        "rtc": 9.502
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 42179,
+        "total_tokens": 82405,
+        "total_words": 2041,
+        "chars_per_token": 0.512,
+        "fertility": 40.375,
+        "rtc": 9.502
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 42179,
         "total_tokens": 82405,
@@ -1612,6 +1891,33 @@
         "fertility": 71.755,
         "rtc": 6.787
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 54658,
+        "total_tokens": 76276,
+        "total_words": 1063,
+        "chars_per_token": 0.717,
+        "fertility": 71.755,
+        "rtc": 6.787
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 54658,
+        "total_tokens": 76276,
+        "total_words": 1063,
+        "chars_per_token": 0.717,
+        "fertility": 71.755,
+        "rtc": 6.787
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 54658,
+        "total_tokens": 76276,
+        "total_words": 1063,
+        "chars_per_token": 0.717,
+        "fertility": 71.755,
+        "rtc": 6.787
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 54658,
@@ -1741,6 +2047,33 @@
         "rtc": 2.017
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 120268,
+        "total_tokens": 230307,
+        "total_words": 4123,
+        "chars_per_token": 0.522,
+        "fertility": 55.859,
+        "rtc": 9.314
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 120268,
+        "total_tokens": 230307,
+        "total_words": 4123,
+        "chars_per_token": 0.522,
+        "fertility": 55.859,
+        "rtc": 9.314
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 120268,
+        "total_tokens": 230307,
+        "total_words": 4123,
+        "chars_per_token": 0.522,
+        "fertility": 55.859,
+        "rtc": 9.314
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 120268,
         "total_tokens": 230307,
@@ -1886,6 +2219,33 @@
         "fertility": 7.786,
         "rtc": 7.433
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 125366,
+        "total_tokens": 191589,
+        "total_words": 24607,
+        "chars_per_token": 0.654,
+        "fertility": 7.786,
+        "rtc": 7.433
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 125366,
+        "total_tokens": 191589,
+        "total_words": 24607,
+        "chars_per_token": 0.654,
+        "fertility": 7.786,
+        "rtc": 7.433
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 125366,
+        "total_tokens": 191589,
+        "total_words": 24607,
+        "chars_per_token": 0.654,
+        "fertility": 7.786,
+        "rtc": 7.433
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 125366,
@@ -2023,6 +2383,33 @@
         "fertility": 8.802,
         "rtc": 10.03
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 63011,
+        "total_tokens": 129947,
+        "total_words": 14764,
+        "chars_per_token": 0.485,
+        "fertility": 8.802,
+        "rtc": 10.03
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 63011,
+        "total_tokens": 129945,
+        "total_words": 14764,
+        "chars_per_token": 0.485,
+        "fertility": 8.801,
+        "rtc": 10.03
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 63011,
+        "total_tokens": 129945,
+        "total_words": 14764,
+        "chars_per_token": 0.485,
+        "fertility": 8.801,
+        "rtc": 10.03
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 63011,
@@ -2152,6 +2539,33 @@
         "rtc": 1.382
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 128573,
+        "total_tokens": 62210,
+        "total_words": 16692,
+        "chars_per_token": 2.067,
+        "fertility": 3.727,
+        "rtc": 2.353
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 128573,
+        "total_tokens": 62210,
+        "total_words": 16692,
+        "chars_per_token": 2.067,
+        "fertility": 3.727,
+        "rtc": 2.353
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 128573,
+        "total_tokens": 62210,
+        "total_words": 16692,
+        "chars_per_token": 2.067,
+        "fertility": 3.727,
+        "rtc": 2.353
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 128573,
         "total_tokens": 62210,
@@ -2297,6 +2711,33 @@
         "fertility": 8.024,
         "rtc": 5.568
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 128847,
+        "total_tokens": 147518,
+        "total_words": 18385,
+        "chars_per_token": 0.873,
+        "fertility": 8.024,
+        "rtc": 5.568
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 128847,
+        "total_tokens": 147518,
+        "total_words": 18385,
+        "chars_per_token": 0.873,
+        "fertility": 8.024,
+        "rtc": 5.568
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 128847,
+        "total_tokens": 147518,
+        "total_words": 18385,
+        "chars_per_token": 0.873,
+        "fertility": 8.024,
+        "rtc": 5.568
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 128847,
@@ -2426,6 +2867,33 @@
         "rtc": 1.404
       },
       "gpt2": {
+        "num_sentences": 997,
+        "total_chars": 131990,
+        "total_tokens": 116467,
+        "total_words": 29193,
+        "chars_per_token": 1.133,
+        "fertility": 3.99,
+        "rtc": 4.292
+      },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 131990,
+        "total_tokens": 116467,
+        "total_words": 29193,
+        "chars_per_token": 1.133,
+        "fertility": 3.99,
+        "rtc": 4.292
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 131990,
+        "total_tokens": 116467,
+        "total_words": 29193,
+        "chars_per_token": 1.133,
+        "fertility": 3.99,
+        "rtc": 4.292
+      },
+      "codex-edit": {
         "num_sentences": 997,
         "total_chars": 131990,
         "total_tokens": 116467,
@@ -2571,6 +3039,33 @@
         "fertility": 2.691,
         "rtc": 2.024
       },
+      "gpt-3": {
+        "num_sentences": 997,
+        "total_chars": 131675,
+        "total_tokens": 54800,
+        "total_words": 20361,
+        "chars_per_token": 2.403,
+        "fertility": 2.691,
+        "rtc": 2.024
+      },
+      "codex": {
+        "num_sentences": 997,
+        "total_chars": 131675,
+        "total_tokens": 54800,
+        "total_words": 20361,
+        "chars_per_token": 2.403,
+        "fertility": 2.691,
+        "rtc": 2.024
+      },
+      "codex-edit": {
+        "num_sentences": 997,
+        "total_chars": 131675,
+        "total_tokens": 54800,
+        "total_words": 20361,
+        "chars_per_token": 2.403,
+        "fertility": 2.691,
+        "rtc": 2.024
+      },
       "opt": {
         "num_sentences": 997,
         "total_chars": 131675,
@@ -2637,8 +3132,8 @@
     }
   },
   "errors": {
-    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69f4f906-79e30e0a00a715a97cda182f;5184a939-d716-41bf-aa89-dcdf19c22bda)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
-    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69f4f914-7e3d284033b4df4804c3d7a5;1def03e3-c0bf-4490-890d-d7624fad5d50)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
+    "llama3": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B.\n403 Client Error. (Request ID: Root=1-69f7805d-05fcb74327f6c9213fa4a1f3;29838192-78e2-4c56-aaf4-eac0ce8c6263)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B/resolve/main/config.json.\nAccess to model meta-llama/Meta-Llama-3-8B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B to ask for access.",
+    "gemma2": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/google/gemma-2-9b.\n403 Client Error. (Request ID: Root=1-69f78068-6c9134d563a22f285fa60d87;bfbb245c-1353-4eda-b183-32b0260ee2f5)\n\nCannot access gated repo for url https://huggingface.co/google/gemma-2-9b/resolve/main/config.json.\nAccess to model google/gemma-2-9b is restricted and you are not in the authorized list. Visit https://huggingface.co/google/gemma-2-9b to ask for access.",
     "deberta-v3-base": "Error parsing line b'\\x0e' in /home/inigo/.cache/huggingface/hub/models--microsoft--deberta-v3-base/snapshots/8ccc9b6f36199bec6961081d44eb72fb3f7353f3/spm.model",
     "claude-sonnet": "ANTHROPIC_API_KEY environment variable is missing.",
     "gemini-pro": "GOOGLE_API_KEY environment variable is missing."
