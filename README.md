@@ -44,9 +44,6 @@ mothertoken rank spa_Latn
 See which tokenizer IDs can be used and which familiar models use them.
 ```bash
 mothertoken list
-
-# Only local tokenizers
-mothertoken list --local-only
 ```
 
 ### 🔤 Tokenize exact text
@@ -56,10 +53,6 @@ mothertoken tokenize "Hola Mundo" --language es
 
 # Check one model
 mothertoken tokenize "Hello" --model gpt-4o
-
-# Include API-backed provider token counters when API keys are configured
-mothertoken tokenize "Hello" --include-api
-mothertoken tokenize "Hello" --model claude-sonnet --include-api
 
 # Estimate the English-equivalent count for a known language
 mothertoken tokenize "مرحبا بالعالم" --language ar --model gpt-4o

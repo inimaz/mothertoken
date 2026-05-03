@@ -50,11 +50,9 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      Public tokenizers (GPT-4o via tiktoken, LLaMA 3 / Mistral / Qwen / Gemma
-      via HuggingFace) are run locally — no API calls, exact counts. Closed
-      tokenizers (Claude, Gemini) use the official
-      <strong>count_tokens</strong> endpoints provided by Anthropic and Google respectively.
-      Results are cached to avoid redundant API calls.
+      MotherToken exposes local tokenizers only. Public tokenizers are run
+      locally (via tiktoken or via HuggingFace) with exact counts. API token counters (e.g. Claude/Gemini) are not included for now, since they can change arbitrarily as providers update their models, and they cannot be reproduced by users.
+      MotherToken's local benchmarks are fully reproducible and contamination-resistant, since tokenization is fixed at training time and does not change with exposure.
     </div>
 
     <div class="section-head">

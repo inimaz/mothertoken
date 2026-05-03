@@ -48,9 +48,9 @@ Run public local tokenizers only:
 uv run mothertoken-benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
 ```
 
-## API-Backed Tokenizers
+## Provider Token Counters
 
-Closed tokenizer APIs require provider keys:
+Closed tokenizer counters require provider credentials:
 
 ```bash
 export ANTHROPIC_API_KEY=your_key
