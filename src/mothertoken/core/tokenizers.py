@@ -10,6 +10,8 @@ from mothertoken.core.registry import ModelType
 
 log = logging.getLogger("mothertoken")
 
+FALLBACK_MAX_POSITION_EMBEDDINGS = 131_072
+
 
 def load_tiktoken_tokenizer(ref: str):
     import tiktoken
@@ -23,9 +25,22 @@ def tokenize_tiktoken(tokenizer, sentences: list[str]) -> list[int]:
 
 def load_hf_tokenizer(ref: str):
     from transformers import AutoTokenizer
+    from transformers.configuration_utils import PreTrainedConfig
 
     log.info(f"Loading HuggingFace tokenizer: {ref}")
-    return AutoTokenizer.from_pretrained(ref)
+    try:
+        return AutoTokenizer.from_pretrained(ref)
+    except AttributeError as exc:
+        if "max_position_embeddings" not in str(exc):
+            raise
+        log.warning(
+            "Retrying HuggingFace tokenizer load for %s with a minimal config that includes max_position_embeddings.",
+            ref,
+        )
+        return AutoTokenizer.from_pretrained(
+            ref,
+            config=PreTrainedConfig(max_position_embeddings=FALLBACK_MAX_POSITION_EMBEDDINGS),
+        )
 
 
 def tokenize_hf(tokenizer, sentences: list[str]) -> list[int]:

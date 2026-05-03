@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from mothertoken.benchmark.runner import compute_metrics, run_benchmark, save_benchmark
+from mothertoken.benchmark.runner import _get_models, compute_metrics, load_config, run_benchmark, save_benchmark
 
 # ---------------------------------------------------------------------------
 # compute_metrics Tests
@@ -55,6 +55,48 @@ def test_compute_metrics_zero_words():
 # ---------------------------------------------------------------------------
 # run_benchmark Tests
 # ---------------------------------------------------------------------------
+
+
+def test_load_config_uses_tokenizer_registry_service():
+    fake_config = {"tokenizers": [{"id": "gpt-4o"}]}
+
+    with patch("mothertoken.benchmark.runner.TokenizerRegistryService") as mock_service_class:
+        mock_service = mock_service_class.return_value
+        mock_service.path_info.return_value = {"path": "/tmp/tokenizers.yaml", "exists": True}
+        mock_service.exists.return_value = True
+        mock_service.load.return_value = fake_config
+
+        assert load_config() == fake_config
+        mock_service_class.assert_called_once_with()
+        mock_service.path_info.assert_called_once_with()
+        mock_service.exists.assert_called_once_with()
+        mock_service.load.assert_called_once_with()
+
+
+def test_load_config_reports_registry_path_when_missing():
+    with patch("mothertoken.benchmark.runner.TokenizerRegistryService") as mock_service_class:
+        mock_service = mock_service_class.return_value
+        mock_service.path_info.return_value = {"path": "/tmp/missing-tokenizers.yaml", "exists": False}
+        mock_service.exists.return_value = False
+
+        with pytest.raises(FileNotFoundError, match="/tmp/missing-tokenizers.yaml"):
+            load_config()
+
+
+def test_get_models_uses_tokenizer_registry_service_list():
+    fake_config = {"tokenizers": [{"id": "gpt-4o"}]}
+    fake_entries = [{"id": "gpt-4o"}]
+
+    with (
+        patch("mothertoken.benchmark.runner._get_config", return_value=fake_config),
+        patch("mothertoken.benchmark.runner.TokenizerRegistryService") as mock_service_class,
+    ):
+        mock_service = mock_service_class.return_value
+        mock_service.list.return_value = fake_entries
+
+        assert _get_models() == fake_entries
+        mock_service_class.assert_called_once_with()
+        mock_service.list.assert_called_once_with(fake_config)
 
 
 @patch("mothertoken.benchmark.runner.load_flores_sentences")

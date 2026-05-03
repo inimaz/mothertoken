@@ -5,9 +5,30 @@ from pathlib import Path
 import pytest
 import yaml
 
-from mothertoken.core.tokenizer_registry_service import HEADER, TokenizerRegistryService
+from mothertoken.core.tokenizer_registry_service import DEFAULT_TOKENIZERS_PATH, HEADER, TokenizerRegistryService
 
 UNUSED_PATH = Path("unused-tokenizers.yaml")
+
+
+def test_default_path_points_to_bundled_tokenizers_yaml():
+    service = TokenizerRegistryService()
+
+    assert service.path == DEFAULT_TOKENIZERS_PATH
+    assert service.path.name == "tokenizers.yaml"
+    assert service.path.parent.name == "data"
+
+
+def test_path_info_reports_path_and_exists(tmp_path):
+    path = tmp_path / "tokenizers.yaml"
+    service = TokenizerRegistryService(path)
+
+    assert service.exists() is False
+    assert service.path_info() == {"path": str(path), "exists": False}
+
+    path.write_text("tokenizers: []\n", encoding="utf-8")
+
+    assert service.exists() is True
+    assert service.path_info() == {"path": str(path), "exists": True}
 
 
 def test_create_adds_tokenizer_entry():

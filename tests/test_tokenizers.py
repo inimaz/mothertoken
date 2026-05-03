@@ -1,6 +1,9 @@
 from unittest.mock import patch
 
-from mothertoken.core.tokenizers import tokenize_sentences
+import pytest
+from transformers.configuration_utils import PreTrainedConfig
+
+from mothertoken.core.tokenizers import FALLBACK_MAX_POSITION_EMBEDDINGS, load_hf_tokenizer, tokenize_sentences
 
 
 def test_tokenizer_caching():
@@ -69,6 +72,35 @@ def test_huggingface_caching():
         assert mock_load.call_count == 1
         assert mock_tokenize.call_count == 1
         assert counts1 == counts2 == [2]
+
+
+def test_load_hf_tokenizer_retries_missing_max_position_embeddings():
+    tokenizer = object()
+
+    with patch("transformers.AutoTokenizer.from_pretrained") as mock_from_pretrained:
+        mock_from_pretrained.side_effect = [
+            AttributeError("'PreTrainedConfig' object has no attribute 'max_position_embeddings'"),
+            tokenizer,
+        ]
+
+        assert load_hf_tokenizer("deepseek-ai/DeepSeek-V3.2") is tokenizer
+
+    assert mock_from_pretrained.call_count == 2
+    assert mock_from_pretrained.call_args_list[0].args == ("deepseek-ai/DeepSeek-V3.2",)
+    retry_kwargs = mock_from_pretrained.call_args_list[1].kwargs
+    assert mock_from_pretrained.call_args_list[1].args == ("deepseek-ai/DeepSeek-V3.2",)
+    assert isinstance(retry_kwargs["config"], PreTrainedConfig)
+    assert retry_kwargs["config"].max_position_embeddings == FALLBACK_MAX_POSITION_EMBEDDINGS
+
+
+def test_load_hf_tokenizer_reraises_unrelated_attribute_error():
+    with patch("transformers.AutoTokenizer.from_pretrained") as mock_from_pretrained:
+        mock_from_pretrained.side_effect = AttributeError("unrelated")
+
+        with pytest.raises(AttributeError, match="unrelated"):
+            load_hf_tokenizer("broken/model")
+
+    assert mock_from_pretrained.call_count == 1
 
 
 def test_api_caching():
