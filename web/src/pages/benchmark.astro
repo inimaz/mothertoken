@@ -51,10 +51,9 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
           <tr>
             <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[25%]">language</th>
             <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[12%]">script</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[20%]">chars/token</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[15%]">fertility</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[10%]">rtc</th>
-            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[18%]"></th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[22%]">chars/token</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[17%]">fertility</th>
+            <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-center py-3.5 px-4 border-b border-border w-[24%]">efficiency (rtc)</th>
           </tr>
         </thead>
         <tbody id="full-body"></tbody>
@@ -127,8 +126,7 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
         <td class="font-mono text-[14px] text-text-tertiary py-4 px-4 border-b border-border align-middle">${row.script}</td>
         <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.cpt.toFixed(1)}</td>
         <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.fert.toFixed(2)}</td>
-        <td class="font-mono text-[16px] text-text-secondary text-right py-4 px-4 border-b border-border align-middle">${row.r.toFixed(1)}×</td>
-        <td class="py-4 px-4 border-b border-border align-middle pl-6">${badge(row.r)}</td>
+        <td class="text-center py-4 px-4 border-b border-border align-middle">${badge(row.r)}</td>
       </tr>`).join('');
   }
 
