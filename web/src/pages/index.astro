@@ -80,7 +80,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">chars/token</th>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">fertility</th>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[14%]">vs english</th>
-                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[15%]">efficiency</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-center py-3.5 px-4 border-b border-border w-[15%]">efficiency (rtc)</th>
               </tr>
             </thead>
             <tbody id="hero-body">
@@ -255,7 +255,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
             </div>
           </div>
         </td>
-        <td class="py-4 px-4 border-b border-border align-middle pr-4">${badge(row.r)}</td>
+        <td class="text-center py-4 px-4 border-b border-border align-middle">${badge(row.r)}</td>
       </tr>`).join('');
 
     const best = rows[0];
