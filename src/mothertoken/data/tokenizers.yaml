@@ -4,7 +4,7 @@
 
 tokenizers:
   - id: gpt-4o
-    name: "OpenAI o200k_base"
+    name: OpenAI o200k_base
     provider: openai
     type: tiktoken
     ref: o200k_base
@@ -14,10 +14,14 @@ tokenizers:
     used_by_examples:
       - GPT-4o
       - GPT-4.1
+      - GPT-4.5
+      - GPT-5
+      - o1
+      - o3
+      - o4-mini
     api_key_env: null
-
   - id: gpt-4
-    name: "OpenAI cl100k_base"
+    name: OpenAI cl100k_base
     provider: openai
     type: tiktoken
     ref: cl100k_base
@@ -28,9 +32,8 @@ tokenizers:
       - GPT-4
       - GPT-3.5 Turbo
     api_key_env: null
-
   - id: llama3
-    name: "Llama 3 tokenizer"
+    name: Llama 3 tokenizer
     provider: meta
     type: huggingface
     ref: meta-llama/Meta-Llama-3-8B
@@ -40,9 +43,8 @@ tokenizers:
     used_by_examples:
       - Llama 3
     api_key_env: null
-
   - id: qwen3
-    name: "Qwen 3 tokenizer"
+    name: Qwen 3 tokenizer
     provider: qwen
     type: huggingface
     ref: Qwen/Qwen3-0.6B
@@ -53,9 +55,8 @@ tokenizers:
       - Qwen 3
       - Qwen3-0.6B
     api_key_env: null
-
   - id: mistral
-    name: "Mistral 7B tokenizer"
+    name: Mistral 7B tokenizer
     provider: mistral
     type: huggingface
     ref: mistralai/Mistral-7B-v0.1
@@ -65,9 +66,8 @@ tokenizers:
     used_by_examples:
       - Mistral 7B
     api_key_env: null
-
   - id: qwen2.5
-    name: "Qwen 2.5 tokenizer"
+    name: Qwen 2.5 tokenizer
     provider: qwen
     type: huggingface
     ref: Qwen/Qwen2.5-7B-Instruct
@@ -78,9 +78,8 @@ tokenizers:
       - Qwen 2.5
       - Qwen2.5-7B-Instruct
     api_key_env: null
-
   - id: deepseek-v3
-    name: "DeepSeek V3 tokenizer"
+    name: DeepSeek V3 tokenizer
     provider: deepseek
     type: huggingface
     ref: deepseek-ai/DeepSeek-V3.2
@@ -90,35 +89,63 @@ tokenizers:
     used_by_examples:
       - DeepSeek V3.2
     api_key_env: null
-
   - id: gpt-oss
-    name: "GPT-OSS tokenizer"
+    name: OpenAI o200k_harmony
     provider: openai
-    type: huggingface
-    ref: openai/gpt-oss-20b
+    type: tiktoken
+    ref: o200k_harmony
     access: local
-    tokenizer_source: huggingface
+    tokenizer_source: tiktoken
     verification_method: local_fixture_count
     used_by_examples:
-      - GPT-OSS 20B
-      - GPT-OSS 120B
+      - GPT-OSS
     api_key_env: null
-
   - id: gpt2
-    name: "GPT-2 tokenizer"
+    name: OpenAI gpt2
     provider: openai
-    type: huggingface
-    ref: openai-community/gpt2
+    type: tiktoken
+    ref: gpt2
     access: local
-    tokenizer_source: huggingface
+    tokenizer_source: tiktoken
     verification_method: local_fixture_count
     used_by_examples:
       - GPT-2
-      - DistilGPT2
     api_key_env: null
-
+  - id: gpt-3
+    name: OpenAI r50k_base
+    provider: openai
+    type: tiktoken
+    ref: r50k_base
+    access: local
+    tokenizer_source: tiktoken
+    verification_method: local_fixture_count
+    used_by_examples:
+      - GPT-3
+    api_key_env: null
+  - id: codex
+    name: OpenAI p50k_base
+    provider: openai
+    type: tiktoken
+    ref: p50k_base
+    access: local
+    tokenizer_source: tiktoken
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Codex
+    api_key_env: null
+  - id: codex-edit
+    name: OpenAI p50k_edit
+    provider: openai
+    type: tiktoken
+    ref: p50k_edit
+    access: local
+    tokenizer_source: tiktoken
+    verification_method: local_fixture_count
+    used_by_examples:
+      - Codex edit
+    api_key_env: null
   - id: opt
-    name: "OPT tokenizer"
+    name: OPT tokenizer
     provider: meta
     type: huggingface
     ref: facebook/opt-125m
@@ -128,9 +155,8 @@ tokenizers:
     used_by_examples:
       - OPT
     api_key_env: null
-
   - id: tinyllama
-    name: "TinyLlama tokenizer"
+    name: TinyLlama tokenizer
     provider: tinyllama
     type: huggingface
     ref: TinyLlama/TinyLlama-1.1B-Chat-v1.0
@@ -140,9 +166,8 @@ tokenizers:
     used_by_examples:
       - TinyLlama
     api_key_env: null
-
   - id: pythia
-    name: "Pythia tokenizer"
+    name: Pythia tokenizer
     provider: eleutherai
     type: huggingface
     ref: EleutherAI/pythia-160m
@@ -152,9 +177,8 @@ tokenizers:
     used_by_examples:
       - Pythia
     api_key_env: null
-
   - id: gemma2
-    name: "Gemma 2 tokenizer"
+    name: Gemma 2 tokenizer
     provider: google
     type: huggingface
     ref: google/gemma-2-9b
@@ -164,9 +188,8 @@ tokenizers:
     used_by_examples:
       - Gemma 2
     api_key_env: null
-
   - id: bert-base-uncased
-    name: "BERT base uncased tokenizer"
+    name: BERT base uncased tokenizer
     provider: google
     type: huggingface
     ref: google-bert/bert-base-uncased
@@ -176,9 +199,8 @@ tokenizers:
     used_by_examples:
       - BERT base uncased
     api_key_env: null
-
   - id: roberta-base
-    name: "RoBERTa base tokenizer"
+    name: RoBERTa base tokenizer
     provider: meta
     type: huggingface
     ref: FacebookAI/roberta-base
@@ -188,9 +210,8 @@ tokenizers:
     used_by_examples:
       - RoBERTa base
     api_key_env: null
-
   - id: xlm-roberta-base
-    name: "XLM-RoBERTa base tokenizer"
+    name: XLM-RoBERTa base tokenizer
     provider: meta
     type: huggingface
     ref: FacebookAI/xlm-roberta-base
@@ -200,9 +221,8 @@ tokenizers:
     used_by_examples:
       - XLM-RoBERTa base
     api_key_env: null
-
   - id: distilbert-base-uncased
-    name: "DistilBERT base uncased tokenizer"
+    name: DistilBERT base uncased tokenizer
     provider: huggingface
     type: huggingface
     ref: distilbert/distilbert-base-uncased
@@ -212,9 +232,8 @@ tokenizers:
     used_by_examples:
       - DistilBERT base uncased
     api_key_env: null
-
   - id: deberta-v3-base
-    name: "DeBERTa v3 base tokenizer"
+    name: DeBERTa v3 base tokenizer
     provider: microsoft
     type: huggingface
     ref: microsoft/deberta-v3-base
@@ -224,9 +243,8 @@ tokenizers:
     used_by_examples:
       - DeBERTa v3 base
     api_key_env: null
-
   - id: claude-sonnet
-    name: "Claude Sonnet tokenizer"
+    name: Claude Sonnet tokenizer
     provider: anthropic
     type: anthropic_api
     ref: claude-sonnet-4-6
@@ -236,9 +254,8 @@ tokenizers:
     used_by_examples:
       - Claude Sonnet
     api_key_env: ANTHROPIC_API_KEY
-
   - id: gemini-pro
-    name: "Gemini Pro tokenizer"
+    name: Gemini Pro tokenizer
     provider: google
     type: google_api
     ref: gemini-1.5-pro

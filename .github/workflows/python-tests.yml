@@ -5,7 +5,8 @@ on:
     paths:
       - "**/*.py"
       - "src/mothertoken/data/benchmark.json"
-      - "src/mothertoken/data/models.yaml"
+      - "src/mothertoken/data/tokenizers.yaml"
+      - "scripts/sync_tiktoken_tokenizers.py"
       - "README.md"
       - "LICENSE"
       - "pyproject.toml"
@@ -35,6 +36,11 @@ jobs:
 
       - name: Install dependencies
         run: uv sync --group tests
+
+        # Check that tiktoken has no new model. If it does, run the sync script,
+        # run mothertoken-benchmark to regenerate the benchmark, and commit the changes
+      - name: Check tiktoken tokenizer registry
+        run: uv run python scripts/sync_tiktoken_tokenizers.py --check
 
       - name: Run tests
         run: uv run pytest
