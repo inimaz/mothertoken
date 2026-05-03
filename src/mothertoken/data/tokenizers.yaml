@@ -243,25 +243,3 @@ tokenizers:
     used_by_examples:
       - DeBERTa v3 base
     api_key_env: null
-  - id: claude-sonnet
-    name: Claude Sonnet tokenizer
-    provider: anthropic
-    type: anthropic_api
-    ref: claude-sonnet-4-6
-    access: api
-    tokenizer_source: provider_api
-    verification_method: provider_count_tokens
-    used_by_examples:
-      - Claude Sonnet
-    api_key_env: ANTHROPIC_API_KEY
-  - id: gemini-pro
-    name: Gemini Pro tokenizer
-    provider: google
-    type: google_api
-    ref: gemini-1.5-pro
-    access: api
-    tokenizer_source: provider_api
-    verification_method: provider_count_tokens
-    used_by_examples:
-      - Gemini Pro
-    api_key_env: GOOGLE_API_KEY
