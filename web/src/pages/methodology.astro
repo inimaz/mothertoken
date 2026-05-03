@@ -31,11 +31,11 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
     <div class="method-block">
       <strong>Chars/token</strong> — total characters divided by total tokens across
       all benchmark sentences. Higher is better: more meaning per token means the
-      model sees more coherent units.
+      tokenizer packs the same text into fewer units.
     </div>
     <div class="method-block">
       <strong>Fertility</strong> — tokens per word. Lower is better: fewer fragments
-      per word means the model reasons over concepts rather than byte sequences.
+      per word means less fragmentation before the model sees the text.
     </div>
     <div class="method-block">
       <strong>RTC (Relative Tokenization Cost)</strong> — English chars/token divided
@@ -50,10 +50,10 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      MotherToken exposes local tokenizers only. Public tokenizers are run
-      locally (via tiktoken or via HuggingFace) with exact counts. MotherToken's
-      local benchmarks are fully reproducible and contamination-resistant, since
-      tokenization is fixed at training time and does not change with exposure.
+      The public benchmark is a curated starter set of concrete tokenizer refs,
+      not an exhaustive catalog. Local counters run via tiktoken or Hugging Face
+      tokenizer files with exact counts. The CLI can compare additional user-supplied
+      Hugging Face refs without adding them to the bundled benchmark.
     </div>
 
     <div class="section-head">
@@ -61,12 +61,10 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      Tokenizer efficiency is determined at training time and frozen into the
-      model vocabulary. A model cannot overfit its tokenizer to FLORES at
-      inference time — the tokenizer either fragments a word efficiently or it
-      doesn't, regardless of prior exposure. This makes tokenization benchmarks
-      significantly more contamination-resistant than comprehension or
-      translation benchmarks.
+      Tokenizer efficiency is determined by tokenizer files such as vocabulary,
+      merge rules, normalization, and special tokens. A model cannot change those
+      files at inference time. This makes tokenization benchmarks significantly
+      more contamination-resistant than comprehension or translation benchmarks.
     </div>
     <div class="method-block">
       Raw FLORES+ sentences are never published in any public artifact. The
@@ -82,7 +80,7 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
     </div>
     <div class="method-block">
       Each benchmark release is versioned by date and pins specific tokenizer
-      library versions. The benchmark script is published at <strong><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/inimaz/mothertoken</a></strong>.
+      refs and library versions. The benchmark script is published at <strong><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/inimaz/mothertoken</a></strong>.
       To reproduce it yourself, see the <strong><a href={MOTHERTOKEN_BENCHMARK_DOCS_URL} target="_blank" rel="noopener noreferrer">benchmarking documentation</a></strong> for detailed instructions.
     </div>
 
@@ -91,8 +89,8 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      MIT licensed. Contributions welcome — especially new model support and
-      additional language coverage.
+      MIT licensed. Contributions welcome — especially better tokenizer refs,
+      comparison workflows, and additional language coverage.
     </div>
 
     <Footer />

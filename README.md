@@ -6,10 +6,10 @@
 
 > *Every model has a native tongue. The question is whether yours matches.*
 
-Benchmarking tool and dataset exploring how tokenizer design creates silent efficiency, quality, and carbon inequities for non-English languages.
+Toolkit for comparing tokenizer efficiency across languages, model families, and user-supplied Hugging Face refs.
 
 > [!NOTE]
-> **Alpha release:** tokenizer coverage is still expanding. The current tokenizer list is useful for comparison, but it is not complete yet.
+> **Alpha release:** the bundled benchmark is curated and representative, not exhaustive. Use direct Hugging Face refs when you want to compare tokenizers outside the starter set.
 
 ## Installation
 
@@ -54,6 +54,9 @@ mothertoken tokenize "Hola Mundo" --language es
 # Check one model
 mothertoken tokenize "Hello" --model gpt-4o
 
+# Check a Hugging Face model/tokenizer ref directly
+mothertoken tokenize "Hello" --model Qwen/Qwen3-0.6B
+
 # Estimate the English-equivalent count for a known language
 mothertoken tokenize "مرحبا بالعالم" --language ar --model gpt-4o
 
@@ -67,11 +70,30 @@ mothertoken tokenize --file prompt.txt
 mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt
 ```
 
+### ⚖️ Compare selected tokenizers
+Compare aliases from `mothertoken list` with direct Hugging Face refs. This is the main workflow when you care about a specific set of models.
+```bash
+mothertoken compare "Travesura realizada" \
+  --model gpt-4o \
+  --model Qwen/Qwen3-0.6B \
+  --model mistralai/Mistral-7B-v0.1
+
+mothertoken compare --file prompt.txt \
+  --model mistralai/Mistral-7B-v0.1 \
+  --model deepseek-ai/DeepSeek-V4-Pro
+```
+
 ---
 
 ## Researcher Workflow
 
 Benchmark regeneration and model-extension docs live in [`docs/benchmarking.md`](docs/benchmarking.md).
+
+You can also benchmark a direct Hugging Face ref without adding it to `tokenizers.yaml`:
+
+```bash
+uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
+```
 
 ## License
 MIT

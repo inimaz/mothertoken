@@ -3,7 +3,14 @@ from unittest.mock import patch
 
 import pytest
 
-from mothertoken.benchmark.runner import _get_models, compute_metrics, load_config, run_benchmark, save_benchmark
+from mothertoken.benchmark.runner import (
+    _get_models,
+    compute_metrics,
+    load_config,
+    resolve_benchmark_models,
+    run_benchmark,
+    save_benchmark,
+)
 
 # ---------------------------------------------------------------------------
 # compute_metrics Tests
@@ -99,6 +106,25 @@ def test_get_models_uses_tokenizer_registry_service_list():
         mock_service.list.assert_called_once_with(fake_config)
 
 
+def test_resolve_benchmark_models_accepts_aliases_and_huggingface_refs():
+    with patch(
+        "mothertoken.benchmark.runner._get_models",
+        return_value=[{"id": "gpt-4o", "type": "tiktoken", "ref": "o200k_base"}],
+    ):
+        selected = resolve_benchmark_models(["gpt-4o", "Qwen/Qwen3-0.6B"])
+
+    assert selected[0]["id"] == "gpt-4o"
+    assert selected[1]["id"] == "Qwen/Qwen3-0.6B"
+    assert selected[1]["type"] == "huggingface"
+    assert selected[1]["ref"] == "Qwen/Qwen3-0.6B"
+
+
+def test_resolve_benchmark_models_rejects_unknown_one_word_ids():
+    with patch("mothertoken.benchmark.runner._get_models", return_value=[{"id": "gpt-4o"}]):
+        with pytest.raises(ValueError, match="Unknown model/tokenizer"):
+            resolve_benchmark_models(["typo-model"])
+
+
 @patch("mothertoken.benchmark.runner.load_flores_sentences")
 @patch("mothertoken.benchmark.runner.tokenizers.tokenize_sentences")
 def test_run_benchmark_flow(mock_tokenize, mock_load_flores):
@@ -134,6 +160,27 @@ def test_run_benchmark_flow(mock_tokenize, mock_load_flores):
 
         assert results["tha_Thai"]["gpt-4o"]["rtc"] == 1.0
         assert not errors
+
+
+@patch("mothertoken.benchmark.runner.load_flores_sentences")
+@patch("mothertoken.benchmark.runner.tokenizers.tokenize_sentences")
+def test_run_benchmark_accepts_direct_huggingface_ref(mock_tokenize, mock_load_flores):
+    call_log = []
+
+    def fake_tokenize(model_cfg, sentences, cache, dry_run):
+        call_log.append(model_cfg)
+        return [3, 3]
+
+    mock_load_flores.return_value = ["hello", "world"]
+    mock_tokenize.side_effect = fake_tokenize
+
+    with patch("mothertoken.benchmark.runner._get_models", return_value=[]):
+        results, errors = run_benchmark(["eng_Latn"], ["Qwen/Qwen3-0.6B"], dry_run=False)
+
+    assert not errors
+    assert "Qwen/Qwen3-0.6B" in results["eng_Latn"]
+    assert call_log[0]["type"] == "huggingface"
+    assert call_log[0]["ref"] == "Qwen/Qwen3-0.6B"
 
 
 @patch("mothertoken.benchmark.runner.load_flores_sentences")
@@ -176,3 +223,20 @@ def test_save_benchmark(tmp_path):
             assert data["metrics"] == results
             assert data["baseline_language"] == "eng_Latn"
             assert len(data["models"]) == 1
+
+
+def test_save_benchmark_includes_direct_huggingface_ref(tmp_path):
+    results = {"eng_Latn": {"Qwen/Qwen3-0.6B": {"rtc": 1.0}}}
+    errors = {}
+    output_path = tmp_path / "benchmark.json"
+    model_ids = ["Qwen/Qwen3-0.6B"]
+
+    with patch("mothertoken.benchmark.runner._get_models", return_value=[]):
+        save_benchmark(results, errors, output_path, model_ids)
+
+    with open(output_path) as f:
+        data = json.load(f)
+
+    assert data["models"][0]["id"] == "Qwen/Qwen3-0.6B"
+    assert data["models"][0]["type"] == "huggingface"
+    assert data["models"][0]["ref"] == "Qwen/Qwen3-0.6B"

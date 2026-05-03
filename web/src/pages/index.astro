@@ -32,8 +32,8 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       </div>
       <h1 class="text-[3.5rem] font-medium leading-[1.06] text-text mb-6 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
       <p class="text-[21px] text-text-secondary leading-[1.6] max-w-[680px] mb-12">
-        Tokenizer efficiency is a proxy for how well a model understands your language.
-        <span id="hero-language-stat">Different tokenizers spend tokens differently across languages.</span>
+        Compare curated tokenizer refs across languages, then bring your own Hugging Face refs in the CLI.
+        <span id="hero-language-stat">Different tokenizer files spend tokens differently across languages.</span>
       </p>
     </section>
     
@@ -201,7 +201,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     }
 
     const worst = rows[rows.length - 1];
-    heroLanguageStat.textContent = `The same content in ${lang.name} might need ${worst.r.toFixed(1)}× as many tokens as English. This means less effective context window, worse reasoning, higher cost multiplier.`;
+    heroLanguageStat.textContent = `The same content in ${lang.name} can need ${worst.r.toFixed(1)}× as many tokens as English with this curated set. That means less effective context window and higher cost.`;
   }
 
   function tokenizerLabel(model) {
@@ -276,7 +276,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
         <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">efficiency spread</div>
         <div class="font-mono text-[1.875rem] font-medium text-text mb-1">${spread}%</div>
-        <div class="text-[16px] text-text-secondary">gap between best & worst</div>
+        <div class="text-[16px] text-text-secondary">gap in curated set</div>
       </div>`;
 
     renderCalc(activeLangId);
