@@ -36,7 +36,7 @@ import CliTerminal from '../components/CliTerminal.astro';
     />
 
     <div class="section-head">
-      <span class="section-label">list tokenizers</span>
+      <span class="section-label">list curated aliases</span>
       <span class="section-rule"></span>
     </div>
     <CliTerminal
@@ -51,8 +51,31 @@ import CliTerminal from '../components/CliTerminal.astro';
         ],
       }}
       notes={[
-        'v1 exposes local counters only',
+        'these are starter aliases, not a complete tokenizer catalog',
         'local counters run on your machine',
+      ]}
+    />
+
+    <div class="section-head">
+      <span class="section-label">compare selected refs</span>
+      <span class="section-rule"></span>
+    </div>
+    <CliTerminal
+      commands={[
+        'mothertoken compare "Travesura realizada"  --model gpt-4o   --model Qwen/Qwen3-0.6B  --model mistralai/Mistral-7B-v0.1',
+        'mothertoken compare --file prompt.txt  --model mistralai/Mistral-7B-v0.1   --model deepseek-ai/DeepSeek-V4-Pro',
+      ]}
+      table={{
+        headers: ['tokenizer', 'ref', 'tokens', 'chars/token'],
+        rows: [
+          ['OpenAI o200k_base', 'o200k_base', '4', '4.750'],
+          ['Qwen/Qwen3-0.6B', 'Qwen/Qwen3-0.6B', '5', '3.800'],
+          ['Mistral 7B', 'mistralai/Mistral-7B-v0.1', '6', '3.167'],
+        ],
+      }}
+      notes={[
+        'use aliases from mothertoken list or direct Hugging Face refs',
+        'unknown one-word ids fail fast so typos do not become network lookups',
       ]}
     />
 
@@ -67,11 +90,12 @@ import CliTerminal from '../components/CliTerminal.astro';
         rows: [['GPT-4o', '5', '2.600', '3', '1.56x']],
       }}
       footerCommands={[
+        'mothertoken tokenize "Hello" --model Qwen/Qwen3-0.6B',
         'mothertoken tokenize --file prompt.txt',
         'mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt',
       ]}
       notes={[
-        'local counters run by default',
+        'local aliases and direct Hugging Face refs are supported',
         '--language adds benchmark English-equivalent estimates',
         '--english-text or --english-file adds a paired translation comparison',
       ]}
@@ -85,8 +109,9 @@ import CliTerminal from '../components/CliTerminal.astro';
       commands={[
         'mothertoken-benchmark --dry-run',
         'mothertoken-benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5',
+        'mothertoken-benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B',
       ]}
-      notes={['benchmark regeneration is documented separately from the everyday CLI']}
+      notes={['benchmark aliases and direct Hugging Face refs are both supported']}
       cursor
     />
 

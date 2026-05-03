@@ -208,6 +208,23 @@ def test_tokenize_single_model():
     assert "English Est." not in result.output
 
 
+def test_tokenize_accepts_direct_huggingface_ref():
+    call_log = []
+
+    def fake_tokenize(model_cfg, sentences, cache, dry_run):
+        call_log.append(model_cfg)
+        return [4]
+
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize):
+        result = runner.invoke(app, ["tokenize", "hello", "--model", "Qwen/Qwen3-0.6B"])
+
+    assert result.exit_code == 0, result.output
+    assert call_log[0]["id"] == "Qwen/Qwen3-0.6B"
+    assert call_log[0]["type"] == "huggingface"
+    assert call_log[0]["ref"] == "Qwen/Qwen3-0.6B"
+    assert "Qwen/Qwen3-0.6B" in result.output
+
+
 def test_tokenize_language_adds_benchmark_english_estimate():
     with (
         _patch_models(),
@@ -370,6 +387,54 @@ def test_tokenize_single_model_tokenizer_error_exits_1():
         result = runner.invoke(app, ["tokenize", "hello", "--model", "gpt-4o"])
     assert result.exit_code == 1
     assert "load failed" in result.output
+
+
+# ---------------------------------------------------------------------------
+# compare
+# ---------------------------------------------------------------------------
+
+
+def test_compare_accepts_aliases_and_direct_huggingface_refs():
+    call_log = []
+
+    def fake_tokenize(model_cfg, sentences, cache, dry_run):
+        call_log.append(model_cfg["ref"])
+        return [3] if model_cfg["id"] == "gpt-4o" else [5]
+
+    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize):
+        result = runner.invoke(
+            app,
+            [
+                "compare",
+                "hello world",
+                "--model",
+                "gpt-4o",
+                "--model",
+                "Qwen/Qwen3-0.6B",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    assert call_log == ["o200k_base", "Qwen/Qwen3-0.6B"]
+    assert "GPT-4o" in result.output
+    assert "Qwen/Qwen3-0.6B" in result.output
+    assert "Chars/Token" in result.output
+
+
+def test_compare_requires_model():
+    with _patch_models():
+        result = runner.invoke(app, ["compare", "hello"])
+
+    assert result.exit_code == 1
+    assert "provide at least one" in result.output.lower() or "provide at least one" in (result.stderr or "").lower()
+
+
+def test_compare_unknown_one_word_model_errors():
+    with _patch_models():
+        result = runner.invoke(app, ["compare", "hello", "--model", "unknown-model"])
+
+    assert result.exit_code == 1
+    assert "hugging face ref" in result.output.lower() or "hugging face ref" in (result.stderr or "").lower()
 
 
 def test_old_token_command_removed():

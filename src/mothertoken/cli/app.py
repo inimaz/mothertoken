@@ -6,6 +6,7 @@ Typer-based CLI for the mothertoken tool.
 Commands:
     rank      — rank all models for a given language from benchmark data
     list      — list supported tokenizers and counter sources
+    compare   — compare user-selected tokenizer aliases or Hugging Face refs
     tokenize  — count tokens in exact user-provided text
 """
 
@@ -122,6 +123,63 @@ def _is_local_tokenizer(model: dict) -> bool:
 def _public_tokenizers(tokenizers_cfg: list[dict]) -> list[dict]:
     """Tokenizers exposed through the public user CLI."""
     return [t for t in tokenizers_cfg if _is_local_tokenizer(t)]
+
+
+def _looks_like_hf_ref(model: str) -> bool:
+    """Return whether a model string should be treated as a direct HF repo/path ref."""
+    return "/" in model or Path(model).exists()
+
+
+def _hf_ref_tokenizer(ref: str) -> dict:
+    return {
+        "id": ref,
+        "name": ref,
+        "provider": "huggingface",
+        "type": ModelType.HUGGINGFACE.value,
+        "ref": ref,
+        "access": "local",
+        "tokenizer_source": "huggingface",
+        "verification_method": "user_supplied_ref",
+        "used_by_examples": [ref],
+        "api_key_env": None,
+    }
+
+
+def _resolve_tokenizer_selection(model: str, local_tokenizers: list[dict]) -> dict:
+    """Resolve a user model value as a curated alias or direct Hugging Face ref."""
+    tokenizer_cfg = next((t for t in local_tokenizers if t["id"] == model), None)
+    if tokenizer_cfg is not None:
+        return tokenizer_cfg
+    if _looks_like_hf_ref(model):
+        return _hf_ref_tokenizer(model)
+
+    available = ", ".join(t["id"] for t in local_tokenizers)
+    err_console.print(
+        f"[bold red]Error:[/] Tokenizer [yellow]{model}[/] not found.\n"
+        f"Use a configured alias ({available}) or a Hugging Face ref like [cyan]Qwen/Qwen3-0.6B[/]."
+    )
+    raise typer.Exit(code=1)
+
+
+def _read_input_text(
+    text: str | None,
+    file: Path | None,
+    *,
+    text_label: str = "text",
+    file_label: str = "--file",
+) -> str:
+    if text is None and file is None:
+        err_console.print(f"[bold red]Error:[/] Provide {text_label} or [bold]{file_label}[/].")
+        raise typer.Exit(code=1)
+    if text is not None and file is not None:
+        err_console.print(f"[bold red]Error:[/] Provide {text_label} or [bold]{file_label}[/], not both.")
+        raise typer.Exit(code=1)
+    if file is not None:
+        if not file.exists():
+            err_console.print(f"[bold red]Error:[/] File not found: {file}")
+            raise typer.Exit(code=1)
+        return file.read_text(encoding="utf-8")
+    return text or ""
 
 
 def _tokenizer_backend(model: dict) -> str:
@@ -281,22 +339,10 @@ def tokenize(
     ] = None,
 ):
     """Count tokens for exact text using local counters."""
-    if text is None and file is None:
-        err_console.print("[bold red]Error:[/] Provide text or [bold]--file[/].")
-        raise typer.Exit(code=1)
-    if text is not None and file is not None:
-        err_console.print("[bold red]Error:[/] Provide text or [bold]--file[/], not both.")
-        raise typer.Exit(code=1)
+    input_text = _read_input_text(text, file)
     if english_text is not None and english_file is not None:
         err_console.print("[bold red]Error:[/] Provide [bold]--english-text[/] or [bold]--english-file[/], not both.")
         raise typer.Exit(code=1)
-    if file is not None:
-        if not file.exists():
-            err_console.print(f"[bold red]Error:[/] File not found: {file}")
-            raise typer.Exit(code=1)
-        input_text = file.read_text(encoding="utf-8")
-    else:
-        input_text = text or ""
 
     paired_english_text: str | None = None
     if english_file is not None:
@@ -310,12 +356,7 @@ def tokenize(
     local_tokenizers = _public_tokenizers(_load_tokenizers_config())
 
     if model is not None:
-        tokenizer_cfg = next((t for t in local_tokenizers if t["id"] == model), None)
-        if tokenizer_cfg is None:
-            available = ", ".join(t["id"] for t in local_tokenizers)
-            err_console.print(f"[bold red]Error:[/] Tokenizer [yellow]{model}[/] not found.\nAvailable: {available}")
-            raise typer.Exit(code=1)
-        candidate_tokenizers = [tokenizer_cfg]
+        candidate_tokenizers = [_resolve_tokenizer_selection(model, local_tokenizers)]
     else:
         candidate_tokenizers = local_tokenizers
 
@@ -416,6 +457,78 @@ def tokenize(
         console.print("[dim]Paired Ratio compares your original text against the supplied English translation.[/]")
 
     if model is not None and errors:
+        raise typer.Exit(code=1)
+
+    console.print()
+
+
+# ---------------------------------------------------------------------------
+# compare
+# ---------------------------------------------------------------------------
+
+
+@app.command()
+def compare(
+    text: Annotated[str | None, typer.Argument(help="Text to compare exactly as provided")] = None,
+    file: Annotated[Path | None, typer.Option("--file", "-f", help="Path to a text file to compare")] = None,
+    models: Annotated[
+        list[str] | None,
+        typer.Option("--model", "-m", help="Tokenizer alias or Hugging Face ref. Repeat to compare multiple."),
+    ] = None,
+):
+    """Compare selected tokenizer aliases or Hugging Face refs on exact text."""
+    input_text = _read_input_text(text, file)
+    model_values = models or []
+    if not model_values:
+        err_console.print(
+            "[bold red]Error:[/] Provide at least one [bold]--model[/] alias or Hugging Face ref to compare."
+        )
+        raise typer.Exit(code=1)
+
+    local_tokenizers = _public_tokenizers(_load_tokenizers_config())
+    candidate_tokenizers = [_resolve_tokenizer_selection(model, local_tokenizers) for model in model_values]
+
+    from mothertoken.core.tokenizers import tokenize_sentences
+
+    cache: dict = {}
+    results: list[tuple[dict, int | None, float | None, str | None]] = []
+
+    preview = input_text.strip()[:60].replace("\n", " ")
+    if len(input_text) > 60:
+        preview += "..."
+
+    console.print()
+    console.print(f'[bold]Comparing:[/] [cyan]"{preview}"[/] ({len(input_text)} chars)\n')
+
+    with console.status("Running counters..."):
+        for tokenizer_cfg in candidate_tokenizers:
+            try:
+                token_count = tokenize_sentences(tokenizer_cfg, [input_text], cache, dry_run=False)[0]
+                cpt = len(input_text) / token_count if token_count > 0 else 0.0
+                results.append((tokenizer_cfg, token_count, cpt, None))
+            except Exception as e:
+                results.append((tokenizer_cfg, None, None, str(e)))
+
+    table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
+    table.add_column("Tokenizer")
+    table.add_column("Ref", overflow="fold")
+    table.add_column("Tokens", justify="right")
+    table.add_column("Chars/Token", justify="right")
+
+    sorted_results = sorted(results, key=lambda row: row[2] if row[2] is not None else -1, reverse=True)
+    for tokenizer_cfg, token_count, cpt, error in sorted_results:
+        if error is not None:
+            table.add_row(tokenizer_cfg["name"], tokenizer_cfg["ref"], "[red]error[/]", "—")
+            continue
+        table.add_row(tokenizer_cfg["name"], tokenizer_cfg["ref"], str(token_count), f"{cpt:.3f}")
+
+    console.print(table)
+
+    errors = [(tokenizer_cfg, error) for tokenizer_cfg, _, _, error in results if error is not None]
+    if errors:
+        console.print("\n[dim]Errors:[/]")
+        for tokenizer_cfg, error in errors:
+            console.print(f"  [yellow]{tokenizer_cfg['name']}[/]: [dim]{error}[/]")
         raise typer.Exit(code=1)
 
     console.print()

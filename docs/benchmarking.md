@@ -6,7 +6,7 @@ Most users do not need this workflow. The regular CLI reads the precomputed `src
 
 ## What The Benchmark Does
 
-The benchmark computes aggregate tokenizer-efficiency metrics across languages and models using FLORES+.
+The benchmark computes aggregate tokenizer-efficiency metrics across languages and tokenizer refs using FLORES+.
 
 Output is written to `src/mothertoken/data/benchmark.json`.
 
@@ -42,6 +42,18 @@ Run a smaller benchmark:
 uv run mothertoken-benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5
 ```
 
+Run a benchmark against a direct Hugging Face model/tokenizer ref:
+
+```bash
+uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
+```
+
+Curated aliases and direct Hugging Face refs can be mixed:
+
+```bash
+uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models gpt-4o,Qwen/Qwen3-0.6B
+```
+
 Run public local tokenizers only:
 
 ```bash
@@ -49,6 +61,10 @@ uv run mothertoken-benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
 ```
 
 ## Add A Tokenizer
+
+You do not need to edit `tokenizers.yaml` just to test a Hugging Face ref. Pass the ref directly to `--models`.
+
+Add an entry only when you want a stable alias, repeated benchmark coverage, or inclusion in the bundled benchmark.
 
 Add a local tokenizer entry to `src/mothertoken/data/tokenizers.yaml`:
 

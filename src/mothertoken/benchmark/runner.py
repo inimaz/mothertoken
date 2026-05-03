@@ -16,6 +16,9 @@ Usage:
     # Subset of models
     python run_benchmark.py --models gpt-4o,llama3,mistral
 
+    # Curated aliases and direct Hugging Face refs can be mixed
+    python run_benchmark.py --models gpt-4o,Qwen/Qwen3-0.6B
+
     # Dry run to verify setup
     python run_benchmark.py --dry-run
 
@@ -93,6 +96,51 @@ def _get_config() -> dict:
 
 def _get_models() -> list:
     return TokenizerRegistryService().list(_get_config())
+
+
+def _looks_like_hf_ref(model_id: str) -> bool:
+    return "/" in model_id or Path(model_id).exists()
+
+
+def _hf_ref_model(ref: str) -> dict:
+    return {
+        "id": ref,
+        "name": ref,
+        "provider": "huggingface",
+        "type": "huggingface",
+        "ref": ref,
+        "access": "local",
+        "tokenizer_source": "huggingface",
+        "verification_method": "user_supplied_ref",
+        "used_by_examples": [ref],
+        "api_key_env": None,
+    }
+
+
+def resolve_benchmark_models(model_ids: list[str]) -> list[dict]:
+    """Resolve configured tokenizer aliases and direct Hugging Face refs."""
+    configured_models = _get_models()
+    configured_by_id = {model["id"]: model for model in configured_models}
+    selected_models = []
+    missing_model_ids = []
+
+    for model_id in model_ids:
+        if model_id in configured_by_id:
+            selected_models.append(configured_by_id[model_id])
+        elif _looks_like_hf_ref(model_id):
+            selected_models.append(_hf_ref_model(model_id))
+        else:
+            missing_model_ids.append(model_id)
+
+    if missing_model_ids:
+        available = ", ".join(configured_by_id)
+        missing = ", ".join(missing_model_ids)
+        raise ValueError(
+            f"Unknown model/tokenizer id(s): {missing}. "
+            f"Use configured aliases ({available}) or Hugging Face refs like Qwen/Qwen3-0.6B."
+        )
+
+    return selected_models
 
 
 # ---------------------------------------------------------------------------
@@ -173,7 +221,7 @@ def run_benchmark(
     english_sentences = load_flores_sentences(ENGLISH_CONFIG) if not dry_run else ["Hello world."] * 10
     english_cpt = {}  # model_id -> chars_per_token
 
-    active_models = [m for m in _get_models() if m["id"] in model_ids]
+    active_models = resolve_benchmark_models(model_ids)
     successful_models = []
     failed_models_log = {}
 
@@ -222,13 +270,14 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
     Save benchmark results as versioned JSON.
     CRITICAL: raw sentences are never included in the output.
     """
+    selected_models = resolve_benchmark_models(model_ids)
     output = {
         "version": datetime.now(UTC).strftime("%Y-%m-%d"),
         "flores_split": FLORES_SPLIT,
         "flores_dataset": FLORES_DATASET,
         "baseline_language": ENGLISH_CONFIG,
-        "models": [m for m in _get_models() if m["id"] in model_ids],
-        "tokenizers": [m for m in _get_models() if m["id"] in model_ids],
+        "models": selected_models,
+        "tokenizers": selected_models,
         "metrics": results,
         "errors": errors,
         "note": (
