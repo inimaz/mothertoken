@@ -13,13 +13,23 @@ HEADER = """# mothertoken - Tokenizer registry for tokenization benchmarks
 # `used_by_examples` is discoverability metadata, not a complete model database.
 
 """
+DEFAULT_TOKENIZERS_PATH = Path(__file__).resolve().parent.parent / "data" / "tokenizers.yaml"
 
 
 class TokenizerRegistryService:
     """Load, query, mutate, and write a tokenizers.yaml config."""
 
-    def __init__(self, path: Path) -> None:
-        self.path = path
+    def __init__(self, path: Path | None = None) -> None:
+        self.path = path or DEFAULT_TOKENIZERS_PATH
+
+    def exists(self) -> bool:
+        return self.path.exists()
+
+    def path_info(self) -> dict[str, Any]:
+        return {
+            "path": str(self.path),
+            "exists": self.exists(),
+        }
 
     def load(self) -> dict[str, Any]:
         with self.path.open(encoding="utf-8") as file:

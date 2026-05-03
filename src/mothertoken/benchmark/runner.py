@@ -35,7 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from mothertoken.core import tokenizers
-from mothertoken.core.resources import load_tokenizers_config
+from mothertoken.core.tokenizer_registry_service import TokenizerRegistryService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
@@ -75,7 +75,13 @@ DEFAULT_LANGUAGES = [
 
 # Tokenizer registry and Configuration
 def load_config() -> dict:
-    return load_tokenizers_config()
+    registry = TokenizerRegistryService()
+    path_info = registry.path_info()
+    if not registry.exists():
+        raise FileNotFoundError(
+            f"tokenizers.yaml not found at {path_info['path']} (exists={path_info['exists']}). Reinstall mothertoken."
+        )
+    return registry.load()
 
 
 def _get_config() -> dict:
@@ -86,7 +92,7 @@ def _get_config() -> dict:
 
 
 def _get_models() -> list:
-    return _get_config().get("tokenizers", [])
+    return TokenizerRegistryService().list(_get_config())
 
 
 # ---------------------------------------------------------------------------
