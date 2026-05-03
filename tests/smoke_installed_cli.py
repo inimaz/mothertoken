@@ -28,26 +28,23 @@ def main() -> None:
     assert_contains(
         rank_output,
         [
-            "Model ranking for",
+            "Tokenizer ranking for",
             "arb_Arab",
             "Cost vs English",
             "is the most efficient tokenizer for arb_Arab",
         ],
     )
 
-    list_output = run_cli(args.bin_dir, "list", "--local-only")
+    list_output = run_cli(args.bin_dir, "list")
     assert_contains(
         list_output,
         [
             "ID",
             "Name",
             "Used by",
-            "Access",
-            "Tokenizer",
+            "Counter source",
         ],
     )
-    if "claude-sonnet" in list_output or "API" in list_output:
-        raise AssertionError(f"--local-only should not show API-backed tokenizers:\n{list_output}")
 
     tokenize_output = run_cli(args.bin_dir, "tokenize", "Hola mundo", "--language", "es", "--model", "gpt-4o")
     assert_contains(

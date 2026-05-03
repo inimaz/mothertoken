@@ -42,16 +42,18 @@ import CliTerminal from '../components/CliTerminal.astro';
     <CliTerminal
       commands={['mothertoken list']}
       table={{
-        headers: ['id', 'name', 'used by', 'access', 'tokenizer'],
+        headers: ['id', 'name', 'used by', 'counter source'],
         rows: [
-          ['gpt-4o', 'OpenAI o200k_base', 'GPT-4o, GPT-4.1', { text: 'local', tone: 'good' }, 'tiktoken / o200k_base'],
-          ['qwen2.5', 'Qwen 2.5 tokenizer', 'Qwen 2.5', { text: 'local', tone: 'good' }, 'Hugging Face / Qwen/Qwen2.5-7B'],
-          ['claude-sonnet', 'Claude Sonnet tokenizer', 'Claude Sonnet', { text: 'API', tone: 'warn' }, 'Anthropic / claude-sonnet-4-6'],
-          ['gemini-pro', 'Gemini Pro tokenizer', 'Gemini Pro', { text: 'API', tone: 'warn' }, 'Google / gemini-1.5-pro'],
+          ['gpt-4o', 'OpenAI o200k_base', 'GPT-4o, GPT-4.1', 'tiktoken / o200k_base'],
+          ['qwen2.5', 'Qwen 2.5 tokenizer', 'Qwen 2.5', 'Hugging Face / Qwen/Qwen2.5-7B'],
+          ['mistral', 'Mistral 7B tokenizer', 'Mistral 7B', 'Hugging Face / mistralai/Mistral-7B-v0.1'],
+          ['gemma2', 'Gemma 2 tokenizer', 'Gemma 2', 'Hugging Face / google/gemma-2-9b'],
         ],
       }}
-      footerCommands={['mothertoken list --local-only']}
-      notes={['the benchmark measures tokenizers; model names are examples that help you pick the right id']}
+      notes={[
+        'v1 exposes local counters only',
+        'local counters run on your machine',
+      ]}
     />
 
     <div class="section-head">
@@ -66,12 +68,10 @@ import CliTerminal from '../components/CliTerminal.astro';
       }}
       footerCommands={[
         'mothertoken tokenize --file prompt.txt',
-        'mothertoken tokenize "Hello" --include-api',
         'mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt',
       ]}
       notes={[
-        'local tokenizers run by default',
-        '--include-api adds provider token counters when API keys are configured',
+        'local counters run by default',
         '--language adds benchmark English-equivalent estimates',
         '--english-text or --english-file adds a paired translation comparison',
       ]}

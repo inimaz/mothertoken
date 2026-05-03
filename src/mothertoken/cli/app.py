@@ -5,7 +5,7 @@ Typer-based CLI for the mothertoken tool.
 
 Commands:
     rank      — rank all models for a given language from benchmark data
-    list      — list supported tokenizers and access
+    list      — list supported tokenizers and counter sources
     tokenize  — count tokens in exact user-provided text
 """
 
@@ -20,7 +20,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from mothertoken.core.registry import LOCAL_MODEL_TYPES, AccessMode, ModelType
+from mothertoken.core.registry import LOCAL_MODEL_TYPES, ModelType
 
 app = typer.Typer(
     name="mothertoken",
@@ -115,19 +115,21 @@ def _load_tokenizers_config() -> list[dict]:
     return cfg.get("tokenizers", [])
 
 
-def _model_access(model: dict) -> str:
-    access = model.get("access")
-    if access:
-        return "API" if access == AccessMode.API else access
-    return AccessMode.LOCAL.value if model["type"] in LOCAL_MODEL_TYPES else "API"
+def _is_local_tokenizer(model: dict) -> bool:
+    return model["type"] in LOCAL_MODEL_TYPES
+
+
+def _public_tokenizers(tokenizers_cfg: list[dict]) -> list[dict]:
+    """Tokenizers exposed through the public user CLI."""
+    return [t for t in tokenizers_cfg if _is_local_tokenizer(t)]
 
 
 def _tokenizer_backend(model: dict) -> str:
     labels = {
         ModelType.TIKTOKEN.value: "tiktoken",
         ModelType.HUGGINGFACE.value: "Hugging Face",
-        ModelType.ANTHROPIC_API.value: "Anthropic",
-        ModelType.GOOGLE_API.value: "Google",
+        ModelType.ANTHROPIC_API.value: "Anthropic count_tokens",
+        ModelType.GOOGLE_API.value: "Google count_tokens",
     }
     return f"{labels.get(model['type'], model['type'])} / {model['ref']}"
 
@@ -137,15 +139,34 @@ def _used_by_examples(model: dict) -> str:
     return ", ".join(examples) if examples else "—"
 
 
+def _tokenizer_table(tokenizers_cfg: list[dict]) -> Table:
+    table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
+    table.add_column("ID", no_wrap=True)
+    table.add_column("Name")
+    table.add_column("Used by")
+    table.add_column("Counter source", overflow="fold")
+
+    for tokenizer_cfg in sorted(tokenizers_cfg, key=lambda t: t["id"]):
+        table.add_row(
+            tokenizer_cfg["id"],
+            tokenizer_cfg["name"],
+            _used_by_examples(tokenizer_cfg),
+            _tokenizer_backend(tokenizer_cfg),
+        )
+    return table
+
+
 # ---------------------------------------------------------------------------
 # rank
 # ---------------------------------------------------------------------------
 
 
-def _show_model_ranking(language: str) -> None:
+def _show_tokenizer_ranking(language: str) -> None:
     data = _load_benchmark_or_exit()
 
     from mothertoken.cli.benchmark_loader import get_language_metrics, get_languages, get_model_name
+
+    public_tokenizer_ids = {t["id"] for t in _public_tokenizers(data.get("tokenizers") or data.get("models") or [])}
 
     available = get_languages(data)
     language = _resolve_language(language, available)
@@ -158,20 +179,22 @@ def _show_model_ranking(language: str) -> None:
     # Sort by chars_per_token descending (higher = more efficient)
     rows = []
     for model_id, m in metrics.items():
+        if public_tokenizer_ids and model_id not in public_tokenizer_ids:
+            continue
         if "error" in m:
             continue
         rows.append((model_id, m))
     rows.sort(key=lambda r: r[1]["chars_per_token"], reverse=True)
 
     console.print()
-    console.print(f"[bold]📊 Model ranking for[/] [cyan]{language}[/]")
+    console.print(f"[bold]📊 Tokenizer ranking for[/] [cyan]{language}[/]")
     if data.get("version"):
         console.print(f"[dim]Benchmark version:[/] {data['version']}")
     console.print()
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
     table.add_column("Rank", style="dim", justify="right")
-    table.add_column("Model")
+    table.add_column("Tokenizer")
     table.add_column("Chars/Token", justify="right")
     table.add_column("Cost vs English", justify="right")
 
@@ -197,8 +220,8 @@ def _show_model_ranking(language: str) -> None:
 
     console.print(table)
 
-    best_model = get_model_name(data, rows[0][0])
-    console.print(f"[green]💡 [bold]{best_model}[/] is the most efficient tokenizer for [cyan]{language}[/].[/]")
+    best_tokenizer = get_model_name(data, rows[0][0])
+    console.print(f"[green]💡 [bold]{best_tokenizer}[/] is the most efficient tokenizer for [cyan]{language}[/].[/]")
     console.print()
 
 
@@ -206,8 +229,8 @@ def _show_model_ranking(language: str) -> None:
 def rank(
     language: Annotated[str, typer.Argument(help="Language alias or FLORES+ code, e.g. ar, arabic, arb_Arab")],
 ):
-    """Rank models by tokenizer efficiency for one language."""
-    _show_model_ranking(language)
+    """Rank tokenizers by efficiency for one language."""
+    _show_tokenizer_ranking(language)
 
 
 # ---------------------------------------------------------------------------
@@ -216,36 +239,17 @@ def rank(
 
 
 @app.command("list")
-def list_tokenizers(
-    local_only: Annotated[bool, typer.Option("--local-only", help="Show only local tokenizers")] = False,
-):
-    """List supported tokenizers and access."""
-    tokenizers_cfg = _load_tokenizers_config()
-    if local_only:
-        tokenizers_cfg = [t for t in tokenizers_cfg if t["type"] in LOCAL_MODEL_TYPES]
+def list_tokenizers():
+    """List supported tokenizers and counter sources."""
+    tokenizers_cfg = _public_tokenizers(_load_tokenizers_config())
 
     if not tokenizers_cfg:
         err_console.print("[bold red]Error:[/] No tokenizers are configured.")
         raise typer.Exit(code=1)
 
-    table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
-    table.add_column("ID")
-    table.add_column("Name")
-    table.add_column("Used by")
-    table.add_column("Access")
-    table.add_column("Tokenizer")
-
-    for tokenizer_cfg in tokenizers_cfg:
-        table.add_row(
-            tokenizer_cfg["id"],
-            tokenizer_cfg["name"],
-            _used_by_examples(tokenizer_cfg),
-            _model_access(tokenizer_cfg),
-            _tokenizer_backend(tokenizer_cfg),
-        )
-
     console.print()
-    console.print(table)
+    console.print("[bold]Local counters[/]")
+    console.print(_tokenizer_table(tokenizers_cfg))
     console.print()
 
 
@@ -258,7 +262,7 @@ def list_tokenizers(
 def tokenize(
     text: Annotated[str | None, typer.Argument(help="Text to tokenize exactly as provided")] = None,
     file: Annotated[Path | None, typer.Option("--file", "-f", help="Path to a text file to tokenize")] = None,
-    model: Annotated[str | None, typer.Option("--model", "-m", help="Model ID, e.g. gpt-4o")] = None,
+    model: Annotated[str | None, typer.Option("--model", "-m", help="Tokenizer ID, e.g. gpt-4o")] = None,
     language: Annotated[
         str | None,
         typer.Option(
@@ -275,15 +279,8 @@ def tokenize(
         Path | None,
         typer.Option("--english-file", help="Path to an English translation file to compare against this text"),
     ] = None,
-    include_api: Annotated[
-        bool,
-        typer.Option(
-            "--include-api",
-            help="Include API-backed tokenizers. Requires the provider API key environment variables.",
-        ),
-    ] = False,
 ):
-    """Count tokens for exact text. Defaults to local tokenizers; use --include-api for provider counters."""
+    """Count tokens for exact text using local counters."""
     if text is None and file is None:
         err_console.print("[bold red]Error:[/] Provide text or [bold]--file[/].")
         raise typer.Exit(code=1)
@@ -310,28 +307,17 @@ def tokenize(
     elif english_text is not None:
         paired_english_text = english_text
 
-    all_tokenizers = _load_tokenizers_config()
-    local_tokenizers = [t for t in all_tokenizers if t["type"] in LOCAL_MODEL_TYPES]
-    api_tokenizers = [t for t in all_tokenizers if t["type"] not in LOCAL_MODEL_TYPES]
+    local_tokenizers = _public_tokenizers(_load_tokenizers_config())
 
     if model is not None:
-        tokenizer_cfg = next((t for t in all_tokenizers if t["id"] == model), None)
+        tokenizer_cfg = next((t for t in local_tokenizers if t["id"] == model), None)
         if tokenizer_cfg is None:
-            available_tokenizers = all_tokenizers if include_api else local_tokenizers
-            available = ", ".join(t["id"] for t in available_tokenizers)
-            if not include_api and api_tokenizers:
-                available += "\nAPI-backed tokenizers require --include-api."
-            err_console.print(f"[bold red]Error:[/] Model [yellow]{model}[/] not found.\nAvailable: {available}")
-            raise typer.Exit(code=1)
-        if tokenizer_cfg["type"] not in LOCAL_MODEL_TYPES and not include_api:
-            err_console.print(
-                f"[bold red]Error:[/] Model [yellow]{model}[/] uses an API-backed tokenizer. "
-                "Rerun with [bold]--include-api[/] and the required provider API key."
-            )
+            available = ", ".join(t["id"] for t in local_tokenizers)
+            err_console.print(f"[bold red]Error:[/] Tokenizer [yellow]{model}[/] not found.\nAvailable: {available}")
             raise typer.Exit(code=1)
         candidate_tokenizers = [tokenizer_cfg]
     else:
-        candidate_tokenizers = all_tokenizers if include_api else local_tokenizers
+        candidate_tokenizers = local_tokenizers
 
     if not candidate_tokenizers:
         err_console.print("[bold red]Error:[/] No tokenizers are configured.")
@@ -364,13 +350,10 @@ def tokenize(
         console.print(f"[dim]Benchmark language:[/] [cyan]{resolved_language}[/]")
     if paired_english_text is not None:
         console.print("[dim]English comparison:[/] provided by user")
-    if include_api:
-        console.print("[dim]API-backed tokenizers:[/] enabled")
     if resolved_language is not None or paired_english_text is not None:
         console.print()
 
-    status_label = "Running local and API tokenizers..." if include_api else "Running local tokenizers..."
-    with console.status(status_label):
+    with console.status("Running local counters..."):
         for tokenizer_cfg in candidate_tokenizers:
             try:
                 sentences = [input_text]
@@ -385,9 +368,7 @@ def tokenize(
                 results.append((tokenizer_cfg, None, None, None, str(e)))
 
     table = Table(box=box.SIMPLE_HEAVY, show_header=True, header_style="bold")
-    table.add_column("ID")
-    if include_api:
-        table.add_column("Access")
+    table.add_column("Tokenizer")
     table.add_column("Tokens", justify="right")
     table.add_column("Chars/Token", justify="right")
     if resolved_language is not None:
@@ -399,11 +380,8 @@ def tokenize(
 
     sorted_results = sorted(results, key=lambda row: row[2] if row[2] is not None else -1, reverse=True)
     for tokenizer_cfg, token_count, cpt, english_token_count, error in sorted_results:
-        access = _model_access(tokenizer_cfg)
         if error is not None:
             row = [tokenizer_cfg["name"]]
-            if include_api:
-                row.append(access)
             row.extend(["[red]error[/]", "—"])
             if resolved_language is not None:
                 row.extend(["—", "—"])
@@ -412,8 +390,6 @@ def tokenize(
             table.add_row(*row)
             continue
         row = [tokenizer_cfg["name"]]
-        if include_api:
-            row.append(access)
         row.extend([str(token_count), f"{cpt:.3f}"])
         if resolved_language is not None:
             rtc = benchmark_metrics.get(tokenizer_cfg["id"], {}).get("rtc")
@@ -435,11 +411,9 @@ def tokenize(
             console.print(f"  [yellow]{tokenizer_cfg['name']}[/]: [dim]{error}[/]")
 
     if resolved_language is not None:
-        console.print("\n[dim]English Est. uses the benchmark vs-English multiplier for this language/model.[/]")
+        console.print("\n[dim]English Est. uses the benchmark vs-English multiplier for this language/tokenizer.[/]")
     if paired_english_text is not None:
         console.print("[dim]Paired Ratio compares your original text against the supplied English translation.[/]")
-    if include_api:
-        console.print("[dim]API-backed rows use provider token counters and require provider API keys.[/]")
 
     if model is not None and errors:
         raise typer.Exit(code=1)

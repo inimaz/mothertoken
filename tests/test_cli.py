@@ -126,6 +126,9 @@ def test_rank_valid_language():
     assert "arb_Arab" in result.output
     assert "GPT-4o" in result.output
     assert "Qwen 2.5" in result.output
+    assert "Tokenizer ranking for" in result.output
+    assert "Tokenizer" in result.output
+    assert "Model ranking" not in result.output
     assert "Cost vs English" in result.output
     assert "Fertility" not in result.output
 
@@ -146,7 +149,7 @@ def test_rank_invalid_language():
     assert "arabic" in result.output.lower() or "arabic" in (result.stderr or "").lower()
 
 
-def test_rank_shows_best_model_tip():
+def test_rank_shows_best_tokenizer_tip():
     with _patch_benchmark():
         result = runner.invoke(app, ["rank", "arb_Arab"])
     assert result.exit_code == 0
@@ -171,22 +174,14 @@ def test_list_lists_supported_tokenizers():
     normalized_output = " ".join(result.output.split())
     assert "gpt-4o" in result.output
     assert "Qwen 2.5" in result.output
-    assert "claude-sonnet" in result.output
-    assert "local" in result.output
-    assert "API" in result.output
+    assert "Local counters" in result.output
+    assert "claude-sonnet" not in result.output
+    assert "Provider counters" not in result.output
+    assert "ANTHROPIC_API_KEY" not in result.output
     assert "Used by" in result.output
+    assert "Counter source" in result.output
     assert "GPT-4.1" in result.output
     assert "tiktoken / o200k_base" in normalized_output
-
-
-def test_list_local_only_hides_api_tokenizers():
-    with _patch_models():
-        result = runner.invoke(app, ["list", "--local-only"])
-    assert result.exit_code == 0, result.output
-    assert "gpt-4o" in result.output
-    assert "qwen2.5" in result.output
-    assert "claude-sonnet" not in result.output
-    assert "API" not in result.output
 
 
 def test_list_empty_config_errors():
@@ -278,7 +273,7 @@ def test_tokenize_language_and_english_text_can_be_combined():
     assert "Paired Ratio" in result.output
 
 
-def test_tokenize_all_local_models_excludes_api_models():
+def test_tokenize_all_local_models_excludes_provider_models():
     call_log = []
 
     def fake_tokenize(model_cfg, sentences, cache, dry_run):
@@ -291,33 +286,6 @@ def test_tokenize_all_local_models_excludes_api_models():
     assert result.exit_code == 0, result.output
     assert call_log == ["gpt-4o", "qwen2.5"]
     assert "Claude Sonnet" not in result.output
-
-
-def test_tokenize_include_api_runs_api_models():
-    call_log = []
-
-    def fake_tokenize(model_cfg, sentences, cache, dry_run):
-        call_log.append(model_cfg["id"])
-        return [3]
-
-    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", side_effect=fake_tokenize):
-        result = runner.invoke(app, ["tokenize", "hello", "--include-api"])
-
-    assert result.exit_code == 0, result.output
-    assert call_log == ["gpt-4o", "qwen2.5", "claude-sonnet"]
-    assert "Claude Sonnet" in result.output
-    assert "Access" in result.output
-    assert "API-backed tokenizers" in result.output
-
-
-def test_tokenize_api_model_allowed_with_include_api():
-    with _patch_models(), patch("mothertoken.core.tokenizers.tokenize_sentences", return_value=[4]):
-        result = runner.invoke(app, ["tokenize", "hello", "--model", "claude-sonnet", "--include-api"])
-
-    assert result.exit_code == 0, result.output
-    assert "Claude Sonnet" in result.output
-    assert "API" in result.output
-    assert "4" in result.output
 
 
 def test_tokenize_file_input(tmp_path):
@@ -374,12 +342,21 @@ def test_tokenize_invalid_language():
     assert "not found" in result.output.lower() or "not found" in (result.stderr or "").lower()
 
 
-def test_tokenize_api_model_rejected():
+def test_tokenize_provider_model_rejected():
     with _patch_models():
         result = runner.invoke(app, ["tokenize", "hello", "--model", "claude-sonnet"])
     assert result.exit_code == 1
-    assert "api-backed" in result.output.lower() or "api-backed" in (result.stderr or "").lower()
-    assert "--include-api" in result.output or "--include-api" in (result.stderr or "")
+    combined_output = result.output + (result.stderr or "")
+    assert "tokenizer" in combined_output.lower()
+    assert "not found" in combined_output.lower()
+    assert "ANTHROPIC_API_KEY" not in combined_output
+    assert "--include-provider-counters" not in combined_output
+
+
+def test_tokenize_include_provider_counters_flag_removed():
+    with _patch_models():
+        result = runner.invoke(app, ["tokenize", "hello", "--include-provider-counters"])
+    assert result.exit_code != 0
 
 
 def test_tokenize_unknown_model():

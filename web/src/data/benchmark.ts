@@ -78,8 +78,6 @@ const MODEL_MAP: Record<string, string> = {
   "llama3": "llama3",
   "mistral": "mistral",
   "qwen2.5": "qwen",
-  "claude-sonnet": "claude",
-  "gemini-pro": "gemini",
   "gemma2": "gemma2",
 };
 
