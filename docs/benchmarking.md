@@ -48,33 +48,22 @@ Run public local tokenizers only:
 uv run mothertoken-benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
 ```
 
-## Provider Token Counters
-
-Closed tokenizer counters require provider credentials:
-
-```bash
-export ANTHROPIC_API_KEY=your_key
-export GOOGLE_API_KEY=your_key
-```
-
-If a key is missing, the benchmark runner records the error and skips that model.
-
 ## Add A Tokenizer
 
-Add an entry to `src/mothertoken/data/tokenizers.yaml`:
+Add a local tokenizer entry to `src/mothertoken/data/tokenizers.yaml`:
 
 ```yaml
   - id: my-tokenizer
     name: "My tokenizer"
     provider: example
-    type: huggingface       # tiktoken | huggingface | anthropic_api | google_api
+    type: huggingface       # tiktoken | huggingface
     ref: org/model-name     # tokenizer ref
-    access: local           # local | api
+    access: local
     tokenizer_source: huggingface
     verification_method: local_fixture_count
     used_by_examples:
       - My Model
-    api_key_env: null       # env var name, or null if no key needed
+    api_key_env: null
 ```
 
 Then run a focused benchmark before regenerating everything:

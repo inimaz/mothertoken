@@ -51,8 +51,9 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
     </div>
     <div class="method-block">
       MotherToken exposes local tokenizers only. Public tokenizers are run
-      locally (via tiktoken or via HuggingFace) with exact counts. API token counters (e.g. Claude/Gemini) are not included for now, since they can change arbitrarily as providers update their models, and they cannot be reproduced by users.
-      MotherToken's local benchmarks are fully reproducible and contamination-resistant, since tokenization is fixed at training time and does not change with exposure.
+      locally (via tiktoken or via HuggingFace) with exact counts. MotherToken's
+      local benchmarks are fully reproducible and contamination-resistant, since
+      tokenization is fixed at training time and does not change with exposure.
     </div>
 
     <div class="section-head">
