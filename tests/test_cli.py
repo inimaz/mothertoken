@@ -115,6 +115,37 @@ def _patch_models():
 
 
 # ---------------------------------------------------------------------------
+# benchmark
+# ---------------------------------------------------------------------------
+
+
+def test_benchmark_command_runs_benchmark_runner(tmp_path):
+    output_path = tmp_path / "benchmark.json"
+
+    with (
+        patch("mothertoken.benchmark.runner.run_benchmark", return_value=({"eng_Latn": {}}, {})) as mock_run,
+        patch("mothertoken.benchmark.runner.save_benchmark") as mock_save,
+    ):
+        result = runner.invoke(
+            app,
+            [
+                "benchmark",
+                "--languages",
+                "eng_Latn",
+                "--models",
+                "gpt-4o",
+                "--output",
+                str(output_path),
+                "--dry-run",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    mock_run.assert_called_once_with(["eng_Latn"], ["gpt-4o"], dry_run=True)
+    mock_save.assert_called_once_with({"eng_Latn": {}}, {}, output_path, ["gpt-4o"])
+
+
+# ---------------------------------------------------------------------------
 # rank
 # ---------------------------------------------------------------------------
 
