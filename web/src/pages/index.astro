@@ -32,8 +32,8 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       </div>
       <h1 class="text-[3.5rem] font-medium leading-[1.06] text-text mb-6 tracking-tight">Every model has a <span class="text-text-tertiary">native tongue.</span><br>The question is whether yours matches.</h1>
       <p class="text-[21px] text-text-secondary leading-[1.6] max-w-[680px] mb-12">
-        Compare curated tokenizer refs across languages, then bring your own Hugging Face refs in the CLI.
-        <span id="hero-language-stat">Different tokenizer files spend tokens differently across languages.</span>
+        See which models make your language cheaper, longer, or harder to fit in context.
+        <span id="hero-language-stat">Different models spend tokens differently across languages.</span>
       </p>
     </section>
     
@@ -41,7 +41,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     <section class="animate-fade-in-up stagger-2">
       <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center">
         <div class="flex items-center gap-4 min-w-0 flex-1">
-          <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="analysis-label">compare tokenizers</span>
+          <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap" id="analysis-label">compare language fit</span>
           <span class="hidden sm:block flex-1 h-[1px] bg-border-strong opacity-40"></span>
         </div>
         <div class="inline-grid grid-cols-2 gap-px bg-border p-px rounded-lg w-full sm:w-auto" role="tablist" aria-label="analysis view">
@@ -76,7 +76,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
             <thead>
               <tr>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-10">#</th>
-                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[35%]">tokenizer</th>
+                <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-left py-3.5 px-4 border-b border-border w-[35%]">token counter</th>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">chars/token</th>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[18%]">fertility</th>
                 <th class="font-mono text-[13px] tracking-[.1em] text-text-tertiary font-normal text-right py-3.5 px-4 border-b border-border w-[14%]">vs english</th>
@@ -171,7 +171,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     const lang = benchmark.languages[activeLangId];
     analysisLabel.textContent = activeView === 'cost'
       ? `${lang.name} cost multiplier`
-      : `${lang.name} across tokenizers`;
+      : `${lang.name} across models`;
   }
 
   function updateLanguageHint() {
@@ -201,13 +201,13 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
     }
 
     const worst = rows[rows.length - 1];
-    heroLanguageStat.textContent = `The same content in ${lang.name} can need ${worst.r.toFixed(1)}× as many tokens as English with this curated set. That means less effective context window and higher cost.`;
+    heroLanguageStat.textContent = `The same content in ${lang.name} can need ${worst.r.toFixed(1)}× as many tokens as English. That means less effective context window and higher cost.`;
   }
 
   function tokenizerLabel(model) {
     return `
       <div class="font-medium text-text-secondary group-hover:text-text transition-colors duration-300">${escapeHTML(model.name)}</div>
-      <div class="font-mono text-[14px] text-text-tertiary mt-1 leading-[1.35]">used by ${escapeHTML(usedByText(model))}</div>
+      <div class="font-mono text-[14px] text-text-tertiary mt-1 leading-[1.35]">examples: ${escapeHTML(usedByText(model))}</div>
     `;
   }
 
@@ -264,14 +264,14 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
 
     document.getElementById('insight-strip').innerHTML = `
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
-        <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">best tokenizer</div>
+        <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">best language fit</div>
         <div class="font-mono text-[1.875rem] font-medium mb-1 ${strokeColor(best.r)}">${best.name}</div>
-        <div class="text-[16px] text-text-secondary">used by ${escapeHTML(usedByText(best.model))}</div>
+        <div class="text-[16px] text-text-secondary">examples: ${escapeHTML(usedByText(best.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
         <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">least efficient</div>
         <div class="font-mono text-[1.875rem] font-medium mb-1 ${strokeColor(worst.r)}">${worst.name}</div>
-        <div class="text-[16px] text-text-secondary">used by ${escapeHTML(usedByText(worst.model))}</div>
+        <div class="text-[16px] text-text-secondary">examples: ${escapeHTML(usedByText(worst.model))}</div>
       </div>
       <div class="bg-bg py-5 px-6 flex flex-col justify-center">
         <div class="text-[13px] text-text-tertiary tracking-[.08em] uppercase mb-2 font-mono">efficiency spread</div>
@@ -294,7 +294,7 @@ const languageOptions = Object.entries(benchmark.languages).sort(([, a], [, b]) 
       <div class="flex justify-between items-start gap-4 py-1.5">
         <span class="cursor-default select-none">
           <span class="block text-[18px] text-text-secondary font-medium transition-colors duration-300 hover:text-text">${escapeHTML(row.name)}</span>
-          <span class="block font-mono text-[14px] text-text-tertiary mt-0.5">used by ${escapeHTML(usedByText(row.model))}</span>
+          <span class="block font-mono text-[14px] text-text-tertiary mt-0.5">examples: ${escapeHTML(usedByText(row.model))}</span>
         </span>
         <span class="text-[16px] font-medium font-mono ${textColorClass(row.r)}">
           ${row.r.toFixed(1)}×
