@@ -50,10 +50,10 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      The public benchmark is a curated starter set of concrete tokenizer refs,
-      not an exhaustive catalog. Local counters run via tiktoken or Hugging Face
-      tokenizer files with exact counts. The CLI can compare additional user-supplied
-      Hugging Face refs without adding them to the bundled benchmark.
+      The public benchmark is a curated starter set of token counters, not an
+      exhaustive model compatibility map. Local counters run via tiktoken or
+      Hugging Face tokenizer files with exact counts. The CLI can compare additional
+      user-supplied Hugging Face model paths without adding them to the bundled benchmark.
     </div>
 
     <div class="section-head">
@@ -80,7 +80,7 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
     </div>
     <div class="method-block">
       Each benchmark release is versioned by date and pins specific tokenizer
-      refs and library versions. The benchmark script is published at <strong><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/inimaz/mothertoken</a></strong>.
+      files and library versions. The benchmark script is published at <strong><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/inimaz/mothertoken</a></strong>.
       To reproduce it yourself, see the <strong><a href={MOTHERTOKEN_BENCHMARK_DOCS_URL} target="_blank" rel="noopener noreferrer">benchmarking documentation</a></strong> for detailed instructions.
     </div>
 
@@ -89,7 +89,7 @@ import { FLORES_URL, GITHUB_URL, MOTHERTOKEN_BENCHMARK_DOCS_URL } from "../const
       <span class="section-rule"></span>
     </div>
     <div class="method-block">
-      MIT licensed. Contributions welcome — especially better tokenizer refs,
+      MIT licensed. Contributions welcome — especially better model coverage,
       comparison workflows, and additional language coverage.
     </div>
 

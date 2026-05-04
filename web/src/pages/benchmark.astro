@@ -23,7 +23,7 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
 
     <div class="flex flex-wrap items-center gap-5 mb-10 animate-fade-in-up stagger-1">
       <div class="flex items-center gap-2.5">
-        <span class="font-mono text-[15px] text-text-secondary">tokenizer</span>
+        <span class="font-mono text-[15px] text-text-secondary">token counter</span>
         <select id="model-sel" class="bg-bg border border-border-strong rounded-md py-2 px-3 font-mono text-[15px] text-text outline-none focus:border-text transition-colors duration-300 cursor-pointer min-w-[170px] shadow-sm">
           {tokenizerOptions.map(([id, m]) => (
             <option value={id} class="bg-bg text-text">
@@ -41,7 +41,7 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
         </select>
       </div>
       <p class="basis-full text-[18px] text-text-tertiary leading-[1.6] max-w-[760px]">
-        This explorer shows the bundled benchmark: a curated set of concrete tokenizer refs, not every tokenizer on Hugging Face. Model names are examples for where those tokenizer refs are used.
+        This explorer shows how the bundled token counters handle each language. It is curated, not exhaustive; listed model names are examples, not a complete compatibility map.
       </p>
     </div>
 

@@ -18,13 +18,13 @@ import CliTerminal from '../components/CliTerminal.astro';
     <CliTerminal commands={['pip install mothertoken']} />
 
     <div class="section-head">
-      <span class="section-label">rank tokenizers for a language</span>
+      <span class="section-label">find the best model fit for a language</span>
       <span class="section-rule"></span>
     </div>
     <CliTerminal
       commands={['mothertoken rank ar']}
       table={{
-        headers: ['tokenizer id', 'chars/token', 'cost vs english'],
+        headers: ['model id', 'chars/token', 'cost vs english'],
         rows: [
           ['gpt-4o', '3.132', { text: '1.56x  ← most efficient', tone: 'good' }],
           ['qwen2.5', '2.585', { text: '1.84x', tone: 'warn' }],
@@ -36,13 +36,13 @@ import CliTerminal from '../components/CliTerminal.astro';
     />
 
     <div class="section-head">
-      <span class="section-label">list curated aliases</span>
+      <span class="section-label">list built-in counter aliases</span>
       <span class="section-rule"></span>
     </div>
     <CliTerminal
       commands={['mothertoken list']}
       table={{
-        headers: ['id', 'name', 'used by', 'counter source'],
+        headers: ['id', 'name', 'example models', 'counter source'],
         rows: [
           ['gpt-4o', 'OpenAI o200k_base', 'GPT-4o, GPT-4.1', 'tiktoken / o200k_base'],
           ['qwen2.5', 'Qwen 2.5 tokenizer', 'Qwen 2.5', 'Hugging Face / Qwen/Qwen2.5-7B'],
@@ -51,13 +51,13 @@ import CliTerminal from '../components/CliTerminal.astro';
         ],
       }}
       notes={[
-        'these are starter aliases, not a complete tokenizer catalog',
+        'these are starter aliases, not a complete model compatibility map',
         'local counters run on your machine',
       ]}
     />
 
     <div class="section-head">
-      <span class="section-label">compare selected refs</span>
+      <span class="section-label">compare selected models</span>
       <span class="section-rule"></span>
     </div>
     <CliTerminal
@@ -66,7 +66,7 @@ import CliTerminal from '../components/CliTerminal.astro';
         'mothertoken compare --file prompt.txt  --model mistralai/Mistral-7B-v0.1   --model deepseek-ai/DeepSeek-V4-Pro',
       ]}
       table={{
-        headers: ['tokenizer', 'ref', 'tokens', 'chars/token'],
+        headers: ['model', 'source', 'tokens', 'chars/token'],
         rows: [
           ['OpenAI o200k_base', 'o200k_base', '4', '4.750'],
           ['Qwen/Qwen3-0.6B', 'Qwen/Qwen3-0.6B', '5', '3.800'],
@@ -74,7 +74,7 @@ import CliTerminal from '../components/CliTerminal.astro';
         ],
       }}
       notes={[
-        'use aliases from mothertoken list or direct Hugging Face refs',
+        'use aliases from mothertoken list or a Hugging Face model path',
         'unknown one-word ids fail fast so typos do not become network lookups',
       ]}
     />
@@ -95,7 +95,7 @@ import CliTerminal from '../components/CliTerminal.astro';
         'mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt',
       ]}
       notes={[
-        'local aliases and direct Hugging Face refs are supported',
+        'local aliases and Hugging Face model paths are supported',
         '--language adds benchmark English-equivalent estimates',
         '--english-text or --english-file adds a paired translation comparison',
       ]}
@@ -111,7 +111,7 @@ import CliTerminal from '../components/CliTerminal.astro';
         'mothertoken-benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5',
         'mothertoken-benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B',
       ]}
-      notes={['benchmark aliases and direct Hugging Face refs are both supported']}
+      notes={['benchmark aliases and Hugging Face model paths are both supported']}
       cursor
     />
 

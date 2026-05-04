@@ -31,7 +31,17 @@ uv pip install -e .
 
 The `mothertoken` command is available after installation.
 
-### 📊 Rank tokenizers for a language
+### Common questions
+
+| Question | Command |
+| --- | --- |
+| I speak a language that is not English. Which tokenizer is most efficient for it? | `mothertoken rank spanish` |
+| I have this text and a chosen model. How many tokens does it use? | `mothertoken tokenize "Hola Mundo" --model gpt-4o` |
+| I am choosing between a few models. Which one tokenizes my text best? | `mothertoken compare "Travesura realizada" --model gpt-4o --model Qwen/Qwen3-0.6B` |
+| How good are the known models at tokenizing my language? | `mothertoken rank arabic` |
+| I have this model. Which languages does it tokenize best? | Coming soon: `mothertoken languages gpt-4o` |
+
+### Rank tokenizers for a language
 Rank supported tokenizers for a specific language using the precomputed benchmark data.
 ```bash
 mothertoken rank spanish
@@ -40,13 +50,13 @@ mothertoken rank spanish
 mothertoken rank spa_Latn
 ```
 
-### 🧭 List tokenizers
+### List tokenizers
 See which tokenizer IDs can be used and which familiar models use them.
 ```bash
 mothertoken list
 ```
 
-### 🔤 Tokenize exact text
+### Tokenize exact text
 Count tokens for exact text using local tokenizers by default. Add `--language` to estimate the English-equivalent token count from the benchmark multiplier.
 ```bash
 mothertoken tokenize "Hola Mundo" --language es
@@ -70,7 +80,7 @@ mothertoken tokenize --file prompt.txt
 mothertoken tokenize --file prompt.ar.txt --language ar --english-file prompt.en.txt
 ```
 
-### ⚖️ Compare selected tokenizers
+### Compare selected tokenizers
 Compare aliases from `mothertoken list` with direct Hugging Face refs. This is the main workflow when you care about a specific set of models.
 ```bash
 mothertoken compare "Travesura realizada" \
