@@ -26,13 +26,15 @@ Requirements:
     pip install datasets tiktoken transformers anthropic google-generativeai huggingface_hub
 """
 
-import argparse
 import json
 import logging
 import sys
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Annotated
+
+import typer
 
 # Add `src/` to the python path so the `mothertoken` module can be resolved natively
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -43,6 +45,14 @@ from mothertoken.core.tokenizer_registry_service import TokenizerRegistryService
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
 
+app = typer.Typer(
+    name="benchmark",
+    help="Run the mothertoken benchmark.",
+    invoke_without_command=True,
+    no_args_is_help=False,
+    rich_markup_mode="rich",
+)
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
@@ -51,6 +61,7 @@ log = logging.getLogger("mothertoken")
 # Keep "devtest" as held-out validation — do not run against it routinely.
 FLORES_SPLIT = "dev"
 FLORES_DATASET = "openlanguagedata/flores_plus"
+DEFAULT_OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "benchmark.json"
 
 # English baseline config in FLORES+
 ENGLISH_CONFIG = "eng_Latn"
@@ -297,43 +308,46 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
 # ---------------------------------------------------------------------------
 
 
-def main():
-    parser = argparse.ArgumentParser(description="mothertoken benchmark runner")
-    parser.add_argument(
-        "--languages",
-        type=str,
-        default=",".join(DEFAULT_LANGUAGES),
-        help="Comma-separated FLORES+ language configs (e.g. tha_Thai,arb_Arab)",
-    )
-    parser.add_argument(
-        "--models",
-        type=str,
-        default=",".join(m["id"] for m in _get_models()),
-        help="Comma-separated model IDs to benchmark",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path(__file__).resolve().parent.parent / "data" / "benchmark.json",
-        help="Output path for benchmark.json",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Run without loading FLORES or real tokenizers — for setup verification",
-    )
-    args = parser.parse_args()
+@app.callback()
+def run(
+    languages: Annotated[
+        str,
+        typer.Option(
+            "--languages",
+            help="Comma-separated FLORES+ language configs (e.g. tha_Thai,arb_Arab)",
+        ),
+    ] = ",".join(DEFAULT_LANGUAGES),
+    models: Annotated[
+        str | None,
+        typer.Option("--models", help="Comma-separated model IDs to benchmark"),
+    ] = None,
+    output: Annotated[
+        Path,
+        typer.Option("--output", help="Output path for benchmark.json"),
+    ] = DEFAULT_OUTPUT_PATH,
+    dry_run: Annotated[
+        bool,
+        typer.Option("--dry-run", help="Run without loading FLORES or real tokenizers - for setup verification"),
+    ] = False,
+):
+    """Run the tokenizer benchmark and write benchmark.json."""
+    language_values = [language.strip() for language in languages.split(",") if language.strip()]
+    if models:
+        model_ids = [model.strip() for model in models.split(",") if model.strip()]
+    else:
+        model_ids = [m["id"] for m in _get_models()]
 
-    languages = args.languages.split(",")
-    model_ids = args.models.split(",")
+    log.info(f"Running benchmark: {len(language_values)} languages x {len(model_ids)} models")
+    if dry_run:
+        log.info("DRY RUN - using dummy data")
 
-    log.info(f"Running benchmark: {len(languages)} languages × {len(model_ids)} models")
-    if args.dry_run:
-        log.info("DRY RUN — using dummy data")
-
-    results, errors = run_benchmark(languages, model_ids, dry_run=args.dry_run)
-    save_benchmark(results, errors, args.output, model_ids)
+    results, errors = run_benchmark(language_values, model_ids, dry_run=dry_run)
+    save_benchmark(results, errors, output, model_ids)
     log.info("Done.")
+
+
+def main():
+    app()
 
 
 if __name__ == "__main__":

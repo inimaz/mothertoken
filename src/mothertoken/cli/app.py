@@ -21,6 +21,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
+from mothertoken.benchmark.runner import app as benchmark_app
 from mothertoken.core.registry import LOCAL_MODEL_TYPES, ModelType
 
 app = typer.Typer(
@@ -31,6 +32,7 @@ app = typer.Typer(
 )
 console = Console()
 err_console = Console(stderr=True)
+app.add_typer(benchmark_app, name="benchmark")
 
 
 # ---------------------------------------------------------------------------

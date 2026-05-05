@@ -32,17 +32,6 @@ tokenizers:
       - GPT-4
       - GPT-3.5 Turbo
     api_key_env: null
-  - id: llama3
-    name: Llama 3 tokenizer
-    provider: meta
-    type: huggingface
-    ref: meta-llama/Meta-Llama-3-8B
-    access: local
-    tokenizer_source: huggingface
-    verification_method: local_fixture_count
-    used_by_examples:
-      - Llama 3
-    api_key_env: null
   - id: qwen3
     name: Qwen 3 tokenizer
     provider: qwen
@@ -177,17 +166,6 @@ tokenizers:
     used_by_examples:
       - Pythia
     api_key_env: null
-  - id: gemma2
-    name: Gemma 2 tokenizer
-    provider: google
-    type: huggingface
-    ref: google/gemma-2-9b
-    access: local
-    tokenizer_source: huggingface
-    verification_method: local_fixture_count
-    used_by_examples:
-      - Gemma 2
-    api_key_env: null
   - id: bert-base-uncased
     name: BERT base uncased tokenizer
     provider: google
@@ -231,15 +209,4 @@ tokenizers:
     verification_method: local_fixture_count
     used_by_examples:
       - DistilBERT base uncased
-    api_key_env: null
-  - id: deberta-v3-base
-    name: DeBERTa v3 base tokenizer
-    provider: microsoft
-    type: huggingface
-    ref: microsoft/deberta-v3-base
-    access: local
-    tokenizer_source: huggingface
-    verification_method: local_fixture_count
-    used_by_examples:
-      - DeBERTa v3 base
     api_key_env: null

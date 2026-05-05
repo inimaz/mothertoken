@@ -37,9 +37,9 @@ The `mothertoken` command is available after installation.
 | --- | --- |
 | I speak a language that is not English. Which tokenizer is most efficient for it? | `mothertoken rank spanish` |
 | I have this text and a chosen model. How many tokens does it use? | `mothertoken tokenize "Hola Mundo" --model gpt-4o` |
-| I am choosing between a few models. Which one tokenizes my text best? | `mothertoken compare "Travesura realizada" --model gpt-4o --model Qwen/Qwen3-0.6B` |
+| I am choosing between a few models. Which one tokenizes my text best? | `mothertoken compare "Travesura realizada" --model gpt-oss --model Qwen/Qwen3-0.6B` |
 | How good are the known models at tokenizing my language? | `mothertoken rank arabic` |
-| I have this model. Which languages does it tokenize best? | Coming soon: `mothertoken languages gpt-4o` |
+| I have this model. Which languages does it tokenize best, which ones worst? | `mothertoken benchmark --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2` |
 
 ### Rank tokenizers for a language
 Rank supported tokenizers for a specific language using the precomputed benchmark data.
