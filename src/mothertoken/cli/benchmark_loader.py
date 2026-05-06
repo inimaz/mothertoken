@@ -1,7 +1,7 @@
 """
 mothertoken — cli/benchmark_loader.py
 
-Loads the bundled benchmark.json and provides helpers to query it.
+Loads the bundled default_benchmark.json and provides helpers to query it.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from mothertoken.core.resources import load_benchmark_data
 
 
 def load_benchmark() -> dict[str, Any]:
-    """Load benchmark.json. Raises FileNotFoundError if not found."""
+    """Load default_benchmark.json. Raises FileNotFoundError if not found."""
     return load_benchmark_data()
 
 

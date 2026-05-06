@@ -6,11 +6,11 @@
  * Raw FLORES+ sentences are never included here — only aggregated metrics.
  *
  * To regenerate:
- *   uv run mothertoken-benchmark --output src/mothertoken/data/benchmark.json
+ *   uv run mothertoken-benchmark --output src/mothertoken/data/default_benchmark.json
  */
 
 import { z } from "zod";
-import rawData from "../../../src/mothertoken/data/benchmark.json";
+import rawData from "../../../src/mothertoken/data/default_benchmark.json";
 
 export interface ModelMetrics {
   cpt: number;   // chars per token — higher is better
@@ -30,7 +30,7 @@ export interface BenchmarkData {
   languages: Record<string, { name: string; script: string }>;
 }
 
-// Define Zod schema to validate the structure of benchmark.json
+// Define Zod schema to validate the structure of default_benchmark.json
 const ModelInfoSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -52,7 +52,7 @@ const BenchmarkJsonSchema = z.object({
 // Validate the raw data
 const parsedData = BenchmarkJsonSchema.parse(rawData);
 
-// Mapping BCP-47 identifiers in benchmark.json to the legacy 3-letter codes used in the UI
+// Mapping BCP-47 identifiers in default_benchmark.json to the legacy 3-letter codes used in the UI
 const LANG_METADATA: Record<string, { code: string; name: string; script: string }> = {
   eng_Latn: { code: "eng", name: "English", script: "Latin" },
   tha_Thai: { code: "tha", name: "Thai", script: "Thai" },

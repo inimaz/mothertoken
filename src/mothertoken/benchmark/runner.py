@@ -4,7 +4,7 @@ mothertoken — benchmark/run_benchmark.py
 Computes tokenization efficiency metrics across languages and models
 using the FLORES+ corpus (openlanguagedata/flores_plus, CC BY-SA 4.0).
 
-Outputs: src/mothertoken/data/benchmark.json — versioned, never contains raw sentences.
+Outputs benchmark JSON — versioned, never contains raw sentences.
 
 Usage:
     # Full run (all languages, all models)
@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from rich.console import Console
 
 # Add `src/` to the python path so the `mothertoken` module can be resolved natively
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -44,6 +45,7 @@ from mothertoken.core.tokenizer_registry_service import TokenizerRegistryService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("mothertoken")
+err_console = Console(stderr=True)
 
 app = typer.Typer(
     name="benchmark",
@@ -61,7 +63,7 @@ app = typer.Typer(
 # Keep "devtest" as held-out validation — do not run against it routinely.
 FLORES_SPLIT = "dev"
 FLORES_DATASET = "openlanguagedata/flores_plus"
-DEFAULT_OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "benchmark.json"
+DEFAULT_BENCHMARK_PATH = Path(__file__).resolve().parent.parent / "data" / "default_benchmark.json"
 
 # English baseline config in FLORES+
 ENGLISH_CONFIG = "eng_Latn"
@@ -322,28 +324,39 @@ def run(
         typer.Option("--models", help="Comma-separated model IDs to benchmark"),
     ] = None,
     output: Annotated[
-        Path,
-        typer.Option("--output", help="Output path for benchmark.json"),
-    ] = DEFAULT_OUTPUT_PATH,
+        Path | None,
+        typer.Option("--output", help="Output path for benchmark JSON. Required unless --dry-run is used."),
+    ] = None,
     dry_run: Annotated[
         bool,
         typer.Option("--dry-run", help="Run without loading FLORES or real tokenizers - for setup verification"),
     ] = False,
 ):
-    """Run the tokenizer benchmark and write benchmark.json."""
+    """Run the tokenizer benchmark and optionally write benchmark JSON."""
     language_values = [language.strip() for language in languages.split(",") if language.strip()]
     if models:
         model_ids = [model.strip() for model in models.split(",") if model.strip()]
     else:
         model_ids = [m["id"] for m in _get_models()]
 
+    if output is None and not dry_run:
+        err_console.print(
+            "[bold red]Error:[/] Provide [bold]--output[/] to choose where benchmark results should be written.\n"
+            f"Maintainers can update the packaged default with: "
+            f"[cyan]mothertoken benchmark --output {DEFAULT_BENCHMARK_PATH}[/]"
+        )
+        raise typer.Exit(code=1)
+
     log.info(f"Running benchmark: {len(language_values)} languages x {len(model_ids)} models")
     if dry_run:
         log.info("DRY RUN - using dummy data")
 
     results, errors = run_benchmark(language_values, model_ids, dry_run=dry_run)
-    save_benchmark(results, errors, output, model_ids)
-    log.info("Done.")
+    if output is not None:
+        save_benchmark(results, errors, output, model_ids)
+        log.info("Done.")
+    else:
+        log.info("Dry run complete. No output file written.")
 
 
 def main():

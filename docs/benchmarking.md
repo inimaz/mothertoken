@@ -2,7 +2,7 @@
 
 This document is for maintainers and researchers who want to regenerate or extend the benchmark dataset.
 
-Most users do not need this workflow. The regular CLI reads the precomputed `src/mothertoken/data/benchmark.json` file.
+Most users do not need this workflow. The regular CLI reads the precomputed `src/mothertoken/data/default_benchmark.json` file.
 
 ## What The Benchmark Does
 
@@ -34,6 +34,12 @@ Run the default benchmark:
 
 ```bash
 uv run mothertoken-benchmark
+```
+
+Regenerate the packaged default benchmark:
+
+```bash
+uv run mothertoken-benchmark --output src/mothertoken/data/default_benchmark.json
 ```
 
 Run a smaller benchmark:
@@ -90,7 +96,7 @@ uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-tokenizer
 
 ## Output Contract
 
-`src/mothertoken/data/benchmark.json` should remain a versioned aggregate dataset with:
+`src/mothertoken/data/default_benchmark.json` should remain a versioned aggregate dataset with:
 
 - benchmark metadata
 - tokenizer metadata

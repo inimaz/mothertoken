@@ -145,6 +145,37 @@ def test_benchmark_command_runs_benchmark_runner(tmp_path):
     mock_save.assert_called_once_with({"eng_Latn": {}}, {}, output_path, ["gpt-4o"])
 
 
+def test_benchmark_requires_output_unless_dry_run():
+    result = runner.invoke(app, ["benchmark", "--languages", "eng_Latn", "--models", "gpt-4o"])
+
+    assert result.exit_code == 1
+    combined_output = result.output + (result.stderr or "")
+    assert "--output" in combined_output
+    assert "default_benchmark.json" in combined_output
+
+
+def test_benchmark_dry_run_without_output_does_not_save():
+    with (
+        patch("mothertoken.benchmark.runner.run_benchmark", return_value=({"eng_Latn": {}}, {})) as mock_run,
+        patch("mothertoken.benchmark.runner.save_benchmark") as mock_save,
+    ):
+        result = runner.invoke(
+            app,
+            [
+                "benchmark",
+                "--languages",
+                "eng_Latn",
+                "--models",
+                "gpt-4o",
+                "--dry-run",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    mock_run.assert_called_once_with(["eng_Latn"], ["gpt-4o"], dry_run=True)
+    mock_save.assert_not_called()
+
+
 # ---------------------------------------------------------------------------
 # rank
 # ---------------------------------------------------------------------------

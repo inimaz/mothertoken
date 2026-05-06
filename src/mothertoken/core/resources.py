@@ -23,10 +23,10 @@ def _find_data_path(filename: str) -> Path:
 
 
 def load_benchmark_data() -> dict[str, Any]:
-    """Load bundled benchmark.json."""
-    benchmark_path = _find_data_path("benchmark.json")
+    """Load bundled default_benchmark.json."""
+    benchmark_path = _find_data_path("default_benchmark.json")
     if not benchmark_path.exists():
-        raise FileNotFoundError(f"benchmark.json not found at {benchmark_path}. Reinstall mothertoken.")
+        raise FileNotFoundError(f"default_benchmark.json not found at {benchmark_path}. Reinstall mothertoken.")
     with open(benchmark_path, encoding="utf-8") as f:
         return json.load(f)
 
