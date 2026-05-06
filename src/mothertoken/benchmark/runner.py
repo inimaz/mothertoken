@@ -339,14 +339,6 @@ def run(
     else:
         model_ids = [m["id"] for m in _get_models()]
 
-    if output is None and not dry_run:
-        err_console.print(
-            "[bold red]Error:[/] Provide [bold]--output[/] to choose where benchmark results should be written.\n"
-            f"Maintainers can update the packaged default with: "
-            f"[cyan]mothertoken benchmark --output {DEFAULT_BENCHMARK_PATH}[/]"
-        )
-        raise typer.Exit(code=1)
-
     log.info(f"Running benchmark: {len(language_values)} languages x {len(model_ids)} models")
     if dry_run:
         log.info("DRY RUN - using dummy data")
