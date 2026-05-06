@@ -38,7 +38,7 @@ jobs:
         run: uv sync --group tests
 
         # Check that tiktoken has no new model. If it does, run the sync script,
-        # run mothertoken-benchmark to regenerate the benchmark, and commit the changes
+        # run mothertoken benchmark to regenerate the benchmark, and commit the changes
       - name: Check tiktoken tokenizer registry
         run: uv run python scripts/sync_tiktoken_tokenizers.py --check
 

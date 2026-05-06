@@ -43,7 +43,6 @@ dependencies = [
 
 [project.scripts]
 mothertoken = "mothertoken.cli.app:app"
-mothertoken-benchmark = "mothertoken.benchmark.runner:main"
 
 [project.urls]
 Homepage = "https://github.com/inimaz/mothertoken"
