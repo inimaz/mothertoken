@@ -2,7 +2,7 @@
 
 This document is for maintainers and researchers who want to regenerate or extend the benchmark dataset.
 
-Most users do not need this workflow. The regular CLI reads the precomputed `src/mothertoken/data/benchmark.json` file.
+Most users do not need this workflow. The regular CLI reads the precomputed `src/mothertoken/data/default_benchmark.json` file.
 
 ## What The Benchmark Does
 
@@ -27,37 +27,43 @@ Some model tokenizers are gated on Hugging Face. Make sure your token has access
 Verify setup without loading FLORES or real tokenizers:
 
 ```bash
-uv run mothertoken-benchmark --dry-run
+uv run mothertoken benchmark --dry-run
 ```
 
 Run the default benchmark:
 
 ```bash
-uv run mothertoken-benchmark
+uv run mothertoken benchmark
+```
+
+Regenerate the packaged default benchmark:
+
+```bash
+uv run mothertoken benchmark --output src/mothertoken/data/default_benchmark.json
 ```
 
 Run a smaller benchmark:
 
 ```bash
-uv run mothertoken-benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5
+uv run mothertoken benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5
 ```
 
 Run a benchmark against a direct Hugging Face model/tokenizer ref:
 
 ```bash
-uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
+uv run mothertoken benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
 ```
 
 Curated aliases and direct Hugging Face refs can be mixed:
 
 ```bash
-uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models gpt-4o,Qwen/Qwen3-0.6B
+uv run mothertoken benchmark --languages eng_Latn,arb_Arab --models gpt-4o,Qwen/Qwen3-0.6B
 ```
 
 Run public local tokenizers only:
 
 ```bash
-uv run mothertoken-benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
+uv run mothertoken benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
 ```
 
 ## Add A Tokenizer
@@ -85,12 +91,12 @@ Add a local tokenizer entry to `src/mothertoken/data/tokenizers.yaml`:
 Then run a focused benchmark before regenerating everything:
 
 ```bash
-uv run mothertoken-benchmark --languages eng_Latn,arb_Arab --models my-tokenizer
+uv run mothertoken benchmark --languages eng_Latn,arb_Arab --models my-tokenizer
 ```
 
 ## Output Contract
 
-`src/mothertoken/data/benchmark.json` should remain a versioned aggregate dataset with:
+`src/mothertoken/data/default_benchmark.json` should remain a versioned aggregate dataset with:
 
 - benchmark metadata
 - tokenizer metadata

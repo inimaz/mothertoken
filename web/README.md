@@ -15,7 +15,7 @@ Astro static site for [mothertoken.dev](https://mothertoken.dev).
 ```
 src/
   data/
-    benchmark.ts        ← adapter for src/mothertoken/data/benchmark.json
+    benchmark.ts        ← adapter for src/mothertoken/data/default_benchmark.json
   layouts/
     Base.astro          ← HTML shell, meta tags
   components/
@@ -39,7 +39,7 @@ pnpm run dev
 
 ## Updating benchmark data
 
-Benchmark regeneration is documented in [`../docs/benchmarking.md`](../docs/benchmarking.md). The web app imports `src/mothertoken/data/benchmark.json` at build time.
+Benchmark regeneration is documented in [`../docs/benchmarking.md`](../docs/benchmarking.md). The web app imports `src/mothertoken/data/default_benchmark.json` at build time.
 
 ## Deployment
 
