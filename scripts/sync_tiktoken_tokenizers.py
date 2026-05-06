@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync OpenAI tiktoken encodings and model mappings into tokenizers.yaml."""
+"""Sync OpenAI tiktoken encodings and model mappings into default_tokenizers.yaml."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import tiktoken.model as tiktoken_model
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TOKENIZERS_PATH = ROOT / "src" / "mothertoken" / "data" / "tokenizers.yaml"
+DEFAULT_TOKENIZERS_PATH = ROOT / "src" / "mothertoken" / "data" / "default_tokenizers.yaml"
 
 HEADER = """# mothertoken - Tokenizer registry for tokenization benchmarks
 # This registry dictates which tokenizers to load and which provider APIs to query.
@@ -195,9 +195,9 @@ def load_config(path: Path) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Sync tiktoken encodings into tokenizers.yaml")
-    parser.add_argument("--path", type=Path, default=DEFAULT_TOKENIZERS_PATH, help="Path to tokenizers.yaml")
-    parser.add_argument("--check", action="store_true", help="Exit non-zero if tokenizers.yaml is out of sync")
+    parser = argparse.ArgumentParser(description="Sync tiktoken encodings into default_tokenizers.yaml")
+    parser.add_argument("--path", type=Path, default=DEFAULT_TOKENIZERS_PATH, help="Path to default_tokenizers.yaml")
+    parser.add_argument("--check", action="store_true", help="Exit non-zero if default_tokenizers.yaml is out of sync")
     parser.add_argument("--dry-run", action="store_true", help="Print the synced YAML instead of writing it")
     args = parser.parse_args()
 

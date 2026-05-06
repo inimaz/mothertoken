@@ -32,11 +32,11 @@ def load_benchmark_data() -> dict[str, Any]:
 
 
 def load_tokenizers_config() -> dict[str, Any]:
-    """Load bundled tokenizers.yaml."""
+    """Load bundled default_tokenizers.yaml."""
     import yaml
 
-    config_path = _find_data_path("tokenizers.yaml")
+    config_path = _find_data_path("default_tokenizers.yaml")
     if not config_path.exists():
-        raise FileNotFoundError(f"tokenizers.yaml not found at {config_path}. Reinstall mothertoken.")
+        raise FileNotFoundError(f"default_tokenizers.yaml not found at {config_path}. Reinstall mothertoken.")
     with open(config_path, encoding="utf-8") as f:
         return yaml.safe_load(f)

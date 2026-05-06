@@ -99,7 +99,7 @@ mothertoken compare --file prompt.txt \
 
 Benchmark regeneration and model-extension docs live in [`docs/benchmarking.md`](docs/benchmarking.md).
 
-You can also benchmark a direct Hugging Face ref without adding it to `tokenizers.yaml`:
+You can also benchmark a direct Hugging Face ref without adding it to `default_tokenizers.yaml`:
 
 ```bash
 uv run mothertoken benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
