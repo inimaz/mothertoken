@@ -1,4 +1,4 @@
-"""CRUD helpers for the tokenizers.yaml registry."""
+"""CRUD helpers for the bundled default_tokenizers.yaml registry."""
 
 from __future__ import annotations
 
@@ -13,11 +13,11 @@ HEADER = """# mothertoken - Tokenizer registry for tokenization benchmarks
 # `used_by_examples` is discoverability metadata, not a complete model database.
 
 """
-DEFAULT_TOKENIZERS_PATH = Path(__file__).resolve().parent.parent / "data" / "tokenizers.yaml"
+DEFAULT_TOKENIZERS_PATH = Path(__file__).resolve().parent.parent / "data" / "default_tokenizers.yaml"
 
 
 class TokenizerRegistryService:
-    """Load, query, mutate, and write a tokenizers.yaml config."""
+    """Load, query, mutate, and write a tokenizer registry config."""
 
     def __init__(self, path: Path | None = None) -> None:
         self.path = path or DEFAULT_TOKENIZERS_PATH

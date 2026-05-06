@@ -69,7 +69,7 @@ def test_load_config_uses_tokenizer_registry_service():
 
     with patch("mothertoken.benchmark.runner.TokenizerRegistryService") as mock_service_class:
         mock_service = mock_service_class.return_value
-        mock_service.path_info.return_value = {"path": "/tmp/tokenizers.yaml", "exists": True}
+        mock_service.path_info.return_value = {"path": "/tmp/default_tokenizers.yaml", "exists": True}
         mock_service.exists.return_value = True
         mock_service.load.return_value = fake_config
 
@@ -83,10 +83,10 @@ def test_load_config_uses_tokenizer_registry_service():
 def test_load_config_reports_registry_path_when_missing():
     with patch("mothertoken.benchmark.runner.TokenizerRegistryService") as mock_service_class:
         mock_service = mock_service_class.return_value
-        mock_service.path_info.return_value = {"path": "/tmp/missing-tokenizers.yaml", "exists": False}
+        mock_service.path_info.return_value = {"path": "/tmp/missing-default-tokenizers.yaml", "exists": False}
         mock_service.exists.return_value = False
 
-        with pytest.raises(FileNotFoundError, match="/tmp/missing-tokenizers.yaml"):
+        with pytest.raises(FileNotFoundError, match="/tmp/missing-default-tokenizers.yaml"):
             load_config()
 
 

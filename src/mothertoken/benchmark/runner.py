@@ -95,13 +95,14 @@ def load_config() -> dict:
     path_info = registry.path_info()
     if not registry.exists():
         raise FileNotFoundError(
-            f"tokenizers.yaml not found at {path_info['path']} (exists={path_info['exists']}). Reinstall mothertoken."
+            f"default_tokenizers.yaml not found at {path_info['path']} (exists={path_info['exists']}). "
+            "Reinstall mothertoken."
         )
     return registry.load()
 
 
 def _get_config() -> dict:
-    """Lazy loader so importing this module doesn't crash if tokenizers.yaml is absent."""
+    """Lazy loader so importing this module doesn't crash if default_tokenizers.yaml is absent."""
     if not hasattr(_get_config, "_cache"):
         _get_config._cache = load_config()  # type: ignore[attr-defined]
     return _get_config._cache  # type: ignore[attr-defined]

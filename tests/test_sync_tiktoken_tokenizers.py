@@ -13,6 +13,12 @@ def _load_script_module():
     return module
 
 
+def test_default_path_points_to_default_tokenizers_yaml():
+    module = _load_script_module()
+
+    assert module.DEFAULT_TOKENIZERS_PATH.name == "default_tokenizers.yaml"
+
+
 def test_sync_config_updates_existing_openai_tiktoken_entry(monkeypatch):
     module = _load_script_module()
     monkeypatch.setattr(module.tiktoken, "list_encoding_names", lambda: ["o200k_base"])
