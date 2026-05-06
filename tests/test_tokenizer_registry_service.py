@@ -10,11 +10,11 @@ from mothertoken.core.tokenizer_registry_service import DEFAULT_TOKENIZERS_PATH,
 UNUSED_PATH = Path("unused-tokenizers.yaml")
 
 
-def test_default_path_points_to_bundled_tokenizers_yaml():
+def test_default_path_points_to_bundled_default_tokenizers_yaml():
     service = TokenizerRegistryService()
 
     assert service.path == DEFAULT_TOKENIZERS_PATH
-    assert service.path.name == "tokenizers.yaml"
+    assert service.path.name == "default_tokenizers.yaml"
     assert service.path.parent.name == "data"
 
 

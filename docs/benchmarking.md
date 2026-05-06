@@ -8,7 +8,7 @@ Most users do not need this workflow. The regular CLI reads the precomputed `src
 
 The benchmark computes aggregate tokenizer-efficiency metrics across languages and tokenizer refs using FLORES+.
 
-Output is written to `src/mothertoken/data/benchmark.json`.
+Packaged default output is written to `src/mothertoken/data/default_benchmark.json`.
 
 The output contains only aggregate metrics. Raw FLORES+ sentences are never written to disk or included in public artifacts.
 
@@ -68,11 +68,11 @@ uv run mothertoken benchmark --models gpt-4o,gpt-4,llama3,mistral,qwen2.5,gemma2
 
 ## Add A Tokenizer
 
-You do not need to edit `tokenizers.yaml` just to test a Hugging Face ref. Pass the ref directly to `--models`.
+You do not need to edit `default_tokenizers.yaml` just to test a Hugging Face ref. Pass the ref directly to `--models`.
 
 Add an entry only when you want a stable alias, repeated benchmark coverage, or inclusion in the bundled benchmark.
 
-Add a local tokenizer entry to `src/mothertoken/data/tokenizers.yaml`:
+Add a local tokenizer entry to `src/mothertoken/data/default_tokenizers.yaml`:
 
 ```yaml
   - id: my-tokenizer

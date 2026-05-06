@@ -1,1 +1,1 @@
-"""Bundled benchmark and model registry data."""
+"""Bundled default benchmark and tokenizer registry data."""
