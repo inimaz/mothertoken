@@ -107,11 +107,16 @@ import CliTerminal from '../components/CliTerminal.astro';
     </div>
     <CliTerminal
       commands={[
-        'mothertoken benchmark --dry-run',
-        'mothertoken benchmark --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5',
-        'mothertoken benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B',
+        'mothertoken benchmark',
+        'mothertoken benchmark run --dry-run',
+        'mothertoken benchmark run --languages arb_Arab,spa_Latn --models gpt-4o,qwen2.5',
+        'mothertoken benchmark status',
       ]}
-      notes={['benchmark aliases and Hugging Face model paths are both supported']}
+      notes={[
+        'benchmark shows help; benchmark run creates data',
+        'without --output, run writes to the user config benchmark and makes it active',
+        'benchmark aliases and Hugging Face model paths are both supported',
+      ]}
       cursor
     />
 

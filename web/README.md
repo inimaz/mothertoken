@@ -41,6 +41,11 @@ pnpm run dev
 
 Benchmark regeneration is documented in [`../docs/benchmarking.md`](../docs/benchmarking.md). The web app imports `src/mothertoken/data/default_benchmark.json` at build time.
 
+```bash
+uv run mothertoken benchmark run --output src/mothertoken/data/default_benchmark.json
+pnpm run build
+```
+
 ## Deployment
 
 ```bash

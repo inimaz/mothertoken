@@ -36,6 +36,7 @@ from typing import Annotated
 
 import typer
 from rich.console import Console
+from rich.table import Table
 
 # Add `src/` to the python path so the `mothertoken` module can be resolved natively
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -306,13 +307,129 @@ def save_benchmark(results: dict, errors: dict, output_path: Path, model_ids: li
     log.info(f"Saved benchmark to {output_path}")
 
 
+def _run_benchmark_command(languages: str, models: str | None, output: Path | None, dry_run: bool) -> None:
+    from mothertoken.core.user_config import set_configured_benchmark_path, user_benchmark_path
+
+    console = Console()
+    language_values = [language.strip() for language in languages.split(",") if language.strip()]
+    if models:
+        model_ids = [model.strip() for model in models.split(",") if model.strip()]
+    else:
+        model_ids = [m["id"] for m in _get_models()]
+
+    output_path = output
+    if output_path is None and not dry_run:
+        output_path = user_benchmark_path()
+
+    if output_path is not None:
+        console.print(f"[dim]Benchmark output:[/] {output_path}", soft_wrap=True)
+
+    log.info(f"Running benchmark: {len(language_values)} languages x {len(model_ids)} models")
+    if dry_run:
+        log.info("DRY RUN - using dummy data")
+
+    results, errors = run_benchmark(language_values, model_ids, dry_run=dry_run)
+    if output_path is not None:
+        save_benchmark(results, errors, output_path, model_ids)
+        if output is None:
+            set_configured_benchmark_path(output_path)
+            log.info(f"Set active benchmark to {output_path}")
+        log.info("Done.")
+    else:
+        log.info("Dry run complete. No output file written.")
+
+
+def _handle_benchmark_config_error(error: Exception) -> None:
+    err_console.print(f"[bold red]Error:[/] {error}")
+    raise typer.Exit(code=1) from error
+
+
+@app.command("use")
+def use_benchmark(
+    benchmark_path: Annotated[
+        Path | None,
+        typer.Argument(help="Benchmark JSON path to make active."),
+    ] = None,
+    default: Annotated[
+        bool,
+        typer.Option("--default", help="Clear the user benchmark override and use the bundled default."),
+    ] = False,
+):
+    """Select the active benchmark for future commands."""
+    from mothertoken.cli.benchmark_loader import load_benchmark_file
+    from mothertoken.core.user_config import clear_configured_benchmark_path, set_configured_benchmark_path
+
+    if default and benchmark_path is not None:
+        err_console.print("[bold red]Error:[/] Provide a benchmark path or [bold]--default[/], not both.")
+        raise typer.Exit(code=1)
+    if not default and benchmark_path is None:
+        err_console.print("[bold red]Error:[/] Provide a benchmark path or [bold]--default[/].")
+        raise typer.Exit(code=1)
+
+    if default:
+        clear_configured_benchmark_path()
+        Console().print("[green]Using bundled default benchmark.[/]")
+        return
+
+    assert benchmark_path is not None
+    try:
+        resolved_path = benchmark_path.expanduser().resolve()
+        load_benchmark_file(resolved_path)
+        saved_path = set_configured_benchmark_path(resolved_path)
+    except (FileNotFoundError, ValueError, json.JSONDecodeError) as error:
+        _handle_benchmark_config_error(error)
+
+    Console().print(f"[green]Active benchmark set:[/] {saved_path}")
+
+
+@app.command("status")
+def benchmark_status():
+    """Show which benchmark is active."""
+    from mothertoken.cli.benchmark_loader import get_languages, get_model_ids, resolve_active_benchmark
+    from mothertoken.core.user_config import user_config_path
+
+    try:
+        data, source = resolve_active_benchmark()
+    except (FileNotFoundError, ValueError, json.JSONDecodeError) as error:
+        _handle_benchmark_config_error(error)
+
+    languages = get_languages(data)
+    model_ids = get_model_ids(data)
+
+    table = Table(show_header=False, box=None)
+    table.add_column("Field", style="bold")
+    table.add_column("Value")
+    table.add_row("Active benchmark", str(source.path))
+    table.add_row("Source type", source.source_type)
+    table.add_row("Reason", source.reason)
+    table.add_row("Config path", str(user_config_path()))
+    table.add_row("Benchmark version", str(data.get("version", "unknown")))
+    table.add_row("Languages", ", ".join(languages) if languages else "none")
+    table.add_row("Tokenizers", ", ".join(model_ids) if model_ids else "none")
+
+    Console().print()
+    Console().print("[bold]Benchmark status[/]")
+    Console().print(table)
+    Console().print()
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
 
 @app.callback()
-def run(
+def benchmark_callback(
+    ctx: typer.Context,
+):
+    """Manage benchmark data."""
+    if ctx.invoked_subcommand is None:
+        Console().print(ctx.get_help())
+        raise typer.Exit(code=0)
+
+
+@app.command("run")
+def run_command(
     languages: Annotated[
         str,
         typer.Option(
@@ -326,7 +443,7 @@ def run(
     ] = None,
     output: Annotated[
         Path | None,
-        typer.Option("--output", help="Output path for benchmark JSON. Required unless --dry-run is used."),
+        typer.Option("--output", help="Output path for benchmark JSON. Defaults to the user config benchmark."),
     ] = None,
     dry_run: Annotated[
         bool,
@@ -334,22 +451,7 @@ def run(
     ] = False,
 ):
     """Run the tokenizer benchmark and optionally write benchmark JSON."""
-    language_values = [language.strip() for language in languages.split(",") if language.strip()]
-    if models:
-        model_ids = [model.strip() for model in models.split(",") if model.strip()]
-    else:
-        model_ids = [m["id"] for m in _get_models()]
-
-    log.info(f"Running benchmark: {len(language_values)} languages x {len(model_ids)} models")
-    if dry_run:
-        log.info("DRY RUN - using dummy data")
-
-    results, errors = run_benchmark(language_values, model_ids, dry_run=dry_run)
-    if output is not None:
-        save_benchmark(results, errors, output, model_ids)
-        log.info("Done.")
-    else:
-        log.info("Dry run complete. No output file written.")
+    _run_benchmark_command(languages, models, output, dry_run)
 
 
 def main():

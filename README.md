@@ -39,7 +39,7 @@ The `mothertoken` command is available after installation.
 | I have this text and a chosen model. How many tokens does it use? | `mothertoken tokenize "Hola Mundo" --model gpt-4o` |
 | I am choosing between a few models. Which one tokenizes my text best? | `mothertoken compare "Travesura realizada" --model gpt-oss --model Qwen/Qwen3-0.6B` |
 | How good are the known models at tokenizing my language? | `mothertoken rank arabic` |
-| I have this model. Which languages does it tokenize best, which ones worst? | `mothertoken benchmark --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2` |
+| I have this model. Which languages does it tokenize best, which ones worst? | `mothertoken benchmark run --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2` |
 
 ### Rank tokenizers for a language
 Rank supported tokenizers for a specific language using the precomputed benchmark data.
@@ -93,6 +93,45 @@ mothertoken compare --file prompt.txt \
   --model deepseek-ai/DeepSeek-V4-Pro
 ```
 
+### Benchmark data
+`mothertoken benchmark` shows benchmark help. Use `benchmark run` to create benchmark data, `benchmark use` to choose the active benchmark, and `benchmark status` to inspect what commands will use.
+
+When `--output` is omitted, `benchmark run` writes to the user-owned benchmark file and makes it active:
+
+```bash
+mothertoken benchmark run --languages eng_Latn,arb_Arab --models gpt-4o,Qwen/Qwen3-0.6B
+```
+
+Before it starts, the command prints the file it will write. The default user config locations are platform-specific:
+
+| OS | User config directory |
+| --- | --- |
+| Linux / XDG | `$XDG_CONFIG_HOME/mothertoken` or `~/.config/mothertoken` |
+| macOS | `~/Library/Application Support/mothertoken` |
+| Windows | `%APPDATA%\mothertoken` |
+
+To write somewhere else:
+
+```bash
+mothertoken benchmark run \
+  --languages eng_Latn,arb_Arab \
+  --models gpt-4o,Qwen/Qwen3-0.6B \
+  --output benchmark.json
+```
+
+Make an existing benchmark active:
+
+```bash
+mothertoken benchmark use benchmark.json
+mothertoken benchmark status
+```
+
+Return to the bundled default benchmark:
+
+```bash
+mothertoken benchmark use --default
+```
+
 ---
 
 ## Researcher Workflow
@@ -102,7 +141,7 @@ Benchmark regeneration and model-extension docs live in [`docs/benchmarking.md`]
 You can also benchmark a direct Hugging Face ref without adding it to `default_tokenizers.yaml`:
 
 ```bash
-uv run mothertoken benchmark --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
+uv run mothertoken benchmark run --languages eng_Latn,arb_Arab --models Qwen/Qwen3-0.6B
 ```
 
 ## License
