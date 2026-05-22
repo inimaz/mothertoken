@@ -9,7 +9,7 @@
 Toolkit for comparing tokenizer efficiency across languages, model families, and user-supplied Hugging Face refs.
 
 > [!NOTE]
-> **Alpha release:** the bundled benchmark is curated and representative, not exhaustive. Use direct Hugging Face refs when you want to compare tokenizers outside the starter set.
+> The bundled benchmark is curated and representative, not exhaustive. Use direct Hugging Face refs when you want to compare tokenizers outside the starter set.
 
 ## Installation
 
@@ -33,13 +33,65 @@ The `mothertoken` command is available after installation.
 
 ### Common questions
 
-| Question | Command |
-| --- | --- |
-| I speak a language that is not English. Which tokenizer is most efficient for it? | `mothertoken rank spanish` |
-| I have this text and a chosen model. How many tokens does it use? | `mothertoken tokenize "Hola Mundo" --model gpt-4o` |
-| I am choosing between a few models. Which one tokenizes my text best? | `mothertoken compare "Travesura realizada" --model gpt-oss --model Qwen/Qwen3-0.6B` |
-| How good are the known models at tokenizing my language? | `mothertoken rank arabic` |
-| I have this model. Which languages does it tokenize best, which ones worst? | `mothertoken benchmark run --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2` |
+#### I speak a language that is not English. Which tokenizer is most efficient for it?
+
+```bash
+mothertoken rank spanish
+```
+
+<details>
+<summary>Show demo</summary>
+
+![Demo of mothertoken rank spanish](demos/common-questions/01-rank-spanish.gif)
+
+[Asciinema source](demos/common-questions/01-rank-spanish.cast)
+
+</details>
+
+#### I have this text and a chosen model. How many tokens does it use?
+
+```bash
+mothertoken tokenize "Hola Mundo" --model gpt-4o
+```
+
+<details>
+<summary>Show demo</summary>
+
+![Demo of mothertoken tokenize Hola Mundo](demos/common-questions/02-tokenize-hola-mundo.gif)
+
+[Asciinema source](demos/common-questions/02-tokenize-hola-mundo.cast)
+
+</details>
+
+#### I am choosing between a few models. Which one tokenizes my text best?
+
+```bash
+mothertoken compare "Travesura realizada" --model gpt-oss --model Qwen/Qwen3-0.6B
+```
+
+<details>
+<summary>Show demo</summary>
+
+![Demo of mothertoken compare Travesura realizada](demos/common-questions/03-compare-travesura.gif)
+
+[Asciinema source](demos/common-questions/03-compare-travesura.cast)
+
+</details>
+
+#### I have this model. Which languages does it tokenize best, which ones worst?
+
+```bash
+mothertoken benchmark run --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2
+```
+
+<details>
+<summary>Show demo</summary>
+
+![Demo of mothertoken benchmark run](demos/common-questions/04-benchmark-models.gif)
+
+[Asciinema source](demos/common-questions/04-benchmark-models.cast)
+
+</details>
 
 ### Rank tokenizers for a language
 Rank supported tokenizers for a specific language using the precomputed benchmark data.
