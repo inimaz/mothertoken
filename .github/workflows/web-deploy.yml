@@ -6,6 +6,8 @@ on:
       - "web/**"
       - ".github/workflows/web-deploy.yml"
 
+env:
+  NODE_VERSION: "22"
 
 permissions:
   contents: read
@@ -23,3 +25,4 @@ jobs:
         uses: withastro/action@44706356b4eb735f8b9035699eb4796241a040c4 # v6.1.0
         with:
           path: web
+          node-version: ${{ env.NODE_VERSION }}
