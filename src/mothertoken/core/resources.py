@@ -24,11 +24,16 @@ def _find_data_path(filename: str) -> Path:
 
 def load_benchmark_data() -> dict[str, Any]:
     """Load bundled default_benchmark.json."""
-    benchmark_path = _find_data_path("default_benchmark.json")
+    benchmark_path = benchmark_data_path()
     if not benchmark_path.exists():
         raise FileNotFoundError(f"default_benchmark.json not found at {benchmark_path}. Reinstall mothertoken.")
     with open(benchmark_path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def benchmark_data_path() -> Path:
+    """Return the bundled default_benchmark.json path."""
+    return _find_data_path("default_benchmark.json")
 
 
 def load_tokenizers_config() -> dict[str, Any]:

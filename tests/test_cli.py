@@ -2,6 +2,7 @@
 Tests for mothertoken CLI commands.
 """
 
+import json
 from unittest.mock import patch
 
 from typer.testing import CliRunner
@@ -119,7 +120,17 @@ def _patch_models():
 # ---------------------------------------------------------------------------
 
 
-def test_benchmark_command_runs_benchmark_runner(tmp_path):
+def test_benchmark_command_shows_help():
+    result = runner.invoke(app, ["benchmark"])
+
+    assert result.exit_code == 0, result.output
+    assert "Usage" in result.output
+    assert "run" in result.output
+    assert "use" in result.output
+    assert "status" in result.output
+
+
+def test_benchmark_run_subcommand_runs_benchmark_runner(tmp_path):
     output_path = tmp_path / "benchmark.json"
 
     with (
@@ -130,6 +141,7 @@ def test_benchmark_command_runs_benchmark_runner(tmp_path):
             app,
             [
                 "benchmark",
+                "run",
                 "--languages",
                 "eng_Latn",
                 "--models",
@@ -143,6 +155,127 @@ def test_benchmark_command_runs_benchmark_runner(tmp_path):
     assert result.exit_code == 0, result.output
     mock_run.assert_called_once_with(["eng_Latn"], ["gpt-4o"], dry_run=True)
     mock_save.assert_called_once_with({"eng_Latn": {}}, {}, output_path, ["gpt-4o"])
+
+
+def test_benchmark_run_without_output_writes_user_config_benchmark(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "appdata"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
+
+    from mothertoken.core.user_config import get_configured_benchmark_path, user_benchmark_path
+
+    with (
+        patch("mothertoken.benchmark.runner.run_benchmark", return_value=({"eng_Latn": {}}, {})) as mock_run,
+        patch("mothertoken.benchmark.runner.save_benchmark") as mock_save,
+    ):
+        result = runner.invoke(
+            app,
+            [
+                "benchmark",
+                "run",
+                "--languages",
+                "eng_Latn",
+                "--models",
+                "gpt-4o",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    assert "Benchmark output" in result.output
+    assert str(user_benchmark_path()) in result.output
+    mock_run.assert_called_once_with(["eng_Latn"], ["gpt-4o"], dry_run=False)
+    mock_save.assert_called_once_with({"eng_Latn": {}}, {}, user_benchmark_path(), ["gpt-4o"])
+    assert get_configured_benchmark_path() == user_benchmark_path().resolve()
+
+
+def test_benchmark_run_dry_run_without_output_does_not_write_user_config(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "appdata"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
+
+    from mothertoken.core.user_config import get_configured_benchmark_path
+
+    with (
+        patch("mothertoken.benchmark.runner.run_benchmark", return_value=({"eng_Latn": {}}, {})),
+        patch("mothertoken.benchmark.runner.save_benchmark") as mock_save,
+    ):
+        result = runner.invoke(
+            app,
+            [
+                "benchmark",
+                "run",
+                "--languages",
+                "eng_Latn",
+                "--models",
+                "gpt-4o",
+                "--dry-run",
+            ],
+        )
+
+    assert result.exit_code == 0, result.output
+    mock_save.assert_not_called()
+    assert get_configured_benchmark_path() is None
+
+
+def test_benchmark_use_sets_active_benchmark(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "appdata"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
+    benchmark_path = tmp_path / "benchmark.json"
+    benchmark_path.write_text(json.dumps(FAKE_BENCHMARK), encoding="utf-8")
+
+    result = runner.invoke(app, ["benchmark", "use", str(benchmark_path)])
+
+    assert result.exit_code == 0, result.output
+    assert "Active benchmark set" in result.output
+
+    from mothertoken.core.user_config import get_configured_benchmark_path
+
+    assert get_configured_benchmark_path() == benchmark_path.resolve()
+
+
+def test_benchmark_use_default_clears_active_benchmark(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "appdata"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
+    benchmark_path = tmp_path / "benchmark.json"
+    benchmark_path.write_text(json.dumps(FAKE_BENCHMARK), encoding="utf-8")
+
+    from mothertoken.core.user_config import get_configured_benchmark_path, set_configured_benchmark_path
+
+    set_configured_benchmark_path(benchmark_path)
+
+    result = runner.invoke(app, ["benchmark", "use", "--default"])
+
+    assert result.exit_code == 0, result.output
+    assert "bundled default" in result.output
+    assert get_configured_benchmark_path() is None
+
+
+def test_benchmark_status_shows_active_benchmark(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "appdata"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
+    benchmark_path = tmp_path / "benchmark.json"
+    benchmark_path.write_text(json.dumps(FAKE_BENCHMARK), encoding="utf-8")
+
+    from mothertoken.core.user_config import set_configured_benchmark_path
+
+    set_configured_benchmark_path(benchmark_path)
+
+    result = runner.invoke(app, ["benchmark", "status"])
+
+    assert result.exit_code == 0, result.output
+    assert "Benchmark status" in result.output
+    assert "user config" in result.output
+    assert "2026-03-26" in result.output
+    assert "arb_Arab" in result.output
+    assert "gpt-4o" in result.output
 
 
 # ---------------------------------------------------------------------------
