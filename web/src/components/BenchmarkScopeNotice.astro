@@ -1,0 +1,46 @@
+<aside class="scope-notice animate-fade-in-up stagger-1" aria-label="Benchmark scope notice">
+  <span class="scope-kicker">benchmark scope</span>
+  <p>
+    The bundled benchmark covers a curated subset of tokenizers. Use the CLI to compare additional Hugging Face tokenizer refs against the languages and prompts you care about.
+  </p>
+</aside>
+
+<style>
+  .scope-notice {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    margin: -2.5rem 0 3rem;
+    padding: 1rem 1.125rem;
+    border: 1px solid color-mix(in srgb, var(--theme-border-strong) 72%, transparent);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--theme-bg-secondary) 72%, var(--theme-bg));
+  }
+
+  .scope-kicker {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.65;
+    text-transform: uppercase;
+    color: var(--theme-text-tertiary);
+  }
+
+  .scope-notice p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--theme-text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .scope-notice {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: -2rem;
+    }
+  }
+</style>
