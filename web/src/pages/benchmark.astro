@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
-import AlphaBanner from '../components/AlphaBanner.astro';
+import BenchmarkScopeNotice from '../components/BenchmarkScopeNotice.astro';
 import Footer from '../components/Footer.astro';
+import BenchmarkCommand from '../components/BenchmarkCommand.astro';
 import benchmark from '../data/benchmark';
 
 const benchmarkJSON = JSON.stringify(benchmark);
@@ -14,7 +15,7 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
 <Base title="mothertoken — benchmark explorer">
   <div class="max-w-[1120px] mx-auto pt-12 px-6 pb-24">
     <Nav activeTab="benchmark" />
-    <AlphaBanner />
+    <BenchmarkScopeNotice />
 
     <div class="flex items-center gap-4 mb-8 animate-fade-in-up stagger-1">
       <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark explorer</span>
@@ -59,6 +60,8 @@ const tokenizerOptions = Object.entries(benchmark.models).sort(([, a], [, b]) =>
         <tbody id="full-body"></tbody>
       </table>
     </div>
+
+    <BenchmarkCommand class="animate-fade-in-up stagger-3" />
 
     <Footer />
   </div>

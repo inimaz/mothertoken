@@ -40,10 +40,12 @@ const cell = (value: string | Cell): Cell =>
 
   <div class="body">
     {commands.map(command => (
-      <div class="line command">
-        <span class="prompt">$</span>
-        <span>{command}</span>
-      </div>
+      command.split(/\r?\n/).map((line, index) => (
+        <div class="line command">
+          <span class="prompt" aria-hidden={index > 0 ? 'true' : undefined}>{index === 0 ? '$' : ''}</span>
+          <span class="command-text">{line}</span>
+        </div>
+      ))
     ))}
 
     {table && (
@@ -139,6 +141,10 @@ const cell = (value: string | Cell): Cell =>
 
 .command {
   color: var(--color-text);
+}
+
+.command-text {
+  white-space: pre;
 }
 
 .prompt {

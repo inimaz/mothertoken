@@ -44,8 +44,6 @@ mothertoken rank spanish
 
 ![Demo of mothertoken rank spanish](demos/common-questions/01-rank-spanish.gif)
 
-[Asciinema source](demos/common-questions/01-rank-spanish.cast)
-
 </details>
 
 #### I have this text and a chosen model. How many tokens does it use?
@@ -58,8 +56,6 @@ mothertoken tokenize "Hola Mundo" --model gpt-4o
 <summary>Show demo</summary>
 
 ![Demo of mothertoken tokenize Hola Mundo](demos/common-questions/02-tokenize-hola-mundo.gif)
-
-[Asciinema source](demos/common-questions/02-tokenize-hola-mundo.cast)
 
 </details>
 
@@ -74,8 +70,6 @@ mothertoken compare "Travesura realizada" --model gpt-oss --model Qwen/Qwen3-0.6
 
 ![Demo of mothertoken compare Travesura realizada](demos/common-questions/03-compare-travesura.gif)
 
-[Asciinema source](demos/common-questions/03-compare-travesura.cast)
-
 </details>
 
 #### I have this model. Which languages does it tokenize best, which ones worst?
@@ -88,8 +82,6 @@ mothertoken benchmark run --models gpt-oss,YOUR_MODEL1,YOUR_MODEL2
 <summary>Show demo</summary>
 
 ![Demo of mothertoken benchmark run](demos/common-questions/04-benchmark-models.gif)
-
-[Asciinema source](demos/common-questions/04-benchmark-models.cast)
 
 </details>
 

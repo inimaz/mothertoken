@@ -1,0 +1,40 @@
+---
+import CliTerminal from './CliTerminal.astro';
+
+interface Props {
+  class?: string;
+}
+
+const className = Astro.props.class;
+
+const benchmarkCommand = `uv run mothertoken benchmark run \\
+  --languages eng_Latn,fra_Latn,spa_Latn,por_Latn,deu_Latn,arb_Arab,cmn_Hans,jpn_Jpan,tha_Thai,hin_Deva,kor_Hang,tur_Latn,ukr_Cyrl,vie_Latn,swh_Latn \\
+  --models gpt-4o,gpt-4,qwen3,mistral,qwen2.5,deepseek-v3,gpt-oss,gpt2,gpt-3,codex,codex-edit,opt,tinyllama,pythia,bert-base-uncased,roberta-base,xlm-roberta-base,distilbert-base-uncased \\
+  --output src/mothertoken/data/default_benchmark.json`;
+---
+
+<section class:list={['benchmark-command', className]}>
+  <div class="section-head">
+    <span class="font-mono text-[13px] tracking-[.15em] text-text-tertiary uppercase whitespace-nowrap">benchmark command</span>
+    <span class="hidden sm:block flex-1 h-[1px] bg-border-strong opacity-40"></span>
+  </div>
+  <p class="text-[16px] text-text-secondary leading-[1.7] mb-4 max-w-[720px]">
+    The benchmark shown here has been generated with the following command:
+  </p>
+  <CliTerminal commands={[benchmarkCommand]} />
+</section>
+
+<style>
+  .benchmark-command {
+    border-top: 1px solid color-mix(in srgb, var(--color-border-strong) 40%, transparent);
+    padding-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+</style>
