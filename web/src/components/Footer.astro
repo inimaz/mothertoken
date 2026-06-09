@@ -1,6 +1,7 @@
 ---
 import benchmark from "../data/benchmark";
-import { GITHUB_URL, FLORES_URL} from "../constants";
+import { GITHUB_URL, FLORES_URL } from "../constants";
+import GithubIcon from "./GithubIcon.astro";
 ---
 
 <footer
@@ -18,9 +19,12 @@ import { GITHUB_URL, FLORES_URL} from "../constants";
   <div class="flex gap-4">
     <a
       href={GITHUB_URL}
-      class="font-mono text-[14px] text-text-tertiary hover:text-text transition-colors duration-300 no-underline"
-      >github↗</a
+      class="inline-flex items-center gap-1.5 font-mono text-[14px] text-text-tertiary hover:text-text transition-colors duration-300 no-underline"
+      aria-label="GitHub repository"
     >
+      <GithubIcon />
+      <span>github↗</span>
+    </a>
     <span class="text-[14px] text-border-strong">/</span>
     <span class="font-mono text-[14px] text-text-tertiary">mit license</span>
     <span class="text-[14px] text-border-strong">/</span>
