@@ -1,5 +1,5 @@
 {
-  "version": "2026-05-04",
+  "version": "2026-06-24",
   "flores_split": "dev",
   "flores_dataset": "openlanguagedata/flores_plus",
   "baseline_language": "eng_Latn",
@@ -561,10 +561,10 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 29492,
+        "total_tokens": 28495,
         "total_words": 20954,
-        "chars_per_token": 4.245,
-        "fertility": 1.407,
+        "chars_per_token": 4.394,
+        "fertility": 1.36,
         "rtc": 1.0
       },
       "qwen2.5": {
@@ -579,10 +579,10 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 30784,
+        "total_tokens": 25695,
         "total_words": 20954,
-        "chars_per_token": 4.067,
-        "fertility": 1.469,
+        "chars_per_token": 4.872,
+        "fertility": 1.226,
         "rtc": 1.0
       },
       "gpt-oss": {
@@ -633,19 +633,19 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 26738,
+        "total_tokens": 25741,
         "total_words": 20954,
-        "chars_per_token": 4.682,
-        "fertility": 1.276,
+        "chars_per_token": 4.864,
+        "fertility": 1.228,
         "rtc": 1.0
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 30482,
+        "total_tokens": 29485,
         "total_words": 20954,
-        "chars_per_token": 4.107,
-        "fertility": 1.455,
+        "chars_per_token": 4.246,
+        "fertility": 1.407,
         "rtc": 1.0
       },
       "pythia": {
@@ -660,37 +660,37 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 27673,
+        "total_tokens": 25679,
         "total_words": 20954,
-        "chars_per_token": 4.524,
-        "fertility": 1.321,
+        "chars_per_token": 4.875,
+        "fertility": 1.225,
         "rtc": 1.0
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 27735,
+        "total_tokens": 25741,
         "total_words": 20954,
-        "chars_per_token": 4.514,
-        "fertility": 1.324,
+        "chars_per_token": 4.864,
+        "fertility": 1.228,
         "rtc": 1.0
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 30989,
+        "total_tokens": 28995,
         "total_words": 20954,
-        "chars_per_token": 4.04,
-        "fertility": 1.479,
+        "chars_per_token": 4.318,
+        "fertility": 1.384,
         "rtc": 1.0
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 125194,
-        "total_tokens": 27673,
+        "total_tokens": 25679,
         "total_words": 20954,
-        "chars_per_token": 4.524,
-        "fertility": 1.321,
+        "chars_per_token": 4.875,
+        "fertility": 1.225,
         "rtc": 1.0
       }
     },
@@ -725,11 +725,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 46329,
+        "total_tokens": 45332,
         "total_words": 24146,
-        "chars_per_token": 3.212,
-        "fertility": 1.919,
-        "rtc": 1.322
+        "chars_per_token": 3.282,
+        "fertility": 1.877,
+        "rtc": 1.339
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -743,11 +743,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 47190,
+        "total_tokens": 39234,
         "total_words": 24146,
-        "chars_per_token": 3.153,
-        "fertility": 1.954,
-        "rtc": 1.29
+        "chars_per_token": 3.792,
+        "fertility": 1.625,
+        "rtc": 1.285
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -797,20 +797,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 52026,
+        "total_tokens": 51029,
         "total_words": 24146,
-        "chars_per_token": 2.86,
-        "fertility": 2.155,
-        "rtc": 1.637
+        "chars_per_token": 2.916,
+        "fertility": 2.113,
+        "rtc": 1.668
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 44154,
+        "total_tokens": 43157,
         "total_words": 24146,
-        "chars_per_token": 3.37,
-        "fertility": 1.829,
-        "rtc": 1.219
+        "chars_per_token": 3.448,
+        "fertility": 1.787,
+        "rtc": 1.232
       },
       "pythia": {
         "num_sentences": 997,
@@ -824,38 +824,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 48366,
+        "total_tokens": 46372,
         "total_words": 24146,
-        "chars_per_token": 3.076,
-        "fertility": 2.003,
-        "rtc": 1.471
+        "chars_per_token": 3.209,
+        "fertility": 1.92,
+        "rtc": 1.519
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 53023,
+        "total_tokens": 51029,
         "total_words": 24146,
-        "chars_per_token": 2.806,
-        "fertility": 2.196,
-        "rtc": 1.609
+        "chars_per_token": 2.916,
+        "fertility": 2.113,
+        "rtc": 1.668
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 39439,
+        "total_tokens": 37445,
         "total_words": 24146,
-        "chars_per_token": 3.773,
-        "fertility": 1.633,
-        "rtc": 1.071
+        "chars_per_token": 3.974,
+        "fertility": 1.551,
+        "rtc": 1.087
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 148789,
-        "total_tokens": 48366,
+        "total_tokens": 46372,
         "total_words": 24146,
-        "chars_per_token": 3.076,
-        "fertility": 2.003,
-        "rtc": 1.471
+        "chars_per_token": 3.209,
+        "fertility": 1.92,
+        "rtc": 1.519
       }
     },
     "spa_Latn": {
@@ -889,11 +889,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 46072,
+        "total_tokens": 45075,
         "total_words": 24819,
-        "chars_per_token": 3.238,
-        "fertility": 1.856,
-        "rtc": 1.311
+        "chars_per_token": 3.31,
+        "fertility": 1.816,
+        "rtc": 1.327
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -907,11 +907,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 47119,
+        "total_tokens": 38392,
         "total_words": 24819,
-        "chars_per_token": 3.166,
-        "fertility": 1.899,
-        "rtc": 1.284
+        "chars_per_token": 3.886,
+        "fertility": 1.547,
+        "rtc": 1.254
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -961,20 +961,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 52072,
+        "total_tokens": 51075,
         "total_words": 24819,
-        "chars_per_token": 2.865,
-        "fertility": 2.098,
-        "rtc": 1.634
+        "chars_per_token": 2.921,
+        "fertility": 2.058,
+        "rtc": 1.665
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 44027,
+        "total_tokens": 43030,
         "total_words": 24819,
-        "chars_per_token": 3.389,
-        "fertility": 1.774,
-        "rtc": 1.212
+        "chars_per_token": 3.467,
+        "fertility": 1.734,
+        "rtc": 1.225
       },
       "pythia": {
         "num_sentences": 997,
@@ -988,38 +988,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 50122,
+        "total_tokens": 48128,
         "total_words": 24819,
-        "chars_per_token": 2.976,
-        "fertility": 2.02,
-        "rtc": 1.52
+        "chars_per_token": 3.1,
+        "fertility": 1.939,
+        "rtc": 1.573
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 53069,
+        "total_tokens": 51075,
         "total_words": 24819,
-        "chars_per_token": 2.811,
-        "fertility": 2.138,
-        "rtc": 1.606
+        "chars_per_token": 2.921,
+        "fertility": 2.058,
+        "rtc": 1.665
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 36769,
+        "total_tokens": 34775,
         "total_words": 24819,
-        "chars_per_token": 4.057,
-        "fertility": 1.481,
-        "rtc": 0.996
+        "chars_per_token": 4.29,
+        "fertility": 1.401,
+        "rtc": 1.006
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 149187,
-        "total_tokens": 50122,
+        "total_tokens": 48128,
         "total_words": 24819,
-        "chars_per_token": 2.976,
-        "fertility": 2.02,
-        "rtc": 1.52
+        "chars_per_token": 3.1,
+        "fertility": 1.939,
+        "rtc": 1.573
       }
     },
     "por_Latn": {
@@ -1053,11 +1053,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 45138,
+        "total_tokens": 44141,
         "total_words": 22409,
-        "chars_per_token": 3.013,
-        "fertility": 2.014,
-        "rtc": 1.409
+        "chars_per_token": 3.081,
+        "fertility": 1.97,
+        "rtc": 1.426
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1071,11 +1071,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 44746,
+        "total_tokens": 36541,
         "total_words": 22409,
-        "chars_per_token": 3.04,
-        "fertility": 1.997,
-        "rtc": 1.338
+        "chars_per_token": 3.722,
+        "fertility": 1.631,
+        "rtc": 1.309
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1125,20 +1125,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 50571,
+        "total_tokens": 49574,
         "total_words": 22409,
-        "chars_per_token": 2.689,
-        "fertility": 2.257,
-        "rtc": 1.741
+        "chars_per_token": 2.744,
+        "fertility": 2.212,
+        "rtc": 1.773
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 42946,
+        "total_tokens": 41949,
         "total_words": 22409,
-        "chars_per_token": 3.167,
-        "fertility": 1.916,
-        "rtc": 1.297
+        "chars_per_token": 3.242,
+        "fertility": 1.872,
+        "rtc": 1.31
       },
       "pythia": {
         "num_sentences": 997,
@@ -1152,38 +1152,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 48198,
+        "total_tokens": 46204,
         "total_words": 22409,
-        "chars_per_token": 2.822,
-        "fertility": 2.151,
-        "rtc": 1.603
+        "chars_per_token": 2.944,
+        "fertility": 2.062,
+        "rtc": 1.656
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 51568,
+        "total_tokens": 49574,
         "total_words": 22409,
-        "chars_per_token": 2.637,
-        "fertility": 2.301,
-        "rtc": 1.711
+        "chars_per_token": 2.744,
+        "fertility": 2.212,
+        "rtc": 1.773
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 34308,
+        "total_tokens": 32314,
         "total_words": 22409,
-        "chars_per_token": 3.964,
-        "fertility": 1.531,
-        "rtc": 1.019
+        "chars_per_token": 4.209,
+        "fertility": 1.442,
+        "rtc": 1.026
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 136009,
-        "total_tokens": 48198,
+        "total_tokens": 46204,
         "total_words": 22409,
-        "chars_per_token": 2.822,
-        "fertility": 2.151,
-        "rtc": 1.603
+        "chars_per_token": 2.944,
+        "fertility": 2.062,
+        "rtc": 1.656
       }
     },
     "deu_Latn": {
@@ -1217,11 +1217,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 45860,
+        "total_tokens": 44863,
         "total_words": 20903,
-        "chars_per_token": 3.196,
-        "fertility": 2.194,
-        "rtc": 1.328
+        "chars_per_token": 3.267,
+        "fertility": 2.146,
+        "rtc": 1.345
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1235,11 +1235,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 46639,
+        "total_tokens": 38746,
         "total_words": 20903,
-        "chars_per_token": 3.142,
-        "fertility": 2.231,
-        "rtc": 1.294
+        "chars_per_token": 3.783,
+        "fertility": 1.854,
+        "rtc": 1.288
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1289,20 +1289,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 56056,
+        "total_tokens": 55059,
         "total_words": 20903,
-        "chars_per_token": 2.614,
-        "fertility": 2.682,
-        "rtc": 1.791
+        "chars_per_token": 2.662,
+        "fertility": 2.634,
+        "rtc": 1.827
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 42701,
+        "total_tokens": 41704,
         "total_words": 20903,
-        "chars_per_token": 3.432,
-        "fertility": 2.043,
-        "rtc": 1.197
+        "chars_per_token": 3.514,
+        "fertility": 1.995,
+        "rtc": 1.208
       },
       "pythia": {
         "num_sentences": 997,
@@ -1316,38 +1316,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 51887,
+        "total_tokens": 49893,
         "total_words": 20903,
-        "chars_per_token": 2.825,
-        "fertility": 2.482,
-        "rtc": 1.602
+        "chars_per_token": 2.937,
+        "fertility": 2.387,
+        "rtc": 1.66
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 57053,
+        "total_tokens": 55059,
         "total_words": 20903,
-        "chars_per_token": 2.569,
-        "fertility": 2.729,
-        "rtc": 1.757
+        "chars_per_token": 2.662,
+        "fertility": 2.634,
+        "rtc": 1.827
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 35800,
+        "total_tokens": 33806,
         "total_words": 20903,
-        "chars_per_token": 4.094,
-        "fertility": 1.713,
-        "rtc": 0.987
+        "chars_per_token": 4.335,
+        "fertility": 1.617,
+        "rtc": 0.996
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 146558,
-        "total_tokens": 51887,
+        "total_tokens": 49893,
         "total_words": 20903,
-        "chars_per_token": 2.825,
-        "fertility": 2.482,
-        "rtc": 1.602
+        "chars_per_token": 2.937,
+        "fertility": 2.387,
+        "rtc": 1.66
       }
     },
     "arb_Arab": {
@@ -1381,11 +1381,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 100173,
+        "total_tokens": 99176,
         "total_words": 18759,
-        "chars_per_token": 1.104,
-        "fertility": 5.34,
-        "rtc": 3.846
+        "chars_per_token": 1.115,
+        "fertility": 5.287,
+        "rtc": 3.941
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1399,11 +1399,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 1776,
+        "total_tokens": 41631,
         "total_words": 18759,
-        "chars_per_token": 62.26,
-        "fertility": 0.095,
-        "rtc": 0.065
+        "chars_per_token": 2.656,
+        "fertility": 2.219,
+        "rtc": 1.834
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1453,20 +1453,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 113436,
+        "total_tokens": 112439,
         "total_words": 18759,
-        "chars_per_token": 0.975,
-        "fertility": 6.047,
-        "rtc": 4.803
+        "chars_per_token": 0.983,
+        "fertility": 5.994,
+        "rtc": 4.946
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 102171,
+        "total_tokens": 101174,
         "total_words": 18759,
-        "chars_per_token": 1.082,
-        "fertility": 5.447,
-        "rtc": 3.795
+        "chars_per_token": 1.093,
+        "fertility": 5.393,
+        "rtc": 3.885
       },
       "pythia": {
         "num_sentences": 997,
@@ -1480,38 +1480,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 92095,
+        "total_tokens": 90101,
         "total_words": 18759,
-        "chars_per_token": 1.201,
-        "fertility": 4.909,
-        "rtc": 3.768
+        "chars_per_token": 1.227,
+        "fertility": 4.803,
+        "rtc": 3.973
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 114433,
+        "total_tokens": 112439,
         "total_words": 18759,
-        "chars_per_token": 0.966,
-        "fertility": 6.1,
-        "rtc": 4.671
+        "chars_per_token": 0.983,
+        "fertility": 5.994,
+        "rtc": 4.946
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 36187,
+        "total_tokens": 34193,
         "total_words": 18759,
-        "chars_per_token": 3.056,
-        "fertility": 1.929,
-        "rtc": 1.322
+        "chars_per_token": 3.234,
+        "fertility": 1.823,
+        "rtc": 1.335
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 110574,
-        "total_tokens": 92095,
+        "total_tokens": 90101,
         "total_words": 18759,
-        "chars_per_token": 1.201,
-        "fertility": 4.909,
-        "rtc": 3.768
+        "chars_per_token": 1.227,
+        "fertility": 4.803,
+        "rtc": 3.973
       }
     },
     "cmn_Hans": {
@@ -1545,11 +1545,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 47669,
+        "total_tokens": 46672,
         "total_words": 2041,
-        "chars_per_token": 0.885,
-        "fertility": 23.356,
-        "rtc": 4.798
+        "chars_per_token": 0.904,
+        "fertility": 22.867,
+        "rtc": 4.862
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1563,11 +1563,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 1608,
+        "total_tokens": 24684,
         "total_words": 2041,
-        "chars_per_token": 26.231,
-        "fertility": 0.788,
-        "rtc": 0.155
+        "chars_per_token": 1.709,
+        "fertility": 12.094,
+        "rtc": 2.851
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1617,20 +1617,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 83402,
+        "total_tokens": 82405,
         "total_words": 2041,
-        "chars_per_token": 0.506,
-        "fertility": 40.863,
-        "rtc": 9.258
+        "chars_per_token": 0.512,
+        "fertility": 40.375,
+        "rtc": 9.502
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 60514,
+        "total_tokens": 59517,
         "total_words": 2041,
-        "chars_per_token": 0.697,
-        "fertility": 29.649,
-        "rtc": 5.893
+        "chars_per_token": 0.709,
+        "fertility": 29.161,
+        "rtc": 5.991
       },
       "pythia": {
         "num_sentences": 997,
@@ -1644,38 +1644,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 41024,
+        "total_tokens": 39030,
         "total_words": 2041,
-        "chars_per_token": 1.028,
-        "fertility": 20.1,
-        "rtc": 4.4
+        "chars_per_token": 1.081,
+        "fertility": 19.123,
+        "rtc": 4.511
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 84399,
+        "total_tokens": 82405,
         "total_words": 2041,
-        "chars_per_token": 0.5,
-        "fertility": 41.352,
-        "rtc": 9.032
+        "chars_per_token": 0.512,
+        "fertility": 40.375,
+        "rtc": 9.502
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 30451,
+        "total_tokens": 28457,
         "total_words": 2041,
-        "chars_per_token": 1.385,
-        "fertility": 14.92,
-        "rtc": 2.917
+        "chars_per_token": 1.482,
+        "fertility": 13.943,
+        "rtc": 2.913
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 42179,
-        "total_tokens": 41024,
+        "total_tokens": 39030,
         "total_words": 2041,
-        "chars_per_token": 1.028,
-        "fertility": 20.1,
-        "rtc": 4.4
+        "chars_per_token": 1.081,
+        "fertility": 19.123,
+        "rtc": 4.511
       }
     },
     "jpn_Jpan": {
@@ -1709,11 +1709,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 62224,
+        "total_tokens": 61227,
         "total_words": 1063,
-        "chars_per_token": 0.878,
-        "fertility": 58.536,
-        "rtc": 4.833
+        "chars_per_token": 0.893,
+        "fertility": 57.598,
+        "rtc": 4.922
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1727,11 +1727,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 909,
+        "total_tokens": 36675,
         "total_words": 1063,
-        "chars_per_token": 60.13,
-        "fertility": 0.855,
-        "rtc": 0.068
+        "chars_per_token": 1.49,
+        "fertility": 34.501,
+        "rtc": 3.269
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1781,20 +1781,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 77273,
+        "total_tokens": 76276,
         "total_words": 1063,
-        "chars_per_token": 0.707,
-        "fertility": 72.693,
-        "rtc": 6.62
+        "chars_per_token": 0.717,
+        "fertility": 71.755,
+        "rtc": 6.787
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 67134,
+        "total_tokens": 66137,
         "total_words": 1063,
-        "chars_per_token": 0.814,
-        "fertility": 63.155,
-        "rtc": 5.045
+        "chars_per_token": 0.826,
+        "fertility": 62.217,
+        "rtc": 5.138
       },
       "pythia": {
         "num_sentences": 997,
@@ -1808,38 +1808,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 53305,
+        "total_tokens": 51311,
         "total_words": 1063,
-        "chars_per_token": 1.025,
-        "fertility": 50.146,
-        "rtc": 4.412
+        "chars_per_token": 1.065,
+        "fertility": 48.27,
+        "rtc": 4.577
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 78270,
+        "total_tokens": 76276,
         "total_words": 1063,
-        "chars_per_token": 0.698,
-        "fertility": 73.631,
-        "rtc": 6.464
+        "chars_per_token": 0.717,
+        "fertility": 71.755,
+        "rtc": 6.787
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 34255,
+        "total_tokens": 32261,
         "total_words": 1063,
-        "chars_per_token": 1.596,
-        "fertility": 32.225,
-        "rtc": 2.532
+        "chars_per_token": 1.694,
+        "fertility": 30.349,
+        "rtc": 2.548
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 54658,
-        "total_tokens": 53305,
+        "total_tokens": 51311,
         "total_words": 1063,
-        "chars_per_token": 1.025,
-        "fertility": 50.146,
-        "rtc": 4.412
+        "chars_per_token": 1.065,
+        "fertility": 48.27,
+        "rtc": 4.577
       }
     },
     "tha_Thai": {
@@ -1873,11 +1873,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 121182,
+        "total_tokens": 120185,
         "total_words": 4123,
-        "chars_per_token": 0.992,
-        "fertility": 29.392,
-        "rtc": 4.277
+        "chars_per_token": 1.001,
+        "fertility": 29.15,
+        "rtc": 4.391
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -1891,11 +1891,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 1772,
+        "total_tokens": 45490,
         "total_words": 4123,
-        "chars_per_token": 67.871,
-        "fertility": 0.43,
-        "rtc": 0.06
+        "chars_per_token": 2.644,
+        "fertility": 11.033,
+        "rtc": 1.843
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -1945,20 +1945,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 231304,
+        "total_tokens": 230307,
         "total_words": 4123,
-        "chars_per_token": 0.52,
-        "fertility": 56.101,
-        "rtc": 9.005
+        "chars_per_token": 0.522,
+        "fertility": 55.859,
+        "rtc": 9.314
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 129544,
+        "total_tokens": 128547,
         "total_words": 4123,
-        "chars_per_token": 0.928,
-        "fertility": 31.42,
-        "rtc": 4.424
+        "chars_per_token": 0.936,
+        "fertility": 31.178,
+        "rtc": 4.538
       },
       "pythia": {
         "num_sentences": 997,
@@ -1972,38 +1972,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 7671,
+        "total_tokens": 5677,
         "total_words": 4123,
-        "chars_per_token": 15.678,
-        "fertility": 1.861,
-        "rtc": 0.289
+        "chars_per_token": 21.185,
+        "fertility": 1.377,
+        "rtc": 0.23
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 232301,
+        "total_tokens": 230307,
         "total_words": 4123,
-        "chars_per_token": 0.518,
-        "fertility": 56.343,
-        "rtc": 8.719
+        "chars_per_token": 0.522,
+        "fertility": 55.859,
+        "rtc": 9.314
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 33375,
+        "total_tokens": 31381,
         "total_words": 4123,
-        "chars_per_token": 3.604,
-        "fertility": 8.095,
-        "rtc": 1.121
+        "chars_per_token": 3.833,
+        "fertility": 7.611,
+        "rtc": 1.127
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 120268,
-        "total_tokens": 7671,
+        "total_tokens": 5677,
         "total_words": 4123,
-        "chars_per_token": 15.678,
-        "fertility": 1.861,
-        "rtc": 0.289
+        "chars_per_token": 21.185,
+        "fertility": 1.377,
+        "rtc": 0.23
       }
     },
     "hin_Deva": {
@@ -2037,11 +2037,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 131501,
+        "total_tokens": 130504,
         "total_words": 24607,
-        "chars_per_token": 0.953,
-        "fertility": 5.344,
-        "rtc": 4.453
+        "chars_per_token": 0.961,
+        "fertility": 5.304,
+        "rtc": 4.574
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2055,11 +2055,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 1963,
+        "total_tokens": 72520,
         "total_words": 24607,
-        "chars_per_token": 63.864,
-        "fertility": 0.08,
-        "rtc": 0.064
+        "chars_per_token": 1.729,
+        "fertility": 2.947,
+        "rtc": 2.818
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2109,20 +2109,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 192586,
+        "total_tokens": 191589,
         "total_words": 24607,
-        "chars_per_token": 0.651,
-        "fertility": 7.826,
-        "rtc": 7.193
+        "chars_per_token": 0.654,
+        "fertility": 7.786,
+        "rtc": 7.433
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 137071,
+        "total_tokens": 136074,
         "total_words": 24607,
-        "chars_per_token": 0.915,
-        "fertility": 5.57,
-        "rtc": 4.491
+        "chars_per_token": 0.921,
+        "fertility": 5.53,
+        "rtc": 4.609
       },
       "pythia": {
         "num_sentences": 997,
@@ -2136,38 +2136,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 74883,
+        "total_tokens": 72889,
         "total_words": 24607,
-        "chars_per_token": 1.674,
-        "fertility": 3.043,
-        "rtc": 2.702
+        "chars_per_token": 1.72,
+        "fertility": 2.962,
+        "rtc": 2.835
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 193583,
+        "total_tokens": 191589,
         "total_words": 24607,
-        "chars_per_token": 0.648,
-        "fertility": 7.867,
-        "rtc": 6.97
+        "chars_per_token": 0.654,
+        "fertility": 7.786,
+        "rtc": 7.433
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 38633,
+        "total_tokens": 36639,
         "total_words": 24607,
-        "chars_per_token": 3.245,
-        "fertility": 1.57,
-        "rtc": 1.245
+        "chars_per_token": 3.422,
+        "fertility": 1.489,
+        "rtc": 1.262
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 125366,
-        "total_tokens": 74883,
+        "total_tokens": 72889,
         "total_words": 24607,
-        "chars_per_token": 1.674,
-        "fertility": 3.043,
-        "rtc": 2.702
+        "chars_per_token": 1.72,
+        "fertility": 2.962,
+        "rtc": 2.835
       }
     },
     "kor_Hang": {
@@ -2201,11 +2201,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 71287,
+        "total_tokens": 70290,
         "total_words": 14764,
-        "chars_per_token": 0.884,
-        "fertility": 4.828,
-        "rtc": 4.803
+        "chars_per_token": 0.896,
+        "fertility": 4.761,
+        "rtc": 4.901
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2219,11 +2219,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 2780,
+        "total_tokens": 42521,
         "total_words": 14764,
-        "chars_per_token": 22.666,
-        "fertility": 0.188,
-        "rtc": 0.179
+        "chars_per_token": 1.482,
+        "fertility": 2.88,
+        "rtc": 3.288
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2273,20 +2273,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 130944,
+        "total_tokens": 129947,
         "total_words": 14764,
-        "chars_per_token": 0.481,
-        "fertility": 8.869,
-        "rtc": 9.73
+        "chars_per_token": 0.485,
+        "fertility": 8.802,
+        "rtc": 10.03
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 95329,
+        "total_tokens": 94332,
         "total_words": 14764,
-        "chars_per_token": 0.661,
-        "fertility": 6.457,
-        "rtc": 6.214
+        "chars_per_token": 0.668,
+        "fertility": 6.389,
+        "rtc": 6.357
       },
       "pythia": {
         "num_sentences": 997,
@@ -2300,38 +2300,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 88070,
+        "total_tokens": 86076,
         "total_words": 14764,
-        "chars_per_token": 0.715,
-        "fertility": 5.965,
-        "rtc": 6.323
+        "chars_per_token": 0.732,
+        "fertility": 5.83,
+        "rtc": 6.66
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 131941,
+        "total_tokens": 129947,
         "total_words": 14764,
-        "chars_per_token": 0.478,
-        "fertility": 8.937,
-        "rtc": 9.452
+        "chars_per_token": 0.485,
+        "fertility": 8.802,
+        "rtc": 10.03
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 35562,
+        "total_tokens": 33568,
         "total_words": 14764,
-        "chars_per_token": 1.772,
-        "fertility": 2.409,
-        "rtc": 2.28
+        "chars_per_token": 1.877,
+        "fertility": 2.274,
+        "rtc": 2.3
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 63011,
-        "total_tokens": 88070,
+        "total_tokens": 86076,
         "total_words": 14764,
-        "chars_per_token": 0.715,
-        "fertility": 5.965,
-        "rtc": 6.323
+        "chars_per_token": 0.732,
+        "fertility": 5.83,
+        "rtc": 6.66
       }
     },
     "tur_Latn": {
@@ -2365,11 +2365,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 63659,
+        "total_tokens": 62662,
         "total_words": 16692,
-        "chars_per_token": 2.02,
-        "fertility": 3.814,
-        "rtc": 2.102
+        "chars_per_token": 2.052,
+        "fertility": 3.754,
+        "rtc": 2.141
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2383,11 +2383,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 52840,
+        "total_tokens": 51988,
         "total_words": 16692,
-        "chars_per_token": 2.433,
-        "fertility": 3.166,
-        "rtc": 1.671
+        "chars_per_token": 2.473,
+        "fertility": 3.115,
+        "rtc": 1.97
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2437,20 +2437,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 63207,
+        "total_tokens": 62210,
         "total_words": 16692,
-        "chars_per_token": 2.034,
-        "fertility": 3.787,
-        "rtc": 2.302
+        "chars_per_token": 2.067,
+        "fertility": 3.727,
+        "rtc": 2.353
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 62324,
+        "total_tokens": 61327,
         "total_words": 16692,
-        "chars_per_token": 2.063,
-        "fertility": 3.734,
-        "rtc": 1.991
+        "chars_per_token": 2.097,
+        "fertility": 3.674,
+        "rtc": 2.025
       },
       "pythia": {
         "num_sentences": 997,
@@ -2464,38 +2464,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 56491,
+        "total_tokens": 54497,
         "total_words": 16692,
-        "chars_per_token": 2.276,
-        "fertility": 3.384,
-        "rtc": 1.988
+        "chars_per_token": 2.359,
+        "fertility": 3.265,
+        "rtc": 2.066
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 64204,
+        "total_tokens": 62210,
         "total_words": 16692,
-        "chars_per_token": 2.003,
-        "fertility": 3.846,
-        "rtc": 2.254
+        "chars_per_token": 2.067,
+        "fertility": 3.727,
+        "rtc": 2.353
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 32104,
+        "total_tokens": 30110,
         "total_words": 16692,
-        "chars_per_token": 4.005,
-        "fertility": 1.923,
-        "rtc": 1.009
+        "chars_per_token": 4.27,
+        "fertility": 1.804,
+        "rtc": 1.011
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 128573,
-        "total_tokens": 56491,
+        "total_tokens": 54497,
         "total_words": 16692,
-        "chars_per_token": 2.276,
-        "fertility": 3.384,
-        "rtc": 1.988
+        "chars_per_token": 2.359,
+        "fertility": 3.265,
+        "rtc": 2.066
       }
     },
     "ukr_Cyrl": {
@@ -2529,11 +2529,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 56528,
+        "total_tokens": 55531,
         "total_words": 18385,
-        "chars_per_token": 2.279,
-        "fertility": 3.075,
-        "rtc": 1.862
+        "chars_per_token": 2.32,
+        "fertility": 3.02,
+        "rtc": 1.894
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2547,11 +2547,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 2754,
+        "total_tokens": 56060,
         "total_words": 18385,
-        "chars_per_token": 46.785,
-        "fertility": 0.15,
-        "rtc": 0.087
+        "chars_per_token": 2.298,
+        "fertility": 3.049,
+        "rtc": 2.12
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2601,20 +2601,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 148515,
+        "total_tokens": 147518,
         "total_words": 18385,
-        "chars_per_token": 0.868,
-        "fertility": 8.078,
-        "rtc": 5.397
+        "chars_per_token": 0.873,
+        "fertility": 8.024,
+        "rtc": 5.568
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 52081,
+        "total_tokens": 51084,
         "total_words": 18385,
-        "chars_per_token": 2.474,
-        "fertility": 2.833,
-        "rtc": 1.66
+        "chars_per_token": 2.522,
+        "fertility": 2.779,
+        "rtc": 1.683
       },
       "pythia": {
         "num_sentences": 997,
@@ -2628,38 +2628,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 109533,
+        "total_tokens": 107539,
         "total_words": 18385,
-        "chars_per_token": 1.176,
-        "fertility": 5.958,
-        "rtc": 3.846
+        "chars_per_token": 1.198,
+        "fertility": 5.849,
+        "rtc": 4.069
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 149512,
+        "total_tokens": 147518,
         "total_words": 18385,
-        "chars_per_token": 0.862,
-        "fertility": 8.132,
-        "rtc": 5.238
+        "chars_per_token": 0.873,
+        "fertility": 8.024,
+        "rtc": 5.568
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 37138,
+        "total_tokens": 35144,
         "total_words": 18385,
-        "chars_per_token": 3.469,
-        "fertility": 2.02,
-        "rtc": 1.164
+        "chars_per_token": 3.666,
+        "fertility": 1.912,
+        "rtc": 1.178
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 128847,
-        "total_tokens": 109533,
+        "total_tokens": 107539,
         "total_words": 18385,
-        "chars_per_token": 1.176,
-        "fertility": 5.958,
-        "rtc": 3.846
+        "chars_per_token": 1.198,
+        "fertility": 5.849,
+        "rtc": 4.069
       }
     },
     "vie_Latn": {
@@ -2693,11 +2693,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 84210,
+        "total_tokens": 83213,
         "total_words": 29193,
-        "chars_per_token": 1.567,
-        "fertility": 2.885,
-        "rtc": 2.708
+        "chars_per_token": 1.586,
+        "fertility": 2.85,
+        "rtc": 2.77
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2711,11 +2711,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 50141,
+        "total_tokens": 54136,
         "total_words": 29193,
-        "chars_per_token": 2.632,
-        "fertility": 1.718,
-        "rtc": 1.545
+        "chars_per_token": 2.438,
+        "fertility": 1.854,
+        "rtc": 1.998
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2765,20 +2765,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 117464,
+        "total_tokens": 116467,
         "total_words": 29193,
-        "chars_per_token": 1.124,
-        "fertility": 4.024,
-        "rtc": 4.167
+        "chars_per_token": 1.133,
+        "fertility": 3.99,
+        "rtc": 4.292
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 87425,
+        "total_tokens": 86428,
         "total_words": 29193,
-        "chars_per_token": 1.51,
-        "fertility": 2.995,
-        "rtc": 2.72
+        "chars_per_token": 1.527,
+        "fertility": 2.961,
+        "rtc": 2.78
       },
       "pythia": {
         "num_sentences": 997,
@@ -2792,38 +2792,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 53042,
+        "total_tokens": 51048,
         "total_words": 29193,
-        "chars_per_token": 2.488,
-        "fertility": 1.817,
-        "rtc": 1.818
+        "chars_per_token": 2.586,
+        "fertility": 1.749,
+        "rtc": 1.886
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 118461,
+        "total_tokens": 116467,
         "total_words": 29193,
-        "chars_per_token": 1.114,
-        "fertility": 4.058,
-        "rtc": 4.051
+        "chars_per_token": 1.133,
+        "fertility": 3.99,
+        "rtc": 4.292
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 36207,
+        "total_tokens": 34213,
         "total_words": 29193,
-        "chars_per_token": 3.645,
-        "fertility": 1.24,
-        "rtc": 1.108
+        "chars_per_token": 3.858,
+        "fertility": 1.172,
+        "rtc": 1.119
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 131990,
-        "total_tokens": 53042,
+        "total_tokens": 51048,
         "total_words": 29193,
-        "chars_per_token": 2.488,
-        "fertility": 1.817,
-        "rtc": 1.818
+        "chars_per_token": 2.586,
+        "fertility": 1.749,
+        "rtc": 1.886
       }
     },
     "swh_Latn": {
@@ -2857,11 +2857,11 @@
       "mistral": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 56316,
+        "total_tokens": 55319,
         "total_words": 20361,
-        "chars_per_token": 2.338,
-        "fertility": 2.766,
-        "rtc": 1.816
+        "chars_per_token": 2.38,
+        "fertility": 2.717,
+        "rtc": 1.846
       },
       "qwen2.5": {
         "num_sentences": 997,
@@ -2875,11 +2875,11 @@
       "deepseek-v3": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 46060,
+        "total_tokens": 49796,
         "total_words": 20361,
-        "chars_per_token": 2.859,
-        "fertility": 2.262,
-        "rtc": 1.423
+        "chars_per_token": 2.644,
+        "fertility": 2.446,
+        "rtc": 1.843
       },
       "gpt-oss": {
         "num_sentences": 997,
@@ -2929,20 +2929,20 @@
       "opt": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 55797,
+        "total_tokens": 54800,
         "total_words": 20361,
-        "chars_per_token": 2.36,
-        "fertility": 2.74,
-        "rtc": 1.984
+        "chars_per_token": 2.403,
+        "fertility": 2.691,
+        "rtc": 2.024
       },
       "tinyllama": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 55820,
+        "total_tokens": 54823,
         "total_words": 20361,
-        "chars_per_token": 2.359,
-        "fertility": 2.742,
-        "rtc": 1.741
+        "chars_per_token": 2.402,
+        "fertility": 2.693,
+        "rtc": 1.768
       },
       "pythia": {
         "num_sentences": 997,
@@ -2956,38 +2956,38 @@
       "bert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 52270,
+        "total_tokens": 50276,
         "total_words": 20361,
-        "chars_per_token": 2.519,
-        "fertility": 2.567,
-        "rtc": 1.796
+        "chars_per_token": 2.619,
+        "fertility": 2.469,
+        "rtc": 1.861
       },
       "roberta-base": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 56794,
+        "total_tokens": 54800,
         "total_words": 20361,
-        "chars_per_token": 2.318,
-        "fertility": 2.789,
-        "rtc": 1.947
+        "chars_per_token": 2.403,
+        "fertility": 2.691,
+        "rtc": 2.024
       },
       "xlm-roberta-base": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 35757,
+        "total_tokens": 33763,
         "total_words": 20361,
-        "chars_per_token": 3.682,
-        "fertility": 1.756,
-        "rtc": 1.097
+        "chars_per_token": 3.9,
+        "fertility": 1.658,
+        "rtc": 1.107
       },
       "distilbert-base-uncased": {
         "num_sentences": 997,
         "total_chars": 131675,
-        "total_tokens": 52270,
+        "total_tokens": 50276,
         "total_words": 20361,
-        "chars_per_token": 2.519,
-        "fertility": 2.567,
-        "rtc": 1.796
+        "chars_per_token": 2.619,
+        "fertility": 2.469,
+        "rtc": 1.861
       }
     }
   },

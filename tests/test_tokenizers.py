@@ -1,9 +1,38 @@
 from unittest.mock import patch
 
 import pytest
-from transformers.configuration_utils import PreTrainedConfig
 
-from mothertoken.core.tokenizers import FALLBACK_MAX_POSITION_EMBEDDINGS, load_hf_tokenizer, tokenize_sentences
+from mothertoken.core.tokenizers import (
+    FALLBACK_MAX_POSITION_EMBEDDINGS,
+    encode_hf,
+    has_unknown_auto_config,
+    load_hf_tokenizer,
+    load_hf_tokenizer_file,
+    tokenize_sentences,
+)
+
+
+class ChatTemplateTokenizer:
+    chat_template = "{% for message in messages %}{{ message.role }}: {{ message.content }}{% endfor %}"
+
+    def __init__(self):
+        self.applied_messages = []
+        self.encoded = []
+
+    def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+        self.applied_messages.append(
+            {
+                "messages": messages,
+                "tokenize": tokenize,
+                "add_generation_prompt": add_generation_prompt,
+            }
+        )
+        assert not tokenize
+        return "<|user|>\nHello world<|assistant|>"
+
+    def encode(self, text, *, add_special_tokens):
+        self.encoded.append({"text": text, "add_special_tokens": add_special_tokens})
+        return [101, 102, 103, 104]
 
 
 def test_tokenizer_caching():
@@ -74,23 +103,117 @@ def test_huggingface_caching():
         assert counts1 == counts2 == [2]
 
 
+def test_huggingface_tokenize_sentences_uses_raw_text_even_with_chat_template():
+    tokenizer = ChatTemplateTokenizer()
+
+    counts = tokenize_sentences(
+        {"id": "chat-model", "type": "huggingface", "ref": "chat/ref"},
+        ["Hello world"],
+        {("tokenizer", "huggingface", "chat/ref"): tokenizer},
+        dry_run=False,
+    )
+
+    assert counts == [4]
+    assert tokenizer.applied_messages == []
+    assert tokenizer.encoded == [{"text": "Hello world", "add_special_tokens": False}]
+
+
+def test_huggingface_raw_tokenizer_uses_plain_encoding_without_special_tokens():
+    class RawTokenizer:
+        def __init__(self):
+            self.encoded = []
+
+        def encode(self, text, *, add_special_tokens):
+            self.encoded.append({"text": text, "add_special_tokens": add_special_tokens})
+            return [1, 2]
+
+    tokenizer = RawTokenizer()
+
+    assert encode_hf(tokenizer, "Hello world") == [1, 2]
+    assert tokenizer.encoded == [{"text": "Hello world", "add_special_tokens": False}]
+
+
+def test_unknown_auto_config_loads_from_tokenizer_file_without_auto_tokenizer(tmp_path):
+    tokenizer = object()
+    config_json = tmp_path / "config.json"
+    config_json.write_text('{"model_type":"future_model_type"}', encoding="utf-8")
+
+    with patch("huggingface_hub.hf_hub_download", return_value=str(config_json)):
+        assert has_unknown_auto_config("org/future-model")
+
+    with (
+        patch("mothertoken.core.tokenizers.load_hf_tokenizer_file", return_value=tokenizer) as mock_file_loader,
+        patch("mothertoken.core.tokenizers.has_unknown_auto_config", return_value=True),
+        patch("transformers.AutoTokenizer.from_pretrained") as mock_auto_tokenizer,
+    ):
+        assert load_hf_tokenizer("org/future-model") is tokenizer
+
+    mock_file_loader.assert_called_once_with("org/future-model")
+    mock_auto_tokenizer.assert_not_called()
+
+
+def test_load_hf_tokenizer_file_uses_tokenizer_json_and_config(tmp_path):
+    tokenizer_json = tmp_path / "tokenizer.json"
+    tokenizer_config_json = tmp_path / "tokenizer_config.json"
+    tokenizer_json.write_text("{}", encoding="utf-8")
+    tokenizer_config_json.write_text(
+        (
+            '{"bos_token":{"content":"<bos>"},"eos_token":{"content":"<eos>"},'
+            '"pad_token":{"content":"<pad>"},"unk_token":null,'
+            '"model_max_length":131072,"chat_template":"{{ messages }}",'
+            '"clean_up_tokenization_spaces":false}'
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_hf_hub_download(ref, filename):
+        return str(tokenizer_json if filename == "tokenizer.json" else tokenizer_config_json)
+
+    with (
+        patch("huggingface_hub.hf_hub_download", side_effect=fake_hf_hub_download) as mock_download,
+        patch("transformers.PreTrainedTokenizerFast", return_value=object()) as mock_fast,
+    ):
+        load_hf_tokenizer_file("deepseek-ai/DeepSeek-V3.2")
+
+    assert [call.args for call in mock_download.call_args_list] == [
+        ("deepseek-ai/DeepSeek-V3.2", "tokenizer.json"),
+        ("deepseek-ai/DeepSeek-V3.2", "tokenizer_config.json"),
+    ]
+    assert mock_fast.call_args.kwargs == {
+        "tokenizer_file": str(tokenizer_json),
+        "bos_token": "<bos>",
+        "eos_token": "<eos>",
+        "pad_token": "<pad>",
+        "chat_template": "{{ messages }}",
+        "model_max_length": 131072,
+        "clean_up_tokenization_spaces": False,
+    }
+
+
 def test_load_hf_tokenizer_retries_missing_max_position_embeddings():
     tokenizer = object()
+    config = type("DeepseekV32Config", (), {})()
 
-    with patch("transformers.AutoTokenizer.from_pretrained") as mock_from_pretrained:
+    with (
+        patch("mothertoken.core.tokenizers.has_unknown_auto_config", return_value=False),
+        patch("mothertoken.core.tokenizers.load_hf_tokenizer_file", side_effect=FileNotFoundError),
+        patch("transformers.AutoConfig.from_pretrained", return_value=config) as mock_config_from_pretrained,
+        patch("transformers.AutoTokenizer.from_pretrained") as mock_from_pretrained,
+    ):
         mock_from_pretrained.side_effect = [
             AttributeError("'PreTrainedConfig' object has no attribute 'max_position_embeddings'"),
             tokenizer,
         ]
 
-        assert load_hf_tokenizer("deepseek-ai/DeepSeek-V3.2") is tokenizer
+        assert load_hf_tokenizer("org/model-with-missing-position-config") is tokenizer
 
     assert mock_from_pretrained.call_count == 2
-    assert mock_from_pretrained.call_args_list[0].args == ("deepseek-ai/DeepSeek-V3.2",)
+    assert mock_from_pretrained.call_args_list[0].args == ("org/model-with-missing-position-config",)
+    mock_config_from_pretrained.assert_called_once_with("org/model-with-missing-position-config")
     retry_kwargs = mock_from_pretrained.call_args_list[1].kwargs
-    assert mock_from_pretrained.call_args_list[1].args == ("deepseek-ai/DeepSeek-V3.2",)
-    assert isinstance(retry_kwargs["config"], PreTrainedConfig)
-    assert retry_kwargs["config"].max_position_embeddings == FALLBACK_MAX_POSITION_EMBEDDINGS
+    assert mock_from_pretrained.call_args_list[1].args == ("org/model-with-missing-position-config",)
+    assert retry_kwargs["config"] is config
+    assert config.max_position_embeddings == FALLBACK_MAX_POSITION_EMBEDDINGS
 
 
 def test_load_hf_tokenizer_reraises_unrelated_attribute_error():
