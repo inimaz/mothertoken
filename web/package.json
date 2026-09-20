@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^7.1.0",
+    "astro": "^7.2.8",
     "zod": "^4.4.0"
   },
   "devDependencies": {
